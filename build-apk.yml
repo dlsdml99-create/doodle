@@ -1,0 +1,84 @@
+name: Build Doodle APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Arrange files
+        run: |
+          # 파일을 폴더 없이 한 곳에 올려도 빌드되게 정리
+          if [ -f index.html ]; then mkdir -p www && cp index.html icon-180.png icon-512.png www/; fi
+          if ls ic_launcher*.png >/dev/null 2>&1; then mkdir -p icons && cp ic_launcher*.png splash.png icons/; fi
+          if [ -f apply-icons.sh ]; then mkdir -p scripts && cp apply-icons.sh scripts/; fi
+
+      - name: Install
+        run: npm install
+
+      - name: Create Android project
+        run: |
+          npx cap add android
+          bash scripts/apply-icons.sh
+          npx cap sync android
+
+      - name: Set version
+        run: |
+          VER=$(grep -oE 'class="ver">v[0-9.]+' www/index.html | grep -oE 'v[0-9.]+')
+          echo "VER=$VER" >> "$GITHUB_ENV"
+          sed -i "s/versionCode 1$/versionCode ${{ github.run_number }}/" android/app/build.gradle
+          sed -i "s/versionName \"1.0\"/versionName \"${VER#v}\"/" android/app/build.gradle
+
+      - name: Build APK
+        working-directory: android
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/doodle.jks"
+            ./gradlew assembleRelease --no-daemon \
+              -Pandroid.injected.signing.store.file="$RUNNER_TEMP/doodle.jks" \
+              -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+              -Pandroid.injected.signing.key.alias=doodle \
+              -Pandroid.injected.signing.key.password="$KEYSTORE_PASSWORD"
+            cp app/build/outputs/apk/release/app-release.apk "../Doodle.apk"
+          else
+            # 항상 같은 서명 키를 써서 새 버전이 기존 앱 위에 덮어 설치되게 함
+            mkdir -p ~/.android && cp ../debug.keystore ~/.android/debug.keystore
+            ./gradlew assembleDebug --no-daemon
+            cp app/build/outputs/apk/debug/app-debug.apk "../Doodle.apk"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Doodle-apk
+          path: Doodle.apk
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VER }}
+          name: Doodle ${{ env.VER }}
+          body_path: release-notes.md
+          files: Doodle.apk
+          make_latest: true
