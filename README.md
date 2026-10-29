@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/badge/%EC%95%B1%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-Android-FF5E5E?style=for-the-badge&logo=android&logoColor=white" alt="앱 다운로드" height="48">
   </a>
 </p>
-<p align="center">버튼을 누르면 Doodle.apk가 바로 받아져요.</p>
+<p align="center">버튼을 누르면 Doodle.apk가 바로 받아져요.<br>📖 <a href="https://dlsdml99-create.github.io/doodle/">앱 받기 · 사용 설명서 페이지</a></p>
 
 ---
 
@@ -37,6 +37,10 @@
 - 만든 친구는 친구 상자에 자동 보관
 
 ## 업데이트 내용
+
+**v2.2**
+- 앱 받기·사용 설명서 페이지 (https://dlsdml99-create.github.io/doodle/)
+- 길게 눌러도 글자 선택 안 됨, 펜 굵기 미리보기 수정
 
 **v2.1**
 - 무대 탭에는 무대만 크게, 버튼은 아이콘으로 정리

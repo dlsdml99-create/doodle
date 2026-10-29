@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Doodle 받기</title>
+<meta name="description" content="내 그림이 살아나요! 그리거나 찍어 올린 그림이 무대에서 춤추고 말하는 안드로이드 앱">
+<meta property="og:title" content="Doodle - 내 그림이 살아나요">
+<meta property="og:description" content="그림을 그리면 친구가 되어 무대에서 춤추고 연극해요. 공룡 밑그림 12종 포함.">
+<meta property="og:image" content="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Gowun+Dodum&display=swap">
+<style>
+/* 레이아웃: 앱 카드(받기 버튼 + QR) → 소개 → 업데이트 내용 → 설치 방법 → 안전 정보 → 자주 묻는 질문 */
+:root{
+  --bg:#EAF4FB; --surface:#FFFFFF; --ink:#1E2944; --sub:#5D6B85; --line:#D3DEEA;
+  --sky:#2FA7E0; --sky-soft:#DDF1FC; --pop:#FF6B4A; --pop-soft:#FFE7E0; --sun:#FFC83D; --leaf:#2FAE6B;
+  --display:"Gaegu","Gowun Dodum",system-ui,sans-serif;
+  --body:"Gowun Dodum",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  --shadow:0 1px 2px rgba(30,41,68,.06),0 8px 24px rgba(30,41,68,.08);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111827; --surface:#1B2336; --ink:#EEF3FA; --sub:#A3B0C6; --line:#2E3A52;
+  --sky:#6CC6F2; --sky-soft:#18324A; --pop:#FF8A6D; --pop-soft:#3A2420; --sun:#FFD46A; --leaf:#5CCB91;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111827; --surface:#1B2336; --ink:#EEF3FA; --sub:#A3B0C6; --line:#2E3A52;
+  --sky:#6CC6F2; --sky-soft:#18324A; --pop:#FF8A6D; --pop-soft:#3A2420; --sun:#FFD46A; --leaf:#5CCB91;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.7 var(--body);margin:0}
+.wrap{max-width:940px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:52px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;line-height:1.15;text-wrap:balance}
+h2{font-size:34px} h3{font-size:22px}
+p{margin:0} a{color:inherit}
+.eyebrow{font-size:13px;letter-spacing:.08em;color:var(--sub);font-weight:700;margin-bottom:6px}
+.lead{color:var(--sub);max-width:60ch;margin-top:8px}
+
+/* 앱 카드 */
+.app{background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow);display:grid;gap:20px}
+.top{display:flex;gap:18px;align-items:center}
+.wrap>*{min-width:0}
+.top>div{min-width:0}
+.top img{width:92px;height:92px;border-radius:24px;flex:none}
+.top h1{font-size:clamp(44px,9vw,60px);letter-spacing:-.5px}
+.top h1 span{color:var(--pop)}
+.tag{color:var(--sub);font-size:17px}
+.facts{display:flex;flex-wrap:wrap;gap:6px}
+.fact{font-size:13px;padding:3px 11px;border-radius:999px;background:var(--bg);color:var(--sub);font-variant-numeric:tabular-nums}
+.get{display:flex;gap:16px;align-items:center}
+.stack{display:grid;gap:8px;flex:1;min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 18px;border-radius:16px;font-weight:700;text-decoration:none;font-size:18px}
+.btn svg{width:22px;height:22px;flex:none}
+.btn.dl{background:var(--pop);color:#fff;box-shadow:0 4px 0 #C94A2E}
+.btn.ghost{background:var(--sky-soft);color:var(--ink);font-size:16px;padding:12px 16px}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.small{font-size:14px;color:var(--sub)}
+.qr{flex:none;display:grid;justify-items:center;gap:4px;font-size:12px;color:var(--sub);text-align:center;width:118px}
+.qr img{width:110px;height:110px;background:#fff;border-radius:12px;padding:6px}
+@media (max-width:460px){.qr{display:none}}
+
+/* 소개 */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.feat{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-width:0}
+.feat img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 40%;display:block;background:var(--sky-soft)}
+.feat div{padding:16px 18px 18px;display:grid;gap:6px}
+.feat h3{font-size:24px}
+.feat p{color:var(--sub);font-size:15px}
+
+/* 업데이트 */
+.log{display:grid;gap:12px}
+.ver{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:16px 20px;display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:start}
+.ver b{font-family:var(--display);font-size:26px;line-height:1;color:var(--sky);font-variant-numeric:tabular-nums}
+.ver.new b{color:var(--pop)}
+.ver .new-pill{display:inline-block;font-size:11px;font-weight:700;background:var(--pop);color:#fff;border-radius:99px;padding:1px 8px;margin-top:6px;font-family:var(--body)}
+.ver ul{margin:0;padding-left:18px;color:var(--ink)}
+.ver li+li{margin-top:2px}
+@media (max-width:460px){.ver{grid-template-columns:1fr;gap:6px}}
+
+/* 설치 */
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:12px;background:var(--surface);border-radius:22px;box-shadow:var(--shadow);padding:20px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:10px}
+ol.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--sky);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px}
+.note{background:var(--pop-soft);border-radius:14px;padding:14px 16px;font-size:15px;margin-top:12px}
+
+/* 안전 */
+.table-wrap{overflow-x:auto;background:var(--surface);border-radius:20px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--sub)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700;white-space:nowrap}
+.ok{color:var(--leaf);font-weight:700}
+
+details{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:4px 18px}
+details+details{margin-top:8px}
+summary{cursor:pointer;font-weight:700;padding:12px 0}
+details p{padding:0 0 14px;color:var(--sub)}
+footer{color:var(--sub);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+@media (prefers-reduced-motion:no-preference){.btn{transition:transform .12s}.btn:active{transform:translateY(2px)}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <section class="app" aria-labelledby="appName">
+    <div class="top">
+      <img src="icon.png" alt="" width="92" height="92">
+      <div>
+        <h1 id="appName">Doo<span>dle</span></h1>
+        <p class="tag">내 그림이 살아나요! 그리면 친구가 되어 무대에서 춤추고 연극해요.</p>
+      </div>
+    </div>
+    <div class="facts">
+      <span class="fact">안드로이드</span><span class="fact">버전 __VER__</span><span class="fact">__MB__MB</span><span class="fact">무료 · 광고 없음</span><span class="fact">인터넷 없이 사용</span>
+    </div>
+    <div class="get">
+      <div class="stack">
+        <a class="btn dl" href="https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+          앱 받기 (APK)</a>
+        <a class="btn ghost" href="guide.html">📖 사용 설명서 보기</a>
+        <p class="small">받은 파일을 열어 설치하면 끝! 처음이면 아래 <a href="#install">설치 방법</a>을 봐 주세요.</p>
+      </div>
+      <div class="qr"><img src="qr.svg" alt="앱 받기 QR 코드" onerror="this.parentNode.hidden=true">폰 카메라로 찍으면 바로 받아요</div>
+    </div>
+  </section>
+
+  <section aria-labelledby="introH">
+    <p class="eyebrow">소개</p>
+    <h2 id="introH">이런 걸 할 수 있어요</h2>
+    <p class="lead">아이가 그린 그림이 진짜 친구처럼 움직여요. 어른 도움 없이도 누르기만 하면 돼요.</p>
+    <div class="feats" style="margin-top:20px">
+      <article class="feat"><img src="guide/04_draw.jpg" alt="공룡 밑그림을 색칠하는 화면" loading="lazy"><div><h3>🦖 밑그림 색칠</h3><p>공룡 12종, 12간지 동물, 동화 나라까지 밑그림 28가지. 색칠통으로 톡 누르면 칸이 칠해져요.</p></div></article>
+      <article class="feat"><img src="guide/06_alive.jpg" alt="그린 공룡이 무대에서 춤추는 화면" loading="lazy"><div><h3>✨ 살아나라!</h3><p>버튼 한 번이면 그림이 무대에 나와 춤추고, 걷고, 점프해요. 움직임 9가지.</p></div></article>
+      <article class="feat"><img src="guide/02_play.jpg" alt="연극 자막이 나오는 무대" loading="lazy"><div><h3>🎭 연극 놀이</h3><p>대본을 쓰면 친구들이 차례로 목소리로 읽어줘요. 내 목소리로 녹음도 돼요.</p></div></article>
+      <article class="feat"><img src="guide/05_big.jpg" alt="가로 화면으로 크게 그리는 모습" loading="lazy"><div><h3>🖍️ 펜 10가지</h3><p>크레용, 반짝이, 무지개, 형광펜, 지우개까지. 두 손가락 확대, 가로 화면으로 크게 그리기.</p></div></article>
+      <article class="feat"><img src="guide/01_stage.jpg" alt="커튼과 조명이 있는 무대" loading="lazy"><div><h3>🎪 진짜 무대</h3><p>빨간 커튼과 움직이는 조명. 영상으로 녹화하거나 사진으로 찍어 가족에게 보낼 수 있어요.</p></div></article>
+      <article class="feat"><img src="guide/08_friends.jpg" alt="친구 꾸미기 화면" loading="lazy"><div><h3>🧸 친구 꾸미기</h3><p>이름 짓기, 크기 바꾸기, 왕관·리본 같은 소품. 만든 친구는 친구 상자에 모여요.</p></div></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="logH">
+    <p class="eyebrow">업데이트 내용</p>
+    <h2 id="logH">새로 바뀐 것</h2>
+    <p class="lead">앱을 켤 때 새 버전이 있으면 알려줘요. 업데이트해도 만든 친구들은 그대로 남아요.</p>
+    <div class="log" style="margin-top:20px">
+      <div class="ver new"><div><b>v2.2</b><br><span class="new-pill">최신</span></div><ul><li>설치·사용 설명 페이지가 생겼어요</li><li>화면을 길게 눌러도 글자가 파랗게 선택되지 않아요</li><li>펜 굵기 미리보기 모양 수정</li></ul></div>
+      <div class="ver"><b>v2.1</b><ul><li>무대 탭에는 무대만! 버튼은 아이콘으로 작게</li><li>친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로 이동</li></ul></div>
+      <div class="ver"><b>v2.0</b><ul><li>커튼·조명·나무 바닥이 있는 진짜 무대</li><li>공룡 밑그림 12종 (안킬로, 스피노, 프테라노돈 등 8종 추가)</li></ul></div>
+      <div class="ver"><b>v1.9</b><ul><li>무대 · 그리기 · 연극 · 친구들 4개 탭</li><li>밑그림 색칠, 펜 10가지, 두 손가락 확대, 가로 화면 크게 그리기</li></ul></div>
+      <div class="ver"><b>v1.8</b><ul><li>새 버전 알림과 버튼 한 번 업데이트</li><li>영상 녹화, 내 목소리 대사, 꾸미기 소품</li></ul></div>
+    </div>
+  </section>
+
+  <section id="install" aria-labelledby="instH">
+    <p class="eyebrow">설치 방법</p>
+    <h2 id="instH">3단계면 끝나요</h2>
+    <ol class="steps" style="margin-top:20px">
+      <li><span>위의 <b>앱 받기</b>를 눌러 <b>Doodle.apk</b>를 받아요.</span></li>
+      <li><span>다 받아지면 알림이나 '내 파일 → 다운로드'에서 파일을 눌러요.</span></li>
+      <li><span>"출처를 알 수 없는 앱" 안내가 나오면 <b>설정 → 이 출처 허용</b>을 켜고 돌아와 <b>설치</b>를 눌러요.</span></li>
+    </ol>
+    <p class="note">⚠️ Play 스토어가 아닌 곳에서 받은 앱이라 한 번 허용이 필요해요. 설치가 끝나면 허용을 다시 꺼도 괜찮아요. 아이폰에서는 설치할 수 없어요.</p>
+  </section>
+
+  <section aria-labelledby="safeH">
+    <p class="eyebrow">안전 정보</p>
+    <h2 id="safeH">안심하고 쓰세요</h2>
+    <div class="table-wrap" style="margin-top:20px">
+      <table>
+        <thead><tr><th>항목</th><th>내용</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>개인정보</td><td>그림, 녹음, 친구 상자는 모두 폰 안에만 저장돼요. 어디에도 보내지 않아요.</td><td class="ok">안전</td></tr>
+          <tr><td>인터넷</td><td>새 버전이 있는지 확인할 때만 GitHub에 버전 번호를 물어봐요.</td><td class="ok">최소</td></tr>
+          <tr><td>권한</td><td>마이크(내 목소리 녹음할 때만). 그 외 권한은 쓰지 않아요.</td><td class="ok">최소</td></tr>
+          <tr><td>광고·결제</td><td>없어요.</td><td class="ok">없음</td></tr>
+          <tr><td>점검</td><td>올리기 전에 외부 전송·위험 코드가 없는지 매번 확인해요. 코드는 이 저장소에 모두 공개돼 있어요.</td><td class="ok">공개</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="faqH">
+    <p class="eyebrow">자주 묻는 질문</p>
+    <h2 id="faqH">궁금한 점</h2>
+    <div style="margin-top:20px">
+      <details><summary>업데이트는 어떻게 하나요?</summary><p>앱을 켰을 때 "새 버전이 나왔어요!" 창이 뜨면 업데이트를 누르세요. 새 파일을 받아 열고 설치하면 돼요. 이 페이지에서 다시 받아 설치해도 같아요.</p></details>
+      <details><summary>업데이트하면 만든 친구가 사라지나요?</summary><p>아니요. 친구 상자에 보관된 친구는 그대로 남아요. 앱을 지웠다가 다시 깔면 사라져요.</p></details>
+      <details><summary>대사를 읽어주는 목소리가 안 나와요.</summary><p>폰 무음 모드를 꺼 주세요. 그래도 안 나오면 설정 → 일반 → 텍스트 음성 변환(TTS)에서 한국어가 켜져 있는지 확인해 주세요.</p></details>
+      <details><summary>사진으로 올린 그림이 잘 안 오려져요.</summary><p>흰 종이에 진한 색으로 그리고, 밝은 곳에서 그림만 화면에 꽉 차게 찍으면 깔끔하게 오려져요.</p></details>
+    </div>
+  </section>
+
+  <footer>Doodle __VER__ · <a href="guide.html">사용 설명서</a> · <a href="https://github.com/dlsdml99-create/doodle">소스 코드</a></footer>
+</main>
+</body></html>

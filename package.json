@@ -1,6 +1,6 @@
 {
   "name": "doodle",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "description": "Doodle - 내 그림이 살아나는 앱",
   "dependencies": {

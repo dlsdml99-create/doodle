@@ -47,6 +47,18 @@ jobs:
           body_path: release-notes.md
           files: Doodle.apk
           make_latest: true
+      - name: Site
+        env:
+          T: ${{ github.token }}
+        run: |
+          MB=$(awk "BEGIN{printf \"%.1f\", $(stat -c%s Doodle.apk)/1048576}")
+          pip install -q qrcode || true
+          python3 -c "import qrcode,qrcode.image.svg as s;qrcode.make('https://dlsdml99-create.github.io/doodle/dl.html',image_factory=s.SvgPathImage,border=1).save('site/qr.svg')" || true
+          sed -i "s/__VER__/$VER/g; s/__MB__/$MB/g" site/*.html
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk"><title>Doodle 받기</title><a href="https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk">Doodle.apk 받기</a>' > site/dl.html
+          touch site/.nojekyll
+          cd site && git init -q -b gh-pages && git add -A && git -c user.name=bot -c user.email=bot@x commit -qm "site $VER"
+          git push -qf https://x-access-token:$T@github.com/${{ github.repository }} gh-pages
       - name: Error
         if: failure()
         env:
