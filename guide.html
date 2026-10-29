@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Doodle 사용 설명서</title>
+<meta name="description" content="Doodle 앱 탭별·기능별 사용 방법">
+<meta property="og:title" content="Doodle 사용 설명서">
+<meta property="og:description" content="무대 · 그리기 · 연극 · 친구들 탭별 사용 방법">
+<meta property="og:image" content="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Gowun+Dodum&display=swap">
+<style>
+/* 레이아웃: 앱 소개 카드(받기 버튼) → 목차 → 탭별 설명(왼쪽 화면 사진, 오른쪽 따라하기) → 받기 */
+:root{
+  --bg:#EAF4FB; --surface:#FFFFFF; --ink:#1E2944; --sub:#5D6B85; --line:#D3DEEA;
+  --sky:#2FA7E0; --sky-soft:#DDF1FC; --pop:#FF6B4A; --pop-soft:#FFE7E0; --sun:#FFC83D; --leaf:#2FAE6B; --grape:#8E5BE0;
+  --display:"Gaegu","Gowun Dodum",system-ui,sans-serif;
+  --body:"Gowun Dodum",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  --shadow:0 1px 2px rgba(30,41,68,.06),0 8px 24px rgba(30,41,68,.08);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111827; --surface:#1B2336; --ink:#EEF3FA; --sub:#A3B0C6; --line:#2E3A52;
+  --sky:#6CC6F2; --sky-soft:#18324A; --pop:#FF8A6D; --pop-soft:#3A2420; --sun:#FFD46A; --leaf:#5CCB91; --grape:#B38CF2;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111827; --surface:#1B2336; --ink:#EEF3FA; --sub:#A3B0C6; --line:#2E3A52;
+  --sky:#6CC6F2; --sky-soft:#18324A; --pop:#FF8A6D; --pop-soft:#3A2420; --sun:#FFD46A; --leaf:#5CCB91; --grape:#B38CF2;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.7 var(--body);margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:44px}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0} a{color:inherit}
+.hero{display:flex;gap:18px;align-items:center;background:var(--surface);border-radius:26px;padding:22px;box-shadow:var(--shadow);flex-wrap:wrap}
+.hero img{width:84px;height:84px;border-radius:22px;flex:none}
+.hero h1{font-size:clamp(34px,7vw,48px)}
+.hero h1 span{color:var(--pop)}
+.hero .lead{color:var(--sub);margin-top:4px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:700;text-decoration:none;font-size:16px}
+.btn.dl{background:var(--pop);color:#fff}
+.btn.ghost{background:var(--sky-soft);color:var(--ink)}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.wrap>*{min-width:0}
+.toc{display:flex;flex-wrap:wrap;gap:8px}
+.toc a{text-decoration:none;font-weight:700;padding:8px 14px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow)}
+.g{display:grid;gap:14px;scroll-margin-top:12px}
+.g h2{display:flex;align-items:center;gap:10px;font-size:34px}
+.g h2 i{font-style:normal;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:var(--c);flex:none}
+.g .lead{color:var(--sub);max-width:62ch}
+.gbody{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:20px;align-items:start}
+.figs{display:grid;gap:14px;position:sticky;top:12px}
+figure{margin:0;display:grid;gap:6px;justify-items:center}
+figure img{width:100%;max-width:280px;height:auto;border-radius:24px;border:6px solid var(--ink);background:var(--surface)}
+figure.wide img{max-width:100%;border-radius:18px}
+figcaption{font-size:13px;color:var(--sub);text-align:center}
+.txt{display:grid;gap:14px;min-width:0}
+.box{background:var(--surface);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow)}
+.box h3{font-size:23px;margin-bottom:8px}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:8px}
+ol.steps li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--c,var(--sky));color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;margin-top:2px}
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.key{display:flex;gap:8px;align-items:center;background:var(--bg);border-radius:12px;padding:8px 10px;font-size:15px}
+.key b{font-size:22px;line-height:1;width:30px;text-align:center;flex:none}
+.tip{background:var(--pop-soft);border-radius:14px;padding:12px 16px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:14px;padding:3px 11px;border-radius:999px;background:var(--sky-soft);font-weight:700}
+@media (max-width:720px){.gbody{grid-template-columns:1fr}.figs{position:static;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}
+footer{color:var(--sub);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <section class="hero" aria-labelledby="t">
+    <img src="icon.png" alt="" width="84" height="84">
+    <div style="flex:1;min-width:220px">
+      <h1 id="t">Doo<span>dle</span> 사용 설명서</h1>
+      <p class="lead">그리고 → 살리고 → 연극하기. 탭 4개만 알면 다 할 수 있어요.</p>
+      <div class="acts">
+        <a class="btn dl" href="https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk">⬇ 앱 받기 (v2.2)</a>
+        <a class="btn ghost" href="index.html#install">설치 방법</a>
+      </div>
+    </div>
+  </section>
+
+  <nav class="toc" aria-label="목차">
+    <a href="#stage">🎪 무대</a><a href="#draw">🖍️ 그리기</a><a href="#play">🎭 연극</a><a href="#friends">🧸 친구들</a><a href="#update">🔄 업데이트</a>
+  </nav>
+
+  <section class="g" id="draw" style="--c:var(--pop-soft)">
+    <h2><i>🖍️</i>그리기</h2>
+    <p class="lead">밑그림을 색칠하거나 빈 종이에 마음대로 그린 다음, <b>살아나라!</b>를 누르면 무대에 나와요.</p>
+    <div class="gbody">
+      <div class="figs">
+        <figure><img src="guide/03_sketch.jpg" alt="밑그림 고르기 창" loading="lazy"><figcaption>밑그림 고르기</figcaption></figure>
+        <figure><img src="guide/04_draw.jpg" alt="공룡을 색칠한 화면" loading="lazy"><figcaption>색칠하기</figcaption></figure>
+      </div>
+      <div class="txt">
+        <div class="box" style="--c:var(--pop)"><h3>밑그림 색칠하기</h3>
+          <ol class="steps"><li>위쪽 <b>밑그림 고르기</b>를 눌러요.</li><li><b>공룡</b> · <b>12간지</b> · <b>동화 나라</b> 중에서 하나를 골라요.</li><li>색을 고르고 칸 안을 <b>톡</b> 누르면 색칠통으로 칠해져요.</li><li>다 칠했으면 <b>살아나라!</b></li></ol></div>
+        <div class="box"><h3>밑그림 28가지</h3>
+          <div class="chips"><span class="chip">🦖 공룡 12종</span><span class="chip">🐭 12간지 동물</span><span class="chip">🏰 공주 · 로봇 · 유니콘 · 성</span></div>
+          <p style="margin-top:8px;color:var(--sub)">공룡: 티라노, 트리케라톱스, 브라키오, 스테고, 안킬로, 파키케팔로, 프테라노돈, 스피노, 파라사우롤로푸스, 벨로키랍터, 아기 공룡 알, 모사사우루스</p></div>
+        <div class="box"><h3>펜 10가지</h3>
+          <div class="keys">
+            <div class="key"><b>✏️</b>연필 — 가는 선</div><div class="key"><b>🖍️</b>크레용 — 거친 질감</div><div class="key"><b>🖊️</b>마커 — 반투명</div><div class="key"><b>🖌️</b>붓 — 빠르면 가늘게</div><div class="key"><b>💨</b>스프레이</div><div class="key"><b>🌈</b>무지개</div><div class="key"><b>✨</b>반짝이 별</div><div class="key"><b>💡</b>형광 빛</div><div class="key"><b>🪣</b>색칠통</div><div class="key"><b>🧽</b>지우개</div>
+          </div>
+          <p style="margin-top:10px;color:var(--sub)">굵기 막대로 펜 크기를 바꾸고, 🌈 동그라미를 누르면 원하는 색을 고를 수 있어요. 틀리면 <b>↶ 되돌리기</b>.</p></div>
+        <div class="box"><h3>크게 그리기</h3>
+          <ol class="steps"><li>두 손가락으로 벌리면 확대, 모으면 축소돼요. 두 손가락으로 끌면 옮겨져요.</li><li><b>⤢ 크게</b>를 누르면 화면이 가로로 돌아가요. 종이는 왼쪽, 도구는 오른쪽.</li><li><b>작게 보기</b>로 돌아와요.</li></ol></div>
+        <figure class="wide"><img src="guide/05_big.jpg" alt="가로 화면 크게 그리기" loading="lazy"><figcaption>가로 화면 크게 그리기</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="g" id="stage" style="--c:var(--sky-soft)">
+    <h2><i>🎪</i>무대</h2>
+    <p class="lead">살아난 친구들이 노는 곳이에요. 무대만 크게 보이고, 아래 동그란 버튼 5개로 놀아요.</p>
+    <div class="gbody">
+      <div class="figs">
+        <figure><img src="guide/06_alive.jpg" alt="공룡이 무대에 나온 화면" loading="lazy"><figcaption>살아난 공룡</figcaption></figure>
+      </div>
+      <div class="txt">
+        <div class="box"><h3>손가락으로 놀기</h3>
+          <ol class="steps" style="--c:var(--sky)"><li>친구를 <b>톡</b> 누르면 공중제비 점프!</li><li>빈 곳을 누르면 그 자리로 걸어가요.</li><li>무대에는 친구가 5명까지 나와요.</li></ol></div>
+        <div class="box"><h3>버튼 5개</h3>
+          <div class="keys">
+            <div class="key"><b>▶</b>연극 시작</div><div class="key"><b>●</b>영상 녹화 (30초)</div><div class="key"><b>🤖</b>자동으로 놀기</div><div class="key"><b>🔊</b>소리 켜고 끄기</div><div class="key"><b>📷</b>사진 찍기</div>
+          </div>
+          <p class="tip" style="margin-top:10px">녹화나 사진은 끝나면 바로 갤러리 저장·카톡 보내기 화면이 떠요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="g" id="play" style="--c:#EFE5FF">
+    <h2><i>🎭</i>연극</h2>
+    <p class="lead">대본을 쓰면 무대에서 친구들이 차례로 말해요. 무대 배경과 음악도 여기서 바꿔요.</p>
+    <div class="gbody">
+      <div class="figs">
+        <figure><img src="guide/07_script.jpg" alt="연극 대본 화면" loading="lazy"><figcaption>대본 쓰기</figcaption></figure>
+        <figure><img src="guide/02_play.jpg" alt="연극 중인 무대와 자막" loading="lazy"><figcaption>연극 중</figcaption></figure>
+      </div>
+      <div class="txt">
+        <div class="box" style="--c:var(--grape)"><h3>대본 쓰고 연극하기</h3>
+          <ol class="steps"><li>왼쪽에서 말할 친구를 고르고, 오른쪽에 대사를 적어요.</li><li><b>+ 대사 추가</b>로 줄을 늘려요.</li><li><b>▶ 무대에서 연극 시작</b>을 누르면 무대로 가서 목소리로 읽어줘요.</li></ol></div>
+        <div class="box"><h3>🎤 내 목소리로 말하기</h3>
+          <p>대사 옆 🎤를 누르고 말한 뒤 ■를 누르면 녹음돼요. 연극할 때 그 친구가 내 목소리로 말해요. (처음 한 번 마이크 허용)</p></div>
+        <div class="box"><h3>무대 배경</h3>
+          <div class="chips"><span class="chip">무대</span><span class="chip">들판</span><span class="chip">바닷가</span><span class="chip">눈 오는 날</span><span class="chip">밤하늘</span><span class="chip">우주</span><span class="chip">도화지</span></div>
+          <p style="margin-top:8px;color:var(--sub)">배경 음악 버튼으로 신나는 음악을 켤 수 있어요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="g" id="friends" style="--c:#E3F6EA">
+    <h2><i>🧸</i>친구들</h2>
+    <p class="lead">무대에 있는 친구를 꾸미고, 새 친구를 만들고, 만든 친구를 다시 불러와요.</p>
+    <div class="gbody">
+      <div class="figs">
+        <figure><img src="guide/08_friends.jpg" alt="친구 꾸미기 화면" loading="lazy"><figcaption>친구 꾸미기</figcaption></figure>
+      </div>
+      <div class="txt">
+        <div class="box" style="--c:var(--leaf)"><h3>친구 꾸미기</h3>
+          <ol class="steps"><li>위쪽 친구 그림을 눌러 꾸밀 친구를 골라요.</li><li>이름, 크기, 움직임(춤추기·걷기·점프 등 9가지)을 바꿔요.</li><li>소품으로 왕관·고깔모자·리본·꽃을 씌워요.</li><li><b>모두 같게</b>를 켜면 다 같이 같은 춤을 춰요.</li></ol></div>
+        <div class="box"><h3>종이 그림으로 친구 만들기</h3>
+          <p><b>그림 사진 올리기</b>로 종이에 그린 그림을 찍으면 배경을 오려서 친구로 만들어요. 흰 종이에 진하게, 밝은 곳에서 찍으면 잘 돼요.</p></div>
+        <div class="box"><h3>친구 상자</h3>
+          <p>만든 친구는 자동으로 보관돼요. 누르면 무대로 다시 나오고, ×로 지울 수 있어요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="g" id="update" style="--c:var(--pop-soft)">
+    <h2><i>🔄</i>업데이트</h2>
+    <div class="box"><ol class="steps" style="--c:var(--pop)"><li>앱을 켤 때 새 버전이 있으면 "새 버전이 나왔어요!" 창이 떠요.</li><li><b>업데이트</b>를 누르면 새 파일을 받아요.</li><li>받은 파일을 열어 설치하면 끝. 만든 친구들은 그대로 남아요.</li></ol>
+      <p style="margin-top:10px;color:var(--sub)">화면 왼쪽 아래 작은 숫자(예: v2.2)가 지금 버전이에요.</p></div>
+  </section>
+
+  <footer>Doodle v2.2 · <a href="index.html">앱 받기 페이지</a> · <a href="https://github.com/dlsdml99-create/doodle">소스 코드</a></footer>
+</main>
+</body></html>
