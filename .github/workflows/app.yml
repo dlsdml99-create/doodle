@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pages: write
+  id-token: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,8 +59,9 @@ jobs:
           sed -i "s/__VER__/$VER/g; s/__MB__/$MB/g" site/*.html
           printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk"><title>Doodle 받기</title><a href="https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk">Doodle.apk 받기</a>' > site/dl.html
           touch site/.nojekyll
-          cd site && git init -q -b gh-pages && git add -A && git -c user.name=bot -c user.email=bot@x commit -qm "site $VER"
-          git push -qf https://x-access-token:$T@github.com/${{ github.repository }} gh-pages
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
       - name: Error
         if: failure()
         env:
@@ -69,3 +72,12 @@ jobs:
           mkdir /tmp/lg && cp /tmp/build.log /tmp/lg/ && cd /tmp/lg
           git init -q -b build-log && git add . && git -c user.name=bot -c user.email=bot@x commit -qm log
           git push -qf https://x-access-token:$T@github.com/${{ github.repository }} build-log
+  pages:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
