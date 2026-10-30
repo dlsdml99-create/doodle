@@ -20,11 +20,13 @@ jobs:
           distribution: temurin
           java-version: 21
       - name: Build
+        env:
+          KEY_PASS: ${{ secrets.KEY_PASS }}
         run: |
           exec > >(tee /tmp/build.log) 2>&1
-          set -x
           mkdir -p www icons scripts ~/.android
           cp index.html icon-*.png www/
+          cp -r fonts www/
           cp ic_launcher*.png splash.png icons/
           cp apply-icons.sh scripts/
           cp debug.keystore ~/.android/ || true
@@ -40,8 +42,23 @@ jobs:
           sed -i "s/versionCode 1$/versionCode ${{ github.run_number }}/" app/build.gradle
           sed -i "s/versionName \"1.0\"/versionName \"${VER#v}\"/" app/build.gradle
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
-          cp app/build/outputs/apk/debug/app-debug.apk ../Doodle.apk
+          sed -i 's/minifyEnabled false/minifyEnabled true\n            shrinkResources true/' app/build.gradle
+          cat ../proguard-doodle.pro >> app/proguard-rules.pro
+          if [ -n "$KEY_PASS" ] && [ -f ../doodle.jks.enc ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in ../doodle.jks.enc -out "$RUNNER_TEMP/doodle.jks" -pass env:KEY_PASS
+            KS="$RUNNER_TEMP/doodle.jks"; KA=doodle; KP="$KEY_PASS"; echo "signing: release key"
+          else
+            KS="$HOME/.android/debug.keystore"; KA=androiddebugkey; KP=android; echo "signing: same key as before"
+          fi
+          { echo "android.injected.signing.store.file=$KS"; echo "android.injected.signing.store.password=$KP"
+            echo "android.injected.signing.key.alias=$KA"; echo "android.injected.signing.key.password=$KP"; } >> gradle.properties
+          if ! ./gradlew assembleRelease --no-daemon; then
+            echo "minify failed, retrying without it"
+            sed -i 's/minifyEnabled true/minifyEnabled false/; s/shrinkResources true/shrinkResources false/' app/build.gradle
+            ./gradlew assembleRelease --no-daemon
+          fi
+          cp app/build/outputs/apk/release/app-release.apk ../Doodle.apk
+          ls -l ../Doodle.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VER }}
