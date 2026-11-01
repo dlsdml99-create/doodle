@@ -147,6 +147,14 @@ header p{margin-right:52px!important}
 .tabbar button[aria-current="page"] b{filter:none;opacity:1}
 body{padding-block:14px 120px}
 .ver{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
+/* 작은 화면에서 옆으로 밀리지 않게: 긴 공룡 이름은 줄바꿈, 무대 버튼은 화면 폭에 맞춰 작아짐 */
+.wrap>*,.group,.dex,.dexc{min-width:0}
+#app>.tab{width:100%;box-sizing:border-box}
+.dex{grid-template-columns:repeat(auto-fill,minmax(min(76px,100%),1fr))}
+.dexc{overflow-wrap:anywhere;word-break:keep-all;text-align:center}
+.label{flex-wrap:wrap}
+.sbar{gap:clamp(6px,2.6vw,12px)}
+.sbar .ib{width:clamp(46px,14vw,56px);height:clamp(46px,14vw,56px)}
 /* 그리기 */
 .drawbox{display:flex;flex-direction:column;gap:10px}
 .dtop{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
@@ -275,6 +283,7 @@ body{padding-block:14px 120px}
     <div class="group">
       <div class="label">친구 꾸미기</div>
       <div class="friends" id="friends"></div>
+      <p class="note" id="noFriend" role="status" hidden>아직 무대에 친구가 없어요. 그리기 탭에서 그림을 그리고 <b>살아나라!</b>를 눌러 친구를 만들어 보세요.</p>
       <div class="panel">
         <div class="ctl"><span>이름</span><input type="text" id="name" maxlength="8" placeholder="뭉치"></div>
         <div class="ctl"><span>크기</span><input type="range" id="size" min="40" max="140" value="100" aria-label="크기"><span id="sizeV">100%</span></div>
@@ -357,7 +366,7 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="updLater">나중에</button><button class="btn main" id="updGo">업데이트</button></div>
   <p>업데이트를 누르면 새 앱 파일을 받아요. 받은 파일을 열어 설치하면 끝! 만든 친구들은 그대로 남아요.</p>
 </div></div>
-<div class="ver">v3.1</div>
+<div class="ver">v3.2</div>
 
 <script>
 (function(){
@@ -878,13 +887,16 @@ function renderFriends(){
     const im=document.createElement('img');im.src=c.thumb;im.alt='';b.appendChild(im);b.onclick=()=>select(c);el.appendChild(b)});
   renderLines();
 }
+/* 친구가 없을 때 꾸미기 버튼을 누르면 조용히 무시하지 말고 친구부터 만들라고 알려 준다 */
+function needFriend(){const none=!chars.length;const n=$('noFriend');if(n)n.hidden=!none;if(none)announce('먼저 친구를 만들어 주세요');return none}
 const propsEl=$('props');
 Object.entries(PROPS).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip sm';b.textContent=v;b.dataset.k=k;
-  b.onclick=()=>{if(sel){sel.prop=k;sfx.pop()}syncControls();announce(v)};propsEl.appendChild(b)});
+  b.onclick=()=>{if(needFriend())return;if(sel){sel.prop=k;sfx.pop()}syncControls();announce(v)};propsEl.appendChild(b)});
 const motionsEl=$('motions');
 Object.entries(MOTIONS).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip';b.textContent=v.name;b.dataset.k=k;
-  b.onclick=()=>{if(together)chars.forEach(c=>{c.motion=k;c.target=null});else if(sel){sel.motion=k;sel.target=null}syncControls();announce(v.name.replace('🦖 ',''))};motionsEl.appendChild(b)});
+  b.onclick=()=>{if(needFriend())return;if(together)chars.forEach(c=>{c.motion=k;c.target=null});else if(sel){sel.motion=k;sel.target=null}syncControls();announce(v.name.replace('🦖 ',''))};motionsEl.appendChild(b)});
 function syncControls(){
+  {const n=$('noFriend');if(n&&chars.length)n.hidden=true}
   [...motionsEl.children].forEach(b=>b.setAttribute('aria-pressed',String(!!sel&&sel.motion===b.dataset.k)));
   [...propsEl.children].forEach(b=>b.setAttribute('aria-pressed',String(!!sel&&sel.prop===b.dataset.k)));
   $('size').value=sel?Math.round(sel.scale*100):100;$('sizeV').textContent=$('size').value+'%';
@@ -1675,8 +1687,8 @@ requestAnimationFrame(loop);
 })();
 </script>
 <!--APPINFO--><script>
-window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.1", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
-window.APP_INFO.online=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.2", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
+window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
 </script>
 <script>
 /* ───── 앱 정보 창 (모든 앱 공통) ─────
