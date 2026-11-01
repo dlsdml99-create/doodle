@@ -21,15 +21,15 @@ jobs:
           java-version: 21
       - name: Build
         env:
-          KEY_PASS: ${{ secrets.KEY_PASS }}
+          SIGNING: ${{ secrets.DOODLE_SIGNING }}
         run: |
+          if [ -z "$SIGNING" ]; then echo "::error::서명 키 비밀값(DOODLE_SIGNING)이 없어요. 저장소 Settings → Secrets and variables → Actions 에 넣어 주세요."; exit 1; fi
           exec > >(tee /tmp/build.log) 2>&1
           mkdir -p www icons scripts ~/.android
           cp index.html icon-*.png www/
           cp -r fonts www/
           cp ic_launcher*.png splash.png icons/
           cp apply-icons.sh scripts/
-          cp debug.keystore ~/.android/ || true
           npm pkg delete dependencies.@capacitor-community/text-to-speech
           npm install --no-audit --no-fund
           for v in 4 5 3; do npm i --no-audit --no-fund --legacy-peer-deps @capacitor-community/text-to-speech@$v && break; done
@@ -44,12 +44,8 @@ jobs:
           chmod +x gradlew
           sed -i 's/minifyEnabled false/minifyEnabled true\n            shrinkResources true/' app/build.gradle
           cat ../proguard-doodle.pro >> app/proguard-rules.pro
-          if [ -n "$KEY_PASS" ] && [ -f ../doodle.jks.enc ]; then
-            openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in ../doodle.jks.enc -out "$RUNNER_TEMP/doodle.jks" -pass env:KEY_PASS
-            KS="$RUNNER_TEMP/doodle.jks"; KA=doodle; KP="$KEY_PASS"; echo "signing: release key"
-          else
-            KS="$HOME/.android/debug.keystore"; KA=androiddebugkey; KP=android; echo "signing: same key as before"
-          fi
+          KS="$RUNNER_TEMP/doodle.jks"; KA=doodle; KP="${SIGNING%%:*}"
+          echo "${SIGNING#*:}" | base64 -d > "$KS"; echo "signing: release key (secret)"
           { echo "android.injected.signing.store.file=$KS"; echo "android.injected.signing.store.password=$KP"
             echo "android.injected.signing.key.alias=$KA"; echo "android.injected.signing.key.password=$KP"; } >> gradle.properties
           if ! ./gradlew assembleRelease --no-daemon; then
