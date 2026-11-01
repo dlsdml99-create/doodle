@@ -152,6 +152,22 @@ body{padding-block:14px 120px}
 #app>.tab{width:100%;box-sizing:border-box}
 .dex{grid-template-columns:repeat(auto-fill,minmax(min(76px,100%),1fr))}
 .dexc{overflow-wrap:anywhere;word-break:keep-all;text-align:center}
+.stickers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.stk{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border:2px dashed var(--line);border-radius:14px;background:#fff;color:#8a93a6;font-size:12px;text-align:center;word-break:keep-all}
+.stk b{font-size:28px;line-height:1.1;filter:grayscale(1);opacity:.5}
+.stk.on{border-style:solid;border-color:#FFC83D;background:#FFF7DD;color:#1E2944}
+.stk.on b{filter:none;opacity:1}
+.stk small{font-size:11px;opacity:.8}
+.party{position:fixed;inset:0;z-index:2000;background:rgba(20,26,45,.55);display:grid;place-items:center;overflow:hidden;padding:20px}
+.party-in{position:relative;z-index:2;background:#fff;color:#1E2944;border:3px solid #1E2944;border-radius:26px;box-shadow:5px 5px 0 #1E2944;padding:22px 20px;max-width:320px;width:100%;text-align:center;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.party-in h2{margin:6px 0;font-family:var(--display);font-size:30px}
+.party-in p{margin:0 0 14px;line-height:1.6}
+.party-stk{font-size:76px;line-height:1;animation:wob 1.2s ease-in-out infinite}
+.party .cf{position:absolute;top:-12px;width:10px;height:14px;border-radius:3px;animation:fall linear forwards;z-index:1}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes wob{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.party .cf,.party-stk,.party-in{animation:none}}
 .label{flex-wrap:wrap}
 .sbar{gap:clamp(6px,2.6vw,12px)}
 .sbar .ib{width:clamp(46px,14vw,56px);height:clamp(46px,14vw,56px)}
@@ -276,6 +292,18 @@ body{padding-block:14px 120px}
   <!-- 탭 4: 친구들 -->
   <section id="tab-friends" class="wrap tab" hidden>
     <div class="group">
+      <div class="label">✨ 새 친구 만들기</div>
+      <div class="row">
+        <button class="btn main" id="goDraw">직접 그리기</button>
+        <label class="btn">그림 사진 올리기<input type="file" id="photo" accept="image/*"></label>
+      </div>
+      <p class="note">종이에 그린 그림을 찍어 올리면 배경을 오려내서 친구로 만들어요.</p>
+    </div>
+    <div class="group" id="stickerBox">
+      <div class="label">🏅 내 스티커 <span class="note" id="stickerCount"></span></div>
+      <div class="stickers" id="stickers"></div>
+    </div>
+    <div class="group">
       <div class="label">🦖 공룡 도감 <span class="note" id="dexCount"></span></div>
       <p class="note">공룡 밑그림을 색칠해서 살리면 칸이 채워져요. 빈 칸을 누르면 바로 색칠하러 가요.</p>
       <div class="dex" id="dex"></div>
@@ -295,14 +323,6 @@ body{padding-block:14px 120px}
           <button class="chip sm" id="remove">무대에서 내보내기</button>
         </div>
       </div>
-    </div>
-    <div class="group">
-      <div class="label">새 친구 만들기</div>
-      <div class="row">
-        <button class="btn main" id="goDraw">직접 그리기</button>
-        <label class="btn">그림 사진 올리기<input type="file" id="photo" accept="image/*"></label>
-      </div>
-      <p class="note">종이에 그린 그림을 찍어 올리면 배경을 오려내서 친구로 만들어요.</p>
     </div>
     <div class="group">
       <div class="label">내 친구 상자</div>
@@ -366,7 +386,7 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="updLater">나중에</button><button class="btn main" id="updGo">업데이트</button></div>
   <p>업데이트를 누르면 새 앱 파일을 받아요. 받은 파일을 열어 설치하면 끝! 만든 친구들은 그대로 남아요.</p>
 </div></div>
-<div class="ver">v3.2</div>
+<div class="ver">v3.3</div>
 
 <script>
 (function(){
@@ -1483,7 +1503,7 @@ function saveDex(){try{localStorage.setItem(DEX_KEY,JSON.stringify(dex))}catch(e
 const DINO_KEYS=Object.keys(DINO_INFO);
 function renderDex(){
   const el=$('dex');el.innerHTML='';const got=DINO_KEYS.filter(k=>dex[k]).length;
-  $('dexCount').textContent=got+' / '+DINO_KEYS.length;
+  $('dexCount').textContent=(got>=DINO_KEYS.length?'🏆 완성! ':'')+got+' / '+DINO_KEYS.length;
   DINO_KEYS.forEach(k=>{const b=document.createElement('button');b.className='dexc'+(dex[k]?' got':'');
     if(dex[k]){const im=document.createElement('img');im.src=dex[k].img;im.alt='';b.appendChild(im)}
     else{const c=document.createElement('canvas');c.width=200;c.height=180;LINEART.draw(c.getContext('2d'),k,200,180);b.appendChild(c);const q=document.createElement('i');q.textContent='?';b.appendChild(q)}
@@ -1499,7 +1519,37 @@ $('dexClose').onclick=()=>{$('dexBox').hidden=true};
 $('dexStage').onclick=async()=>{const k=dexOpen,d=dex[k];$('dexBox').hidden=true;const cv=await imgCanvas(d.img);
   addChar(cv,defaultMotion(k),sketchName(k),{kind:k,parts:d.parts});showTab('stage');toast.textContent=DINO_INFO[k][0]+' 등장! 크앙!'};
 $('dexReplay').onclick=()=>{const k=dexOpen;$('dexBox').hidden=true;goColor(k)};
-function dexAdd(k,c){const isNew=!dex[k];dex[k]={img:c.thumb,parts:c.parts||null};saveDex();renderDex();
+/* 도감 스티커: 3·6·9마리, 다 모으면(12) 공룡 박사 + 축하 화면 */
+const STICKERS=[[3,'🥚','아기 탐험가'],[6,'🦕','공룡 친구'],[9,'🧭','공룡 탐험대장'],[12,'🏆','공룡 박사']];
+function dexGot(){return DINO_KEYS.filter(k=>dex[k]).length}
+function renderStickers(){const box=$('stickers');if(!box)return;const got=dexGot();box.innerHTML='';
+  STICKERS.forEach(([n,e,name])=>{const on=got>=Math.min(n,DINO_KEYS.length);const d=document.createElement('div');d.className='stk'+(on?' on':'');
+    d.innerHTML='<b>'+(on?e:'🔒')+'</b><span>'+name+'</span><small>'+(on?'받았어요':n+'마리')+'</small>';d.setAttribute('aria-label',name+' 스티커 '+(on?'받음':n+'마리 모으면 받아요'));box.appendChild(d)});
+  $('stickerCount').textContent=STICKERS.filter(([n])=>got>=Math.min(n,DINO_KEYS.length)).length+' / '+STICKERS.length}
+function celebrate(all,st){
+  if(partyOpen)partyOpen();
+  const o=document.createElement('div');o.className='party';o.setAttribute('role','dialog');o.setAttribute('aria-label',all?'공룡 도감 완성':'새 스티커');
+  o.innerHTML='<div class="party-in"><div class="party-stk">'+st[1]+'</div><h2>'+(all?'공룡 도감 완성!':'새 스티커!')+'</h2><p>'+(all?'공룡 '+DINO_KEYS.length+'마리를 모두 모았어요.<br><b>'+st[2]+'</b> 스티커를 받았어요!':'공룡 '+st[0]+'마리를 모았어요.<br><b>'+st[2]+'</b> 스티커를 받았어요!')+'</p><button class="btn main" type="button">'+(all?'최고야!':'좋아요!')+'</button></div>';
+  for(let i=0;i<(all?60:28);i++){const c=document.createElement('i');c.className='cf';c.style.left=Math.random()*100+'%';c.style.background=['#FFC83D','#FF6B4A','#4CB3E8','#2FAE6B','#FF7DA0','#9B6BFF'][i%6];c.style.animationDelay=(Math.random()*1.2)+'s';c.style.animationDuration=(2.2+Math.random()*1.6)+'s';o.appendChild(c)}
+  const close=()=>{o.remove();partyOpen=null};o.querySelector('button').onclick=close;o.onclick=e=>{if(e.target===o)close()};partyOpen=close;
+  document.body.appendChild(o);try{sfx.pop()}catch(e){}
+  announce(all?'우와! 공룡 도감을 다 채웠어요! 공룡 박사 스티커를 받았어요!':st[2]+' 스티커를 받았어요!');
+  if(!all)setTimeout(()=>{if(o.isConnected)close()},4500)}
+let partyOpen=null;
+/* 휴대폰 뒤로 가기: 열린 창 → 크게 그리기 → 연극 멈춤 → 무대 탭 순서로 하나씩 닫고, 무대에서 누르면 앱을 닫는다 */
+window.onBackKey=()=>{
+  if(partyOpen){partyOpen();return true}
+  for(const id of ['upd','vidBox','shot','paperPreview','paperBox','sketchBox','rigBox','dexBox']){const b=$(id);
+    if(b&&!b.hidden){const c=b.querySelector('[id$="Close"],[id$="Later"],.close,[aria-label="닫기"]');if(c)c.click();else b.hidden=true;return true}}
+  if($('drawbox')&&$('drawbox').classList.contains('big')){setBig(false);return true}
+  if(playing){stopPlay();return true}
+  const cur=Object.keys(TAB_NAMES).find(k=>!$('tab-'+k).hidden);
+  if(cur&&cur!=='stage'){showTab('stage');return true}
+  return false};
+if(CAP&&CAP.App&&CAP.App.addListener)CAP.App.addListener('backButton',()=>{let h=false;try{h=window.onBackKey&&window.onBackKey()}catch(e){}if(!h)CAP.App.exitApp()});
+function dexAdd(k,c){const before=dexGot();const isNew=!dex[k];dex[k]={img:c.thumb,parts:c.parts||null};saveDex();renderDex();renderStickers();
+  if(isNew){const got=dexGot(),st=STICKERS.find(([n])=>before<Math.min(n,DINO_KEYS.length)&&got>=Math.min(n,DINO_KEYS.length));
+    if(st)setTimeout(()=>celebrate(got>=DINO_KEYS.length,st),1600)}
   if(isNew){setTimeout(()=>{toast.textContent='🦖 새 공룡! 도감에 '+DINO_INFO[k][0]+' 칸이 채워졌어요';announce(josa(DINO_INFO[k][0],'을','를')+' 도감에 모았어요!')},900);
     for(let i=0;i<24;i++)particles.push({x:VW/2,y:VH*0.4,vx:(Math.random()-.5)*600,vy:-Math.random()*420-60,life:1.4,c:['#FFC83D','#FF6B4A','#4CB3E8','#2FAE6B','#FF7DA0'][i%5]})}}
 function imgCanvas(src){return new Promise(res=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);res(c)};im.onerror=()=>res(null);im.src=src})}
@@ -1680,14 +1730,14 @@ setTimeout(checkUpdate,1500);
 (async()=>{
   const ok=await restoreStage();
   // 처음 열면 빈 무대에서 시작 (예시 친구를 미리 넣지 않음)
-  renderBox();renderDex();restoreDraw();
+  renderBox();renderDex();renderStickers();restoreDraw();
   toast.textContent=ok?'친구를 톡 누르면 점프, 빈 곳을 누르면 걸어가요!':'그림을 그리거나 찍어서 첫 친구를 만들어 보세요!';
 })();
 requestAnimationFrame(loop);
 })();
 </script>
 <!--APPINFO--><script>
-window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.2", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
+window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.3", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
 window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
 </script>
 <script>
