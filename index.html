@@ -170,6 +170,8 @@ body{padding-block:14px 120px}
 @media (prefers-reduced-motion:reduce){.party .cf,.party-stk,.party-in{animation:none}}
 .label{flex-wrap:wrap}
 .sbar{gap:clamp(6px,2.6vw,12px)}
+.dzoom{display:flex;flex-wrap:wrap;gap:6px}.dzoom .chip{white-space:nowrap}
+@media (max-width:360px){.dzoom .chip{padding-inline:10px;font-size:13px}}
 .sbar .ib{width:clamp(46px,14vw,56px);height:clamp(46px,14vw,56px)}
 /* 그리기 */
 .drawbox{display:flex;flex-direction:column;gap:10px}
@@ -234,7 +236,7 @@ body{padding-block:14px 120px}
   <section id="tab-draw" class="wrap tab" hidden>
     <div class="drawbox" id="drawbox">
       <div class="dtop">
-        <div class="dzoom"><button class="chip sm" id="sketchBtn">밑그림 고르기</button><button class="chip sm" id="paperBtn">🖨️ 종이 색칠</button></div>
+        <div class="dzoom"><button class="chip sm" id="sketchBtn">밑그림 고르기</button><button class="chip sm" id="paperBtn">🖨️ 종이 색칠</button><button class="chip sm" id="drawPhoto">📷 그림 사진</button></div>
         <div class="dzoom">
           <button class="chip sm" id="zoomOut" aria-label="축소">−</button>
           <button class="chip sm" id="zoomReset">맞춤</button>
@@ -386,7 +388,7 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="updLater">나중에</button><button class="btn main" id="updGo">업데이트</button></div>
   <p>업데이트를 누르면 새 앱 파일을 받아요. 받은 파일을 열어 설치하면 끝! 만든 친구들은 그대로 남아요.</p>
 </div></div>
-<div class="ver">v3.3</div>
+<div class="ver">v3.4</div>
 
 <script>
 (function(){
@@ -1067,14 +1069,16 @@ function renderBox(){
 }
 
 /* ================= 사진 올리기 ================= */
+/* 그리기 탭에서도 종이에 그린 그림 사진으로 친구 만들기 (친구들 탭의 '그림 사진 올리기'와 같은 기능) */
+$('drawPhoto').onclick=()=>{announce('종이에 그린 그림을 찍어요');$('photo').click()};
 $('photo').addEventListener('change',e=>{
   const f=e.target.files&&e.target.files[0];if(!f)return;
   toast.textContent='그림을 오려내는 중이에요…';
   const img=new Image(),url=URL.createObjectURL(f);
   img.onload=()=>{const s=makeSprite(img);URL.revokeObjectURL(url);
     if(s){const c=addChar(s);storeFriend(c);showTab('stage');toast.textContent='살아났어요! 친구들 탭에서 이름과 움직임을 바꿀 수 있어요.'}
-    else toast.textContent='그림을 찾지 못했어요. 흰 종이에 진하게 그린 그림을 밝은 곳에서 찍어 주세요.';e.target.value=''};
-  img.onerror=()=>{toast.textContent='사진을 열 수 없어요. 다른 사진으로 해 볼까요?'};
+    else {toast.textContent='그림을 찾지 못했어요. 흰 종이에 진하게 그린 그림을 밝은 곳에서 찍어 주세요.';toast2(toast.textContent)}e.target.value=''};
+  img.onerror=()=>{toast.textContent='사진을 열 수 없어요. 다른 사진으로 해 볼까요?';toast2(toast.textContent)};
   img.src=url;
 });
 
@@ -1737,7 +1741,7 @@ requestAnimationFrame(loop);
 })();
 </script>
 <!--APPINFO--><script>
-window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.3", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
+window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.4", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
 window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
 </script>
 <script>
