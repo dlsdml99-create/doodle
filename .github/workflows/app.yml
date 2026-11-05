@@ -56,6 +56,8 @@ jobs:
             sed -i 's/minifyEnabled true/minifyEnabled false/; s/shrinkResources true/shrinkResources false/' app/build.gradle
             ./gradlew assembleRelease --no-daemon
           fi
+          # 보안: 서명 키 파일과 비밀번호 줄은 빌드가 끝나면 바로 지움
+          rm -f "$KS"; sed -i '/android.injected.signing/d' gradle.properties
           cp app/build/outputs/apk/release/app-release.apk ../Doodle.apk
           ls -l ../Doodle.apk
       - uses: softprops/action-gh-release@v2
