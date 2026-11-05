@@ -119,7 +119,7 @@ body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea{-webkit-user-select:text;user-select:text}
 /* v3 */
 header{position:relative}
-.hbtn{position:absolute;right:0;top:-2px;width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:var(--card);font-size:20px;cursor:pointer;padding:0}
+.hbtn{position:absolute;right:0;top:-2px;min-width:44px;width:auto;height:44px;border-radius:22px;white-space:nowrap;border:2px solid var(--ink);background:var(--card);font-size:17px;font-weight:700;color:var(--ink);cursor:pointer;padding:0 10px}
 .hbtn[aria-pressed="false"]{opacity:.55}
 header p{margin-right:52px!important}
 .dex{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
@@ -134,7 +134,6 @@ header p{margin-right:52px!important}
 .psteps{margin:0;padding-left:20px;color:var(--ink);font-size:15px;line-height:1.6}
 .ln.scene{grid-template-columns:auto 1fr auto;background:var(--chip);border-color:var(--line)}
 .ln.scene b{font-family:var(--display);font-size:19px;padding:0 4px;white-space:nowrap}
-#paperPreview{width:100%;max-height:45vh;object-fit:contain;background:#fff;border-radius:10px}
 .sketchcard{overflow:auto}
 .shot .sketchcard p.note{color:var(--muted)}
 .wrapbtns{display:flex;flex-wrap:wrap;gap:8px}
@@ -206,7 +205,6 @@ body{padding-block:14px 120px}
 .skgrid button{background:#fff;border:2px solid var(--line);border-radius:12px;padding:4px;cursor:pointer;color:#222;font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center}
 .skgrid canvas{width:100%;height:auto}
 #cutCv{width:100%;height:auto;max-height:56vh;object-fit:contain;border-radius:12px;background:#fff;border:2px solid var(--line);touch-action:none;display:block}
-#skPhoto{width:100%}
 .mysk{position:relative}.mysk img{width:100%;height:auto;display:block}
 .mysk .x{position:absolute;top:2px;right:2px;width:26px;height:26px;border-radius:50%;background:#1E2944;color:#fff;display:grid;place-items:center;font-size:16px;line-height:1}
 @media (prefers-reduced-motion: reduce){.btn:active{transform:none}}
@@ -216,7 +214,7 @@ body{padding-block:14px 120px}
   <header>
     <h1>Doo<span>dle</span></h1>
     <p id="tabTitle">무대</p>
-    <button class="hbtn" id="readBtn" aria-pressed="true" aria-label="말로 알려주기">🗣️</button>
+    <button class="hbtn" id="readBtn" aria-pressed="true" aria-label="말로 알려주기: 한국어">🗣️ 한</button>
   </header>
 
   <!-- 탭 1: 무대 (무대만) -->
@@ -240,7 +238,7 @@ body{padding-block:14px 120px}
   <section id="tab-draw" class="wrap tab" hidden>
     <div class="drawbox" id="drawbox">
       <div class="dtop">
-        <div class="dzoom"><button class="chip sm" id="sketchBtn">밑그림 고르기</button><button class="chip sm" id="paperBtn">🖨️ 종이 색칠</button><button class="chip sm" id="drawPhoto">📷 그림 사진</button></div>
+        <div class="dzoom"><button class="chip sm" id="sketchBtn">밑그림 고르기</button><button class="chip sm" id="drawPhoto">📷 그림 사진</button></div>
         <div class="dzoom">
           <button class="chip sm" id="zoomOut" aria-label="축소">−</button>
           <button class="chip sm" id="zoomReset">맞춤</button>
@@ -301,9 +299,9 @@ body{padding-block:14px 120px}
       <div class="label">✨ 새 친구 만들기</div>
       <div class="row">
         <button class="btn main" id="goDraw">직접 그리기</button>
-        <label class="btn">그림 사진 올리기<input type="file" id="photo" accept="image/*"></label>
+        <button class="btn" id="photoBtn" type="button">📷 그림 사진</button>
       </div>
-      <p class="note">종이에 그린 그림을 찍어 올리면 배경을 오려내서 친구로 만들어요.</p>
+      <p class="note">사진을 찍거나 앨범에서 고른 뒤, 원하는 곳만 손가락으로 둘러 그리기 화면으로 가져와요.</p>
     </div>
     <div class="group" id="stickerBox">
       <div class="label">🏅 내 스티커 <span class="note" id="stickerCount"></span></div>
@@ -360,30 +358,20 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="dexReplay">다시 색칠하기</button><button class="btn main" id="dexStage">무대로 데려가기</button></div>
   <button class="chip sm" id="dexClose">닫기</button>
 </div></div>
-<div class="shot" id="paperBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="paperTitle">
-  <h2 id="paperTitle">종이 색칠 놀이</h2>
-  <ol class="psteps"><li>밑그림을 골라 종이로 뽑아요</li><li>크레용으로 색칠해요</li><li>네 귀퉁이 까만 네모가 다 보이게 찍어요</li></ol>
-  <div class="row"><button class="btn" id="paperPrint">🖨️ 밑그림 뽑기</button><label class="btn main">📷 색칠한 종이 찍기<input type="file" id="paperPhoto" accept="image/*" capture="environment"></label></div>
-  <p class="note" id="paperMsg" aria-live="polite"></p>
-  <img id="paperPreview" hidden alt="인쇄용 밑그림">
-  <button class="chip sm" id="paperClose">닫기</button>
-</div></div>
 <div class="shot" id="sketchBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="skTitle">
   <h2 id="skTitle">밑그림 고르기</h2>
-  <button class="btn main" id="skPhoto" type="button">📸 사진으로 밑그림 만들기</button>
   <div class="chips" id="skCats"></div>
   <div class="skgrid" id="skGrid"></div>
   <div class="row"><button class="btn" id="skNone">밑그림 없이</button><button class="btn" id="skClose">닫기</button></div>
 </div></div>
 
 <div class="shot" id="cutBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="cutTitle">
-  <h2 id="cutTitle">사진으로 밑그림</h2>
+  <h2 id="cutTitle">사진으로 그리기</h2>
+  <div class="row" id="cutPick"><label class="btn main">📷 사진 찍기<input type="file" id="camIn" accept="image/*" capture="environment"></label><label class="btn">🖼️ 앨범<input type="file" id="albumIn" accept="image/*"></label></div>
   <p class="note" id="cutMsg" aria-live="polite"></p>
-  <canvas id="cutCv" width="500" height="450" aria-label="사진에서 고르기"></canvas>
-  <div class="chips" id="cutLevels" hidden><button class="chip sm" data-l="0" aria-pressed="false">선 적게</button><button class="chip sm" data-l="1" aria-pressed="true">보통</button><button class="chip sm" data-l="2" aria-pressed="false">선 많이</button></div>
-  <div class="row"><button class="btn" id="cutAuto" type="button">✨ 자동으로</button><button class="btn" id="cutAgain" type="button" hidden>다시 고르기</button><button class="btn main" id="cutUse" type="button" hidden>이걸로 색칠하기</button></div>
+  <canvas id="cutCv" width="500" height="450" aria-label="사진에서 고르기" hidden></canvas>
+  <div class="row" id="cutBtns" hidden><button class="btn" id="cutAll" type="button">사진 전체</button><button class="btn" id="cutAgain" type="button" hidden>다시 고르기</button><button class="btn main" id="cutUse" type="button" hidden>이걸로 그리기</button></div>
   <button class="chip sm" id="cutClose">닫기</button>
-  <input type="file" id="cutFile" accept="image/*" hidden>
 </div></div>
 <div class="shot" id="shot" hidden><div>
   <img id="shotImg" alt="무대 사진">
@@ -402,7 +390,7 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="updLater">나중에</button><button class="btn main" id="updGo">업데이트</button></div>
   <p>업데이트를 누르면 새 앱 파일을 받아요. 받은 파일을 열어 설치하면 끝! 만든 친구들은 그대로 남아요.</p>
 </div></div>
-<div class="ver">v3.6</div>
+<div class="ver">v3.7</div>
 
 <script>
 (function(){
@@ -449,8 +437,8 @@ function babble(text,c){
 }
 // 기기 목소리(TTS): 되면 진짜 목소리, 안 되면 말소리로 자동 전환
 const hasTTS='speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
-let ttsBroken=!hasTTS, koVoice=null;
-function pickVoice(){try{const v=speechSynthesis.getVoices();koVoice=v.find(x=>/^ko/i.test(x.lang))||null}catch(e){}}
+let ttsBroken=!hasTTS, koVoice=null, enVoice=null;
+function pickVoice(){try{const v=speechSynthesis.getVoices();koVoice=v.find(x=>/^ko/i.test(x.lang))||null;enVoice=v.find(x=>/^en[-_]US/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null}catch(e){}}
 if(hasTTS){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
 const PITCH=[1.4,0.75,1.8,1.05,1.6];
 // 앱(APK)에서는 폰의 기본 음성 엔진으로 진짜 목소리를 냄
@@ -524,62 +512,6 @@ function makeSprite(src){
   return out;
 }
 
-/* 스케치북·종이 사진 오리기: 그림자·누런 종이·책상·스프링을 빼고 그림만 남겨요 (폰 안에서만 계산) */
-function photoCut(src){
-  const max=520,sc=Math.min(1,max/Math.max(src.width,src.height)),w=Math.max(1,Math.round(src.width*sc)),h=Math.max(1,Math.round(src.height*sc));
-  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(src,0,0,w,h);
-  const im=x.getImageData(0,0,w,h),d=im.data,N=w*h,L=new Float32Array(N),C=new Float32Array(N);
-  for(let q=0,k=0;q<N;q++,k+=4){const r=d[k],g=d[k+1],b=d[k+2];L[q]=0.299*r+0.587*g+0.114*b;C[q]=Math.max(r,g,b)-Math.min(r,g,b)}
-  // 주변 밝기(종이 밝기)와 비교해서 진한 곳만 그림으로 (그림자처럼 천천히 어두워지는 곳은 무시)
-  const integ=(v,m)=>{const I=new Float64Array((w+1)*(h+1));for(let j=0;j<h;j++){let row=0;for(let i=0;i<w;i++){const q=j*w+i;row+=m?(m[q]?v[q]:0):v[q];I[(j+1)*(w+1)+i+1]=I[j*(w+1)+i+1]+row}}return I};
-  const box=(I,i,j,R)=>{const a=Math.max(0,i-R),b=Math.max(0,j-R),e=Math.min(w,i+R+1),f=Math.min(h,j+R+1);return [I[f*(w+1)+e]-I[b*(w+1)+e]-I[f*(w+1)+a]+I[b*(w+1)+a],(e-a)*(f-b)]};
-  const R=Math.max(8,Math.round(Math.min(w,h)/18)),IL=integ(L),IC=integ(C),ink=new Uint8Array(N);
-  for(let j=0;j<h;j++)for(let i=0;i<w;i++){const q=j*w+i,[sl,n]=box(IL,i,j,R),[scc]=box(IC,i,j,R);
-    if(L[q]<sl/n-22||C[q]>scc/n+38)ink[q]=1}
-  // 끊어진 선을 잇고(조금 굵게) 덩어리 나누기
-  const r=Math.max(2,Math.round(Math.min(w,h)*0.012)),dil=new Uint8Array(N),tmp=new Uint8Array(N);
-  for(let j=0;j<h;j++){let last=-1e9;for(let i=0;i<w;i++){if(ink[j*w+i])last=i;if(i-last<=r)tmp[j*w+i]=1}last=1e9;for(let i=w-1;i>=0;i--){if(ink[j*w+i])last=i;if(last-i<=r)tmp[j*w+i]=1}}
-  for(let i=0;i<w;i++){let last=-1e9;for(let j=0;j<h;j++){if(tmp[j*w+i])last=j;if(j-last<=r)dil[j*w+i]=1}last=1e9;for(let j=h-1;j>=0;j--){if(tmp[j*w+i])last=j;if(last-j<=r)dil[j*w+i]=1}}
-  const lab=new Int32Array(N),comps=[];let id=0;
-  for(let s0=0;s0<N;s0++){if(!dil[s0]||lab[s0])continue;id++;const st=[s0];lab[s0]=id;let a=0,x0=w,y0=h,x1=0,y1=0,inkA=0;
-    while(st.length){const q=st.pop(),i=q%w,j=(q/w)|0;a++;if(ink[q])inkA++;if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j;
-      if(i>0&&dil[q-1]&&!lab[q-1]){lab[q-1]=id;st.push(q-1)}if(i<w-1&&dil[q+1]&&!lab[q+1]){lab[q+1]=id;st.push(q+1)}
-      if(j>0&&dil[q-w]&&!lab[q-w]){lab[q-w]=id;st.push(q-w)}if(j<h-1&&dil[q+w]&&!lab[q+w]){lab[q+w]=id;st.push(q+w)}}
-    const edge=x0<=1||y0<=1||x1>=w-2||y1>=h-2;comps.push({id,a,inkA,x0,y0,x1,y1,edge})}
-  // 종이 테두리(책상과 종이 경계·스프링)처럼 가장자리만 있는 큰 액자 모양은 빼기
-  comps.forEach(o=>{const bw=o.x1-o.x0+1,bh=o.y1-o.y0+1;if(bw*bh<N*0.2)return;let nc=0,ni=0;
-    let cc=0,cn=0;
-    for(let j=o.y0;j<=o.y1;j+=2)for(let i=o.x0;i<=o.x1;i+=2){const q=j*w+i,inC=Math.abs(i-(o.x0+o.x1)/2)<bw*0.3&&Math.abs(j-(o.y0+o.y1)/2)<bh*0.3;
-      if(inC&&!ink[q]){cc+=C[q];cn++}if(lab[q]!==o.id||!ink[q])continue;ni++;if(inC)nc++}
-    if(ni&&nc/ni<0.08&&(!cn||cc/cn<55)){o.edge=true;o.frame=true}});
-  const big=comps.filter(o=>o.inkA>N*0.0015);let pool=big.filter(o=>!o.edge);if(!pool.length)pool=big;if(!pool.length)return null;
-  const cxw=w/2,cyw=h/2,score=o=>o.inkA/(1+Math.hypot((o.x0+o.x1)/2-cxw,(o.y0+o.y1)/2-cyw)/Math.min(w,h));
-  const main=pool.reduce((m,o)=>score(o)>score(m)?o:m),mw=main.x1-main.x0,mh=main.y1-main.y0;
-  // 그림이 사진 밖으로 꽉 차게 찍혔으면(가장자리에 닿은 큰 그림) 예전 방식으로
-  if(big.reduce((t,o)=>t+(o.edge&&!o.frame?o.inkA:0),0)>main.inkA*2)return null;
-  const keep=new Set([main.id]);pool.forEach(o=>{if(o.inkA>main.inkA*0.03&&o.x0>=main.x0-mw*0.15&&o.x1<=main.x1+mw*0.15&&o.y0>=main.y0-mh*0.15&&o.y1<=main.y1+mh*0.15)keep.add(o.id)});
-  // 바깥에서 들어갈 수 없는 안쪽(그림 속 흰 부분)은 그림으로 남기기
-  const out=new Uint8Array(N),st=[],obj=q=>keep.has(lab[q]);
-  const push=q=>{if(out[q]||obj(q))return;out[q]=1;st.push(q)};
-  for(let i=0;i<w;i++){push(i);push((h-1)*w+i)}for(let j=0;j<h;j++){push(j*w);push(j*w+w-1)}
-  while(st.length){const q=st.pop(),i=q%w,j=(q/w)|0;if(i>0)push(q-1);if(i<w-1)push(q+1);if(j>0)push(q-w);if(j<h-1)push(q+w)}
-  // 바깥 종이 색을 칸마다 재서(그림 속은 가까운 칸 값으로 채움) 종이색은 하얗게, 그림 색은 그림자만큼 밝게
-  const G=12,gw=Math.ceil(w/G),gh=Math.ceil(h/G),gs=new Float32Array(gw*gh*3),gc=new Float32Array(gw*gh);
-  for(let q=0;q<N;q++)if(out[q]&&!ink[q]){const g=((q/w|0)/G|0)*gw+((q%w)/G|0),k=q*4;gs[g*3]+=d[k];gs[g*3+1]+=d[k+1];gs[g*3+2]+=d[k+2];gc[g]++}
-  const has=new Uint8Array(gw*gh);let left=0;for(let g=0;g<gw*gh;g++){if(gc[g]>G*G*0.2){gs[g*3]/=gc[g];gs[g*3+1]/=gc[g];gs[g*3+2]/=gc[g];has[g]=1}else left++}
-  if(left===gw*gh){gs.fill(235);has.fill(1);left=0}
-  while(left>0){const nx=has.slice();let ch=0;for(let gy=0;gy<gh;gy++)for(let gx=0;gx<gw;gx++){const g=gy*gw+gx;if(has[g])continue;let r0=0,g0=0,b0=0,n=0;
-      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const X=gx+dx,Y=gy+dy;if(X<0||Y<0||X>=gw||Y>=gh)continue;const o=Y*gw+X;if(!has[o])continue;r0+=gs[o*3];g0+=gs[o*3+1];b0+=gs[o*3+2];n++}
-      if(n){gs[g*3]=r0/n;gs[g*3+1]=g0/n;gs[g*3+2]=b0/n;nx[g]=1;ch++}}has.set(nx);left-=ch;if(!ch)break}
-  let any=0;
-  for(let j=0;j<h;j++)for(let i=0;i<w;i++){const q=j*w+i,k=q*4;if(out[q]){d[k+3]=0;continue}any++;
-    const fx=Math.max(0,Math.min(gw-1.001,i/G-0.5)),fy=Math.max(0,Math.min(gh-1.001,j/G-0.5)),x0=fx|0,y0=fy|0,x1=Math.min(gw-1,x0+1),y1=Math.min(gh-1,y0+1),ax=fx-x0,ay=fy-y0,bl=c=>(gs[(y0*gw+x0)*3+c]*(1-ax)+gs[(y0*gw+x1)*3+c]*ax)*(1-ay)+(gs[(y1*gw+x0)*3+c]*(1-ax)+gs[(y1*gw+x1)*3+c]*ax)*ay,pr=bl(0),pg=bl(1),pb=bl(2),pL=0.299*pr+0.587*pg+0.114*pb;
-    if(!ink[q]&&Math.hypot(d[k]-pr,d[k+1]-pg,d[k+2]-pb)<55){d[k]=d[k+1]=d[k+2]=255;continue}
-    const f=Math.min(1.8,Math.max(1,235/Math.max(60,pL)));d[k]=Math.min(255,d[k]*f);d[k+1]=Math.min(255,d[k+1]*f);d[k+2]=Math.min(255,d[k+2]*f)}
-  if(any<N*0.004)return null;
-  x.putImageData(im,0,0);return c;
-}
-
 /* ================= 예시 친구들 ================= */
 function sampleA(){
   const c=document.createElement('canvas'); c.width=420; c.height=520;
@@ -648,7 +580,7 @@ const DINO_INFO={
 };
 const FACE={trex:1,ptera:1};
 function josa(w,a,b){const c=w.charCodeAt(w.length-1);if(c<0xAC00||c>0xD7A3)return w+b;return w+((c-0xAC00)%28?a:b)}
-function sketchName(k){if(isMySk(k))return '사진 밑그림';for(const g of LINEART.LIST)for(const [kk,n] of g.items)if(kk===k)return n;return k}
+function sketchName(k){for(const g of LINEART.LIST)for(const [kk,n] of g.items)if(kk===k)return n;return k}
 function speakName(k){return DINO_INFO[k]?DINO_INFO[k][0]:sketchName(k)}
 
 /* --- 공룡 움직임 4가지 --- */
@@ -669,12 +601,35 @@ function dust(x){for(let i=0;i<7;i++)particles.push({x:x+(Math.random()-.5)*60,y
 
 /* --- 읽어주기 --- */
 let readOn=(()=>{try{return localStorage.getItem('doodle-read')!=='0'}catch(e){return true}})();
-function setReadBtn(){const b=$('readBtn');b.setAttribute('aria-pressed',readOn);b.textContent=readOn?'🗣️':'🤐';b.setAttribute('aria-label',readOn?'말로 알려주기 켜짐':'말로 알려주기 꺼짐')}
-$('readBtn').onclick=()=>{readOn=!readOn;try{localStorage.setItem('doodle-read',readOn?'1':'0')}catch(e){}setReadBtn();if(readOn)announce('말로 알려줄게요')};
+/* 말로 알려주기: 한국어 / English / 끄기 (버튼을 누를 때마다 차례로) */
+let voiceLang=(()=>{try{return localStorage.getItem('doodle-voice')==='en'?'en':'ko'}catch(e){return 'ko'}})();
+function setReadBtn(){const b=$('readBtn');b.setAttribute('aria-pressed',readOn);b.textContent=readOn?(voiceLang==='en'?'🗣️ EN':'🗣️ 한'):'🤐';
+  b.setAttribute('aria-label',readOn?(voiceLang==='en'?'말로 알려주기: 영어':'말로 알려주기: 한국어'):'말로 알려주기 꺼짐')}
+$('readBtn').onclick=()=>{if(!readOn){readOn=true;voiceLang='ko'}else if(voiceLang==='ko')voiceLang='en';else readOn=false;
+  try{localStorage.setItem('doodle-read',readOn?'1':'0');localStorage.setItem('doodle-voice',voiceLang)}catch(e){}setReadBtn();
+  if(readOn)announce('한국어로 말할게요',"I'll speak English!");else{try{if(NTTS)NTTS.stop().catch(()=>{});else if(hasTTS)speechSynthesis.cancel()}catch(e){}}};
 setReadBtn();
-function announce(text){if(!readOn||!soundOn||playing||!text)return;
-  try{if(NTTS){NTTS.stop().catch(()=>{}).then(()=>NTTS.speak({text,lang:'ko-KR',rate:1.0,pitch:1.15,volume:1.0,category:'playback'})).catch(()=>{});return}
-    if(hasTTS&&!ttsBroken){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ko-KR';if(koVoice)u.voice=koVoice;u.rate=1;u.pitch=1.15;speechSynthesis.speak(u)}}catch(e){}}
+function announce(ko,en){if(!readOn||!soundOn||playing)return;const isEn=voiceLang==='en',text=isEn?en:ko;if(!text)return;const lang=isEn?'en-US':'ko-KR';
+  try{if(NTTS){NTTS.stop().catch(()=>{}).then(()=>NTTS.speak({text,lang,rate:isEn?0.9:1.0,pitch:1.15,volume:1.0,category:'playback'})).catch(()=>{});return}
+    if(hasTTS&&!ttsBroken){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;const v=isEn?enVoice:koVoice;if(v)u.voice=v;u.rate=isEn?0.9:1;u.pitch=1.15;speechSynthesis.speak(u)}}catch(e){}}
+/* 영어로 말할 때 쓰는 이름들 */
+const TAB_EN={stage:'Stage',draw:'Draw',play:'Play',friends:'Friends'};
+const PEN_EN={pencil:'Pencil',crayon:'Crayon',marker:'Marker',brush:'Brush',spray:'Spray',rainbow:'Rainbow',glitter:'Glitter',neon:'Neon',fill:'Paint bucket',eraser:'Eraser'};
+const PROP_EN={none:'No hat',crown:'Crown',party:'Party hat',bow:'Bow',flower:'Flower'};
+const MOTION_EN={dance:'Dance',walk:'Walk',jump:'Jump',jelly:'Wobble',hello:'Say hello',spin:'Spin',sleep:'Sleep',scared:'Shiver',fly:'Float',stomp:'Stomp',roar:'Roar!',tail:'Wag your tail',flap:'Flap your wings'};
+const SCENE_EN={theater:'Theater',field:'Field',sea:'Beach',snow:'Snowy day',night:'Night sky',space:'Space',paper:'Paper'};
+const CAT_EN={'공룡':'Dinosaurs','12간지':'Zodiac animals','동화 나라':'Fairy tale land'};
+const RIG_EN={arm:'Hands',leg:'Feet',head:'Head',tail:'Tail',wing:'Wings'};
+const NAME_EN={trex:'Tyrannosaurus',triceratops:'Triceratops',brachio:'Brachiosaurus',stego:'Stegosaurus',ankylo:'Ankylosaurus',pachy:'Pachycephalosaurus',
+  ptera:'Pteranodon',spino:'Spinosaurus',parasaur:'Parasaurolophus',raptor:'Velociraptor',egg:'Baby dinosaur',mosa:'Mosasaurus',
+  rat:'Mouse',ox:'Cow',tiger:'Tiger',rabbit:'Rabbit',dragon:'Dragon',snake:'Snake',horse:'Horse',sheep:'Sheep',monkey:'Monkey',rooster:'Rooster',dog:'Dog',pig:'Pig',
+  princess:'Princess',robot:'Robot',unicorn:'Unicorn',castle:'Castle'};
+const FACT_EN={trex:'Its teeth were as big as bananas.',triceratops:'It had three horns on its face.',brachio:'Its neck was so long it ate leaves from tall trees.',
+  stego:'It had big plates along its back.',ankylo:'It had a hard club at the end of its tail.',pachy:'Its skull was very thick and hard.',
+  ptera:'It was a flying reptile. Not a dinosaur!',spino:'It had a big sail on its back and ate fish.',parasaur:'It may have made a toot sound with its crest.',
+  raptor:'It was as small as a turkey and very fast.',egg:'Dinosaurs hatched from eggs.',mosa:'It was a big reptile that lived in the sea. Not a dinosaur!'};
+const STICKER_EN={'아기 탐험가':'Little explorer','공룡 친구':'Dino buddy','공룡 탐험대장':'Dino expedition leader','공룡 박사':'Dino expert'};
+const nameEn=k=>NAME_EN[k]||'';
 
 /* --- 팔다리 (관절) --- */
 // 밑그림(1000x900) 기준 관절: a=끝, b=돌아가는 점, r=굵기 / poly=모양
@@ -960,13 +915,13 @@ function renderFriends(){
   renderLines();
 }
 /* 친구가 없을 때 꾸미기 버튼을 누르면 조용히 무시하지 말고 친구부터 만들라고 알려 준다 */
-function needFriend(){const none=!chars.length;const n=$('noFriend');if(n)n.hidden=!none;if(none)announce('먼저 친구를 만들어 주세요');return none}
+function needFriend(){const none=!chars.length;const n=$('noFriend');if(n)n.hidden=!none;if(none)announce('먼저 친구를 만들어 주세요','Make a friend first');return none}
 const propsEl=$('props');
 Object.entries(PROPS).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip sm';b.textContent=v;b.dataset.k=k;
-  b.onclick=()=>{if(needFriend())return;if(sel){sel.prop=k;sfx.pop()}syncControls();announce(v)};propsEl.appendChild(b)});
+  b.onclick=()=>{if(needFriend())return;if(sel){sel.prop=k;sfx.pop()}syncControls();announce(v,PROP_EN[k])};propsEl.appendChild(b)});
 const motionsEl=$('motions');
 Object.entries(MOTIONS).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip';b.textContent=v.name;b.dataset.k=k;
-  b.onclick=()=>{if(needFriend())return;if(together)chars.forEach(c=>{c.motion=k;c.target=null});else if(sel){sel.motion=k;sel.target=null}syncControls();announce(v.name.replace('🦖 ',''))};motionsEl.appendChild(b)});
+  b.onclick=()=>{if(needFriend())return;if(together)chars.forEach(c=>{c.motion=k;c.target=null});else if(sel){sel.motion=k;sel.target=null}syncControls();announce(v.name.replace('🦖 ',''),MOTION_EN[k])};motionsEl.appendChild(b)});
 function syncControls(){
   {const n=$('noFriend');if(n&&chars.length)n.hidden=true}
   [...motionsEl.children].forEach(b=>b.setAttribute('aria-pressed',String(!!sel&&sel.motion===b.dataset.k)));
@@ -982,7 +937,7 @@ $('remove').onclick=()=>{if(!sel)return;chars=chars.filter(c=>c!==sel);sel=chars
   toast.textContent=chars.length?'친구가 상자로 돌아갔어요.':'무대가 비었어요. 친구 상자에서 불러오거나 새로 그려 보세요.'};
 const scenesEl=$('scenes');
 Object.entries(SCENES).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip';b.textContent=v;b.dataset.k=k;b.setAttribute('aria-pressed',String(k===scene));
-  b.onclick=()=>{setScene(k);announce(v)};scenesEl.appendChild(b)});
+  b.onclick=()=>{setScene(k);announce(v,SCENE_EN[k])};scenesEl.appendChild(b)});
 // 웹(아이폰 사파리 등)에서는 공유 창으로 '사진에 저장'·보내기
 async function webShare(blob,name,title){try{if(!navigator.canShare||!window.File)return false;const f=new File([blob],name,{type:blob.type});
   if(!navigator.canShare({files:[f]}))return false;await navigator.share({files:[f],title:title||'Doodle'});return true}catch(e){return !!(e&&e.name==='AbortError')}}
@@ -1123,20 +1078,6 @@ function renderBox(){
     const go=()=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');cv.width=img.width;cv.height=img.height;cv.getContext('2d').drawImage(img,0,0);addChar(cv,item.kind?defaultMotion(item.kind):null,item.name||null,{kind:item.kind,parts:item.parts});showTab('stage');toast.textContent='친구가 무대에 나왔어요!'};img.src=item.img};
     d.onclick=go;d.onkeydown=e=>{if(e.key==='Enter')go()};el.appendChild(d)});
 }
-
-/* ================= 사진 올리기 ================= */
-/* 그리기 탭에서도 종이에 그린 그림 사진으로 친구 만들기 (친구들 탭의 '그림 사진 올리기'와 같은 기능) */
-$('drawPhoto').onclick=()=>{announce('종이에 그린 그림을 찍어요');$('photo').click()};
-$('photo').addEventListener('change',e=>{
-  const f=e.target.files&&e.target.files[0];if(!f)return;
-  toast.textContent='그림을 오려내는 중이에요…';
-  const img=new Image(),url=URL.createObjectURL(f);
-  img.onload=()=>{let s=null;try{const cut=photoCut(img);if(cut)s=makeSprite(cut)}catch(err){s=null}if(!s)s=makeSprite(img);URL.revokeObjectURL(url);
-    if(s){const c=addChar(s);storeFriend(c);showTab('stage');toast.textContent='살아났어요! 친구들 탭에서 이름과 움직임을 바꿀 수 있어요.'}
-    else {toast.textContent='그림을 찾지 못했어요. 흰 종이에 진하게 그린 그림을 밝은 곳에서 찍어 주세요.';toast2(toast.textContent)}e.target.value=''};
-  img.onerror=()=>{toast.textContent='사진을 열 수 없어요. 다른 사진으로 해 볼까요?';toast2(toast.textContent)};
-  img.src=url;
-});
 
 /* ================= 밑그림 (1000x900 기준, 직접 그린 선화) ================= */
 const LINEART=(function(){
@@ -1364,7 +1305,7 @@ function showTab(t){
   if(t==='draw')fitPaper();
   scrollTo(0,0);
 }
-[...$('tabbar').children].forEach(b=>b.onclick=()=>{showTab(b.dataset.tab);announce(TAB_NAMES[b.dataset.tab])});
+[...$('tabbar').children].forEach(b=>b.onclick=()=>{showTab(b.dataset.tab);announce(TAB_NAMES[b.dataset.tab],TAB_EN[b.dataset.tab])});
 $('play2').onclick=()=>{showTab('stage');if(!playing)$('play').click()};
 
 /* ================= 그리기 ================= */
@@ -1384,7 +1325,7 @@ let pen='crayon',color='#FF4D4D',size=16,stroke=null,hue=0;
 const pensEl=$('pens');
 PENS.forEach(p=>{const b=document.createElement('button');b.className='pen';b.dataset.k=p.k;b.setAttribute('aria-pressed',String(p.k===pen));
   const ic=document.createElement('i');ic.textContent=p.i;b.append(ic,p.n);
-  b.onclick=()=>{pen=p.k;[...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));updDot();announce(p.n)};pensEl.appendChild(b)});
+  b.onclick=()=>{pen=p.k;[...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));updDot();announce(p.n,PEN_EN[p.k])};pensEl.appendChild(b)});
 const colorsEl=$('colors');
 function pickColor(c,btn){color=c;[...colorsEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x===btn)));
   if(pen==='eraser'){pen='crayon';[...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='crayon')))}updDot()}
@@ -1444,7 +1385,7 @@ $('clearAll').onclick=()=>{snap();px.clearRect(0,0,PW,PH);commit();setSketch(nul
 /* ================= v3: 장면 · 영상 ================= */
 function setScene(k){scene=k;[...scenesEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k===k)))}
 $('addScene').onclick=()=>{const used=script.filter(l=>l.type==='scene').map(l=>l.scene),next=Object.keys(SCENES).find(k=>k!==scene&&!used.includes(k))||'field';
-  script.push({type:'scene',scene:next});renderLines();announce('장면을 추가했어요')};
+  script.push({type:'scene',scene:next});renderLines();announce('장면을 추가했어요','New scene added')};
 function lineCount(){return script.filter(l=>l.type!=='scene'&&l.text.trim()).length}
 let videoMode=false;
 function startRec(maxSec){
@@ -1584,175 +1525,79 @@ function lineAlpha(){const im=lnx.getImageData(0,0,PW,PH),d=im.data;
   // 흰 바탕은 투명하게, 검은 선만 남겨서 아래 색칠이 보이게
   for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;const lum=(d[i]+d[i+1]+d[i+2])/3;d[i+3]=Math.round(d[i+3]*(1-lum/255));d[i]=d[i+1]=d[i+2]=34}
   lnx.putImageData(im,0,0)}
-function setSketch(key){sketchKey=key;lnx.clearRect(0,0,PW,PH);if(!key)return;
-  if(isMySk(key)){const it=mySk().find(o=>'my:'+o.id===key);if(!it){sketchKey=null;return}
-    const img=new Image();img.onload=()=>{if(sketchKey!==key)return;lnx.clearRect(0,0,PW,PH);lnx.drawImage(img,0,0,PW,PH);lineAlpha()};img.src=it.img;return}
+const SKETCH_KEYS=new Set(LINEART.LIST.flatMap(g=>g.items.map(i=>i[0])));
+function setSketch(key){sketchKey=key;lnx.clearRect(0,0,PW,PH);if(!key||!SKETCH_KEYS.has(key)){sketchKey=null;return}
   LINEART.draw(lnx,key,PW,PH);lineAlpha()}
-let skCat=0,skMode='load';
+let skCat=0;
 function loadSketch(k){snap();px.clearRect(0,0,PW,PH);commit();setSketch(k);drawDirty=true;drawDirtyAt=Date.now();fitPaper();pen='fill';
   [...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='fill')));updDot();
-  toast2(isMySk(k)?'사진 밑그림이에요! 색칠통으로 톡톡 칠하거나 크레용으로 칠해 보세요.':speakName(k)+' 밑그림이에요! 색칠통으로 톡톡 칠하거나 크레용으로 칠해 보세요.')}
-function openSketch(mode){if(typeof mode==='string')skMode=mode;
-  $('skTitle').textContent=skMode==='print'?'어떤 밑그림을 뽑을까요?':skMode==='scan'?'어떤 밑그림을 색칠했나요?':'밑그림 고르기';
-  const mine=skMode==='load',MY=LINEART.LIST.length;if(!mine&&skCat===MY)skCat=0;
-  $('skPhoto').hidden=!mine;
+  toast2(speakName(k)+' 밑그림이에요! 색칠통으로 톡톡 칠하거나 크레용으로 칠해 보세요.')}
+function openSketch(){
   const cats=$('skCats');cats.innerHTML='';
-  const cl=LINEART.LIST.map(g=>g.cat);if(mine)cl.push('📸 내 사진');
-  cl.forEach((n,i)=>{const b=document.createElement('button');b.className='chip sm';b.textContent=n;b.setAttribute('aria-pressed',String(i===skCat));
-    b.onclick=()=>{skCat=i;openSketch();announce(n.replace('📸 ',''))};cats.appendChild(b)});
+  LINEART.LIST.forEach((g,i)=>{const b=document.createElement('button');b.className='chip sm';b.textContent=g.cat;b.setAttribute('aria-pressed',String(i===skCat));
+    b.onclick=()=>{skCat=i;openSketch();announce(g.cat,CAT_EN[g.cat])};cats.appendChild(b)});
   const grid=$('skGrid');grid.innerHTML='';
-  if(mine&&skCat===MY){const l=mySk();
-    if(!l.length){const p=document.createElement('div');p.className='empty';p.textContent='아직 사진 밑그림이 없어요. 위의 「사진으로 밑그림 만들기」를 눌러 보세요.';grid.appendChild(p)}
-    l.forEach(it=>{const b=document.createElement('button');b.className='mysk';const im=document.createElement('img');im.src=it.img;im.alt='';b.append(im,'사진 밑그림');b.setAttribute('aria-label','사진 밑그림');
-      const x=document.createElement('span');x.className='x';x.textContent='×';x.setAttribute('role','button');x.setAttribute('aria-label','사진 밑그림 지우기');
-      x.onclick=ev=>{ev.stopPropagation();saveMySk(mySk().filter(o=>o.id!==it.id));openSketch()};b.appendChild(x);
-      b.onclick=()=>{$('sketchBox').hidden=true;loadSketch('my:'+it.id)};grid.appendChild(b)});
-    $('sketchBox').hidden=false;return}
   LINEART.LIST[skCat].items.forEach(([k,n])=>{const b=document.createElement('button');const c=document.createElement('canvas');c.width=200;c.height=180;
     LINEART.draw(c.getContext('2d'),k,200,180);b.append(c,n);b.setAttribute('aria-label',n+' 밑그림');
-    b.onclick=()=>{announce(speakName(k)+'!');$('sketchBox').hidden=true;
-      if(skMode==='print'){doPrint(k);return}if(skMode==='scan'){finishScan(k);return}loadSketch(k)};grid.appendChild(b)});
+    b.onclick=()=>{announce(speakName(k)+'!',nameEn(k)+'!');$('sketchBox').hidden=true;loadSketch(k)};grid.appendChild(b)});
   $('sketchBox').hidden=false;
 }
 
-/* ================= v3.6 사진 밑그림: 사진에서 원하는 것만 골라(누끼) 색칠 밑그림으로 ================= */
-const MYSK_KEY='doodle-mysketch';
-function isMySk(k){return typeof k==='string'&&k.slice(0,3)==='my:'}
-function mySk(){try{return JSON.parse(localStorage.getItem(MYSK_KEY)||'[]')||[]}catch(e){return[]}}
-function saveMySk(l){for(;;){try{localStorage.setItem(MYSK_KEY,JSON.stringify(l));return true}catch(e){if(l.length<=1)return false;l=l.slice(0,-1)}}}
-const CUT={img:null,cv:null,sc:1,pts:[],work:null,level:1,out:null,busy:false};
-function cutReset(msg){CUT.pts=[];CUT.work=null;CUT.out=null;$('cutLevels').hidden=true;$('cutUse').hidden=true;$('cutAgain').hidden=true;$('cutAuto').hidden=false;
-  $('cutMsg').textContent=msg||'색칠하고 싶은 것을 손가락으로 빙 둘러 주세요.';cutPaint()}
+/* ================= v3.7 사진으로 그리기: 찍거나 고른 사진에서 원하는 곳만 둘러서, 사진 그대로 그리기 화면에 ================= */
+try{localStorage.removeItem('doodle-mysketch')}catch(e){}   // v3.6 사진 밑그림 보관함은 쓰지 않아요
+const CUT={img:null,sc:1,pts:[],out:null};
+function cutOpen(){if(playing)stopPlay();CUT.img=null;CUT.out=null;CUT.pts=[];
+  $('cutPick').hidden=false;$('cutCv').hidden=true;$('cutBtns').hidden=true;
+  $('cutMsg').textContent='사진을 찍거나 앨범에서 골라 주세요.';$('cutBox').hidden=false;announce('사진을 찍거나 골라 주세요','Take a photo, or pick one')}
+function cutStep(sel){$('cutAll').hidden=sel;$('cutAgain').hidden=!sel;$('cutUse').hidden=!sel;
+  $('cutMsg').textContent=sel?'이 부분을 가져올게요. 맞으면 「이걸로 그리기」를 눌러요.':'그리고 싶은 곳을 손가락으로 빙 둘러 주세요. 사진을 다 쓰려면 「사진 전체」를 눌러요.'}
 function cutPaint(){const c=$('cutCv'),x=c.getContext('2d');
-  if(CUT.out){c.width=500;c.height=450;x.fillStyle='#fff';x.fillRect(0,0,500,450);x.drawImage(CUT.out,0,0,500,450);return}
+  if(CUT.out){const o=CUT.out,s=Math.min(1,900/Math.max(o.width,o.height));c.width=Math.max(1,Math.round(o.width*s));c.height=Math.max(1,Math.round(o.height*s));
+    x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(o,0,0,c.width,c.height);return}
   if(!CUT.img)return;const im=CUT.img,s=Math.min(1,900/Math.max(im.width,im.height));c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);CUT.sc=s;
   x.drawImage(im,0,0,c.width,c.height);
   if(CUT.pts.length>1){x.save();x.lineWidth=Math.max(4,c.width/90);x.lineJoin=x.lineCap='round';x.setLineDash([x.lineWidth*2.2,x.lineWidth*1.6]);
     x.strokeStyle='#fff';x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=6;x.beginPath();CUT.pts.forEach((p,i)=>i?x.lineTo(p[0]*s,p[1]*s):x.moveTo(p[0]*s,p[1]*s));x.stroke();x.restore()}}
-$('skPhoto').onclick=()=>{$('cutFile').click()};
-$('cutFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
-  const url=URL.createObjectURL(f),img=new Image();
+function cutLoad(f){const url=URL.createObjectURL(f),img=new Image();
+  $('cutMsg').textContent='사진을 여는 중이에요…';
   img.onload=()=>{// 너무 큰 사진은 줄여서 (빠르게, 메모리 적게)
-    const s=Math.min(1,1400/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);CUT.img=c;$('sketchBox').hidden=true;$('cutBox').hidden=false;cutReset();
-    announce('색칠하고 싶은 것을 손가락으로 빙 둘러 주세요')};
-  img.onerror=()=>{URL.revokeObjectURL(url);toast2('사진을 열 수 없어요. 다른 사진으로 해 볼까요?')};img.src=url});
+    const s=Math.min(1,1400/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*s));c.height=Math.max(1,Math.round(img.height*s));
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);CUT.img=c;CUT.out=null;CUT.pts=[];
+    $('cutPick').hidden=true;$('cutCv').hidden=false;$('cutBtns').hidden=false;cutStep(false);cutPaint();
+    announce('그리고 싶은 곳을 손가락으로 빙 둘러 주세요','Draw a circle around the part you want')};
+  img.onerror=()=>{URL.revokeObjectURL(url);$('cutMsg').textContent='사진을 열 수 없어요. 다른 사진으로 해 볼까요?'};img.src=url}
+['camIn','albumIn'].forEach(id=>$(id).addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)cutLoad(f)}));
+/* 둘러싼 모양 그대로 오리기 (색·모양은 사진 그대로) */
+function cutMake(pts){const im=CUT.img;let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  pts.forEach(([x,y])=>{x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)});
+  x0=Math.max(0,Math.floor(x0));y0=Math.max(0,Math.floor(y0));x1=Math.min(im.width,Math.ceil(x1));y1=Math.min(im.height,Math.ceil(y1));
+  const w=x1-x0,h=y1-y0;if(w<8||h<8)return null;
+  const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');
+  g.beginPath();pts.forEach(([x,y],i)=>i?g.lineTo(x-x0,y-y0):g.moveTo(x-x0,y-y0));g.closePath();g.clip();g.drawImage(im,-x0,-y0);return c}
+function cutDone(pts){const o=cutMake(pts);if(!o){CUT.pts=[];cutPaint();$('cutMsg').textContent='조금 더 크게 빙 둘러 주세요.';return}CUT.out=o;cutStep(true);cutPaint()}
 {const c=$('cutCv');let down=false;
   const P=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)/r.width*c.width/CUT.sc,(e.clientY-r.top)/r.height*c.height/CUT.sc]};
-  c.addEventListener('pointerdown',e=>{if(CUT.out||CUT.busy||!CUT.img)return;down=true;try{c.setPointerCapture(e.pointerId)}catch(_){}CUT.pts=[P(e)];cutPaint()});
+  c.addEventListener('pointerdown',e=>{if(CUT.out||!CUT.img)return;down=true;try{c.setPointerCapture(e.pointerId)}catch(_){}CUT.pts=[P(e)];cutPaint()});
   c.addEventListener('pointermove',e=>{if(!down)return;const p=P(e),q=CUT.pts[CUT.pts.length-1];if(Math.hypot(p[0]-q[0],p[1]-q[1])*CUT.sc>3){CUT.pts.push(p);cutPaint()}});
   const up=()=>{if(!down)return;down=false;const im=CUT.img,pts=CUT.pts;
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;pts.forEach(([x,y])=>{x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)});
-    if(pts.length<8||(x1-x0)<im.width*0.06||(y1-y0)<im.height*0.06){CUT.pts=[];cutPaint();$('cutMsg').textContent='조금 더 크게 빙 둘러 주세요. 잘 모르겠으면 「자동으로」를 눌러요.';return}
-    cutRun()};
+    if(pts.length<8||(x1-x0)<im.width*0.05||(y1-y0)<im.height*0.05){CUT.pts=[];cutPaint();$('cutMsg').textContent='조금 더 크게 빙 둘러 주세요. 사진을 다 쓰려면 「사진 전체」를 눌러요.';return}
+    cutDone(pts)};
   c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up)}
-$('cutAuto').onclick=()=>{if(!CUT.img||CUT.busy)return;const w=CUT.img.width,h=CUT.img.height,m=0.015;
-  CUT.pts=[[w*m,h*m],[w*(1-m),h*m],[w*(1-m),h*(1-m)],[w*m,h*(1-m)]];cutRun()};
-$('cutAgain').onclick=()=>cutReset();
-$('cutClose').onclick=()=>{$('cutBox').hidden=true;CUT.img=null;CUT.work=null;CUT.out=null};
-[...$('cutLevels').querySelectorAll('button')].forEach(b=>b.onclick=()=>{CUT.level=+b.dataset.l;[...$('cutLevels').children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
-  if(CUT.work){CUT.out=cutLines(CUT.work,CUT.level);cutPaint()}});
-$('cutUse').onclick=()=>{if(!CUT.out)return;const id=Date.now().toString(36),l=mySk();
-  let u=CUT.out.toDataURL('image/webp',0.9);if(u.slice(0,15)!=='data:image/webp')u=CUT.out.toDataURL('image/png');
-  l.unshift({id,img:u});const ok=saveMySk(l.slice(0,6));
-  $('cutBox').hidden=true;showTab('draw');loadSketch('my:'+id);if(!ok)toast2('저장 공간이 부족해서 보관은 못 했지만 지금 바로 색칠할 수 있어요.');
-  CUT.img=null;CUT.work=null;CUT.out=null;announce('사진 밑그림이 생겼어요! 색칠해 봐요')};
-function cutRun(){CUT.busy=true;$('cutMsg').textContent='고른 것만 오려서 밑그림으로 바꾸는 중이에요…';cutPaint();
-  setTimeout(()=>{try{CUT.work=cutObject(CUT.img,CUT.pts);CUT.out=CUT.work?cutLines(CUT.work,CUT.level):null}catch(e){CUT.work=null;CUT.out=null}CUT.busy=false;
-    if(!CUT.out){cutReset('잘 안 됐어요. 고르고 싶은 것을 조금 더 넉넉하게 둘러 볼까요?');return}
-    $('cutLevels').hidden=false;$('cutUse').hidden=false;$('cutAgain').hidden=false;$('cutAuto').hidden=true;
-    $('cutMsg').textContent='이렇게 밑그림이 됐어요! 선이 너무 많거나 적으면 아래에서 바꿔요.';cutPaint()},30)}
-
-/* 고른 것 오리기: 둘러싼 선 근처 색 = 배경, 배경과 다른 색 덩어리 = 고른 것 */
-function cutObject(src,pts){
-  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;pts.forEach(([x,y])=>{x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)});
-  const pad=Math.max(x1-x0,y1-y0)*0.03;x0=Math.max(0,x0-pad);y0=Math.max(0,y0-pad);x1=Math.min(src.width,x1+pad);y1=Math.min(src.height,y1+pad);
-  const s=Math.min(1.5,560/Math.max(x1-x0,y1-y0)),w=Math.max(8,Math.round((x1-x0)*s)),h=Math.max(8,Math.round((y1-y0)*s)),N=w*h;
-  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});
-  x.filter='blur(1.5px)';x.drawImage(src,x0,y0,x1-x0,y1-y0,0,0,w,h);x.filter='none';const d=x.getImageData(0,0,w,h).data;
-  const m=document.createElement('canvas');m.width=w;m.height=h;const mx=m.getContext('2d',{willReadFrequently:true});mx.fillStyle='#000';mx.beginPath();
-  pts.forEach(([px_,py],i)=>{const X=(px_-x0)*s,Y=(py-y0)*s;i?mx.lineTo(X,Y):mx.moveTo(X,Y)});mx.closePath();mx.fill();
-  const md=mx.getImageData(0,0,w,h).data,ins=new Uint8Array(N);for(let q=0;q<N;q++)ins[q]=md[q*4+3]>127?1:0;
-  let insA=0;for(let q=0;q<N;q++)insA+=ins[q];if(insA<N*0.02)return null;
-  const R=Math.max(3,Math.round(Math.min(w,h)*0.035)),core=erode(ins,w,h,R);
-  // 배경 표본: 둘러싼 선 바로 안쪽 띠 + 선 바깥
-  const bg=[];for(let q=0;q<N;q+=2)if(!core[q])bg.push(q);if(bg.length<20)return null;
-  const cen=kmeans(d,bg,6,8),dist=q=>{let b=1e9;for(let k=0;k<cen.length;k+=3){const e=Math.hypot(d[q*4]-cen[k],d[q*4+1]-cen[k+1],d[q*4+2]-cen[k+2]);if(e<b)b=e}return b};
-  const bd=bg.filter((_,i)=>i%3===0).map(dist).sort((a,b)=>a-b),T=Math.max(26,Math.min(70,bd[Math.floor(bd.length*0.95)]*1.35+8));
-  let fg=new Uint8Array(N);for(let q=0;q<N;q++)if(ins[q]&&dist(q)>T)fg[q]=1;
-  const r2=Math.max(2,Math.round(Math.min(w,h)*0.012));fg=erode(dilate(fg,w,h,r2),w,h,r2);for(let q=0;q<N;q++)fg[q]&=ins[q];
-  // 큰 덩어리만 (둘러싼 가운데에 가까운 것 우선)
-  const lab=new Int32Array(N),comps=[];let id=0;
-  for(let s0=0;s0<N;s0++){if(!fg[s0]||lab[s0])continue;id++;let a=0,sx=0,sy=0;const st=[s0];lab[s0]=id;
-    while(st.length){const q=st.pop(),i=q%w,j=(q/w)|0;a++;sx+=i;sy+=j;
-      if(i>0&&fg[q-1]&&!lab[q-1]){lab[q-1]=id;st.push(q-1)}if(i<w-1&&fg[q+1]&&!lab[q+1]){lab[q+1]=id;st.push(q+1)}
-      if(j>0&&fg[q-w]&&!lab[q-w]){lab[q-w]=id;st.push(q-w)}if(j<h-1&&fg[q+w]&&!lab[q+w]){lab[q+w]=id;st.push(q+w)}}
-    comps.push({id,a,cx:sx/a,cy:sy/a})}
-  let keep=null;
-  if(comps.length){const big=comps.reduce((m,o)=>o.a>m.a?o:m);keep=new Set(comps.filter(o=>o.a>big.a*0.12).map(o=>o.id))}
-  let area=0;const out=new Uint8Array(N);if(keep)for(let q=0;q<N;q++)if(keep.has(lab[q])){out[q]=1;area++}
-  if(area<insA*0.04||area>insA*0.985){out.set(erode(ins,w,h,Math.max(2,R>>1)));area=0;for(let q=0;q<N;q++)area+=out[q]}
-  fillHoles(out,w,h);const sm=erode(dilate(out,w,h,1),w,h,1);
-  return{d,w,h,mask:sm}}
-function dilate(a,w,h,r){const t=new Uint8Array(a.length),o=new Uint8Array(a.length);
-  for(let j=0;j<h;j++){let last=-1e9;for(let i=0;i<w;i++){if(a[j*w+i])last=i;if(i-last<=r)t[j*w+i]=1}last=1e9;for(let i=w-1;i>=0;i--){if(a[j*w+i])last=i;if(last-i<=r)t[j*w+i]=1}}
-  for(let i=0;i<w;i++){let last=-1e9;for(let j=0;j<h;j++){if(t[j*w+i])last=j;if(j-last<=r)o[j*w+i]=1}last=1e9;for(let j=h-1;j>=0;j--){if(t[j*w+i])last=j;if(last-j<=r)o[j*w+i]=1}}return o}
-function erode(a,w,h,r){const n=new Uint8Array(a.length);for(let q=0;q<a.length;q++)n[q]=a[q]?0:1;
-  // 가장자리 밖은 배경으로 보고 깎기
-  const W2=w+2,H2=h+2,b=new Uint8Array(W2*H2).fill(1);for(let j=0;j<h;j++)for(let i=0;i<w;i++)b[(j+1)*W2+i+1]=n[j*w+i];
-  const g=dilate(b,W2,H2,r),o=new Uint8Array(a.length);for(let j=0;j<h;j++)for(let i=0;i<w;i++)o[j*w+i]=g[(j+1)*W2+i+1]?0:1;return o}
-function fillHoles(a,w,h){const seen=new Uint8Array(a.length),st=[];const push=q=>{if(seen[q]||a[q])return;seen[q]=1;st.push(q)};
-  for(let i=0;i<w;i++){push(i);push((h-1)*w+i)}for(let j=0;j<h;j++){push(j*w);push(j*w+w-1)}
-  while(st.length){const q=st.pop(),i=q%w,j=(q/w)|0;if(i>0)push(q-1);if(i<w-1)push(q+1);if(j>0)push(q-w);if(j<h-1)push(q+w)}
-  for(let q=0;q<a.length;q++)if(!seen[q])a[q]=1}
-function kmeans(d,idx,k,it){k=Math.min(k,idx.length);const c=new Float32Array(k*3);
-  for(let i=0;i<k;i++){const q=idx[Math.floor((i+0.5)*idx.length/k)];c[i*3]=d[q*4];c[i*3+1]=d[q*4+1];c[i*3+2]=d[q*4+2]}
-  const st=Math.max(1,Math.floor(idx.length/6000));
-  for(let t=0;t<it;t++){const s=new Float64Array(k*4);
-    for(let n=0;n<idx.length;n+=st){const q=idx[n]*4;let b=0,bd=1e18;for(let i=0;i<k;i++){const e=(d[q]-c[i*3])**2+(d[q+1]-c[i*3+1])**2+(d[q+2]-c[i*3+2])**2;if(e<bd){bd=e;b=i}}
-      s[b*4]+=d[q];s[b*4+1]+=d[q+1];s[b*4+2]+=d[q+2];s[b*4+3]++}
-    for(let i=0;i<k;i++)if(s[i*4+3]){c[i*3]=s[i*4]/s[i*4+3];c[i*3+1]=s[i*4+1]/s[i*4+3];c[i*3+2]=s[i*4+2]/s[i*4+3]}}
-  return c}
-/* 오린 것을 색칠 밑그림 선으로: 바깥 윤곽(굵게) + 비슷한 색끼리 나눈 칸 경계(가늘게, 칸이 닫혀서 색칠통이 잘 됨) */
-function cutLines(wk,level){const{d,w,h,mask}=wk,N=w*h;
-  const K=[3,5,8][level],minF=[0.03,0.012,0.004][level];
-  const idx=[];let area=0;for(let q=0;q<N;q++)if(mask[q]){idx.push(q);area++}
-  const lab=new Int16Array(N).fill(-1);
-  if(K>1&&idx.length>50){const cen=kmeans(d,idx,K,10);
-    for(const q of idx){let b=0,bd=1e18;for(let i=0;i<cen.length/3;i++){const e=(d[q*4]-cen[i*3])**2+(d[q*4+1]-cen[i*3+1])**2+(d[q*4+2]-cen[i*3+2])**2;if(e<bd){bd=e;b=i}}lab[q]=b}
-    // 자잘한 점 없애기 (주변에 많은 칸 색으로)
-    for(let pass=0;pass<3;pass++){const nl=lab.slice();for(let j=1;j<h-1;j++)for(let i=1;i<w-1;i++){const q=j*w+i;if(lab[q]<0)continue;const cnt={};let best=lab[q],bc=0;
-      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const v=lab[q+dy*w+dx];if(v<0)continue;cnt[v]=(cnt[v]||0)+1;if(cnt[v]>bc){bc=cnt[v];best=v}}if(bc>=5)nl[q]=best}lab.set(nl)}
-    // 너무 작은 칸은 옆 칸에 합치기
-    const minA=Math.max(12,area*minF),cid=new Int32Array(N);let id=0;
-    for(const s0 of idx){if(cid[s0])continue;id++;const st=[s0],mem=[];cid[s0]=id;let nb=-1;
-      while(st.length){const q=st.pop();mem.push(q);const i=q%w,j=(q/w)|0;
-        for(const n of [i>0?q-1:-1,i<w-1?q+1:-1,j>0?q-w:-1,j<h-1?q+w:-1]){if(n<0||lab[n]<0)continue;if(lab[n]!==lab[s0]){nb=lab[n];continue}if(!cid[n]){cid[n]=id;st.push(n)}}}
-      if(mem.length<minA&&nb>=0)for(const q of mem)lab[q]=nb}
-  }else for(const q of idx)lab[q]=0;
-  // 1000x900 종이에 맞추기
-  let bx0=w,by0=h,bx1=0,by1=0;for(const q of idx){const i=q%w,j=(q/w)|0;if(i<bx0)bx0=i;if(i>bx1)bx1=i;if(j<by0)by0=j;if(j>by1)by1=j}
-  if(bx1<=bx0||by1<=by0)return null;
-  const S=Math.min(880/(bx1-bx0+1),790/(by1-by0+1)),ox=(1000-(bx1-bx0+1)*S)/2-bx0*S,oy=(900-(by1-by0+1)*S)/2-by0*S;
-  // 칸 경계와 바깥 윤곽을 작은 그림에 찍고, 크게 늘린 뒤 부드럽게
-  const inner=new Uint8ClampedArray(N*4),outer=new Uint8ClampedArray(N*4);
-  for(let j=0;j<h;j++)for(let i=0;i<w;i++){const q=j*w+i;if(!mask[q])continue;const l=lab[q];
-    let edge=false,diff=false;for(const n of [i>0?q-1:-1,i<w-1?q+1:-1,j>0?q-w:-1,j<h-1?q+w:-1]){if(n<0||!mask[n]){edge=true;continue}if(lab[n]!==l&&lab[n]>l)diff=true}
-    if(edge)outer[q*4+3]=255;else if(diff)inner[q*4+3]=255}
-  const toCv=a=>{const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').putImageData(new ImageData(a,w,h),0,0);return c};
-  const o=document.createElement('canvas');o.width=1000;o.height=900;const g=o.getContext('2d',{willReadFrequently:true});
-  g.fillStyle='#fff';g.fillRect(0,0,1000,900);g.imageSmoothingEnabled=true;
-  const tmp=document.createElement('canvas');tmp.width=1000;tmp.height=900;const tx=tmp.getContext('2d',{willReadFrequently:true});
-  const stamp=(src,wid)=>{tx.clearRect(0,0,1000,900);tx.imageSmoothingEnabled=true;tx.drawImage(src,ox,oy,w*S,h*S);
-    // 선을 굵게: 여러 번 겹쳐 찍기
-    const im=tx.getImageData(0,0,1000,900),a=im.data,al=new Uint8Array(1000*900);for(let q=0;q<al.length;q++)al[q]=a[q*4+3]>40?1:0;
-    const th=dilate(al,1000,900,Math.max(1,Math.round(wid/2)));for(let q=0;q<al.length;q++){a[q*4]=a[q*4+1]=a[q*4+2]=34;a[q*4+3]=th[q]?255:0}
-    tx.putImageData(im,0,0);g.filter='blur(0.8px)';g.drawImage(tmp,0,0);g.filter='none'};
-  stamp(toCv(inner),Math.max(3,Math.min(5,S*1.4)));stamp(toCv(outer),Math.max(6,Math.min(9,S*2.4)));
-  return o}
-$('sketchBtn').onclick=()=>openSketch('load');
-$('skClose').onclick=()=>{$('sketchBox').hidden=true;pendingScan=null};
-$('skNone').onclick=()=>{$('sketchBox').hidden=true;if(skMode!=='load')return;setSketch(null);drawDirty=true;toast2('밑그림 없이 자유롭게 그려요.')};
+$('cutAll').onclick=()=>{if(!CUT.img)return;const w=CUT.img.width,h=CUT.img.height;CUT.pts=[[0,0],[w,0],[w,h],[0,h]];cutDone(CUT.pts)};
+$('cutAgain').onclick=()=>{CUT.out=null;CUT.pts=[];cutStep(false);cutPaint()};
+$('cutClose').onclick=()=>{$('cutBox').hidden=true;CUT.img=null;CUT.out=null};
+$('cutUse').onclick=()=>{const o=CUT.out;if(!o)return;
+  snap();px.clearRect(0,0,PW,PH);setSketch(null);
+  const s=Math.min(880/o.width,790/o.height);px.drawImage(o,(PW-o.width*s)/2,(PH-o.height*s)/2,o.width*s,o.height*s);commit();
+  drawDirty=true;drawDirtyAt=Date.now();$('cutBox').hidden=true;CUT.img=null;CUT.out=null;showTab('draw');fitPaper();
+  pen='crayon';[...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='crayon')));updDot();
+  toast2('사진을 가져왔어요! 그 위에 그리거나 색칠하고 「살아나라!」를 눌러요.');
+  announce('사진을 가져왔어요! 그리고 색칠해 봐요','Here is your photo! Draw and color on it')};
+$('drawPhoto').onclick=cutOpen;$('photoBtn').onclick=cutOpen;
+$('sketchBtn').onclick=()=>openSketch();
+$('skClose').onclick=()=>{$('sketchBox').hidden=true};
+$('skNone').onclick=()=>{$('sketchBox').hidden=true;setSketch(null);drawDirty=true;toast2('밑그림 없이 자유롭게 그려요.')};
 
 /* --- 크게 그리기 (가로 화면) --- */
 const SO=CAP&&CAP.ScreenOrientation;
@@ -1784,7 +1629,7 @@ $('wake').onclick=async()=>{
   const kind=DINO_INFO[sketchKey]?sketchKey:null;
   const c=addChar(s,kind?defaultMotion(kind):null,kind?sketchName(kind):null,{kind,parts:mapParts(RIG[sketchKey],s)});storeFriend(c);showTab('stage');
   toast.textContent=kind?DINO_INFO[kind][0]+'가 살아났어요! 톡 누르면 펄쩍!':'살아났어요! 친구들 탭에서 이름·움직임·팔다리를 바꿀 수 있어요.';
-  announce('살아나라!');if(kind)dexAdd(kind,c);
+  announce('살아나라!','Come alive!');if(kind)dexAdd(kind,c);
 };
 
 /* ================= v3: 도감 ================= */
@@ -1802,10 +1647,10 @@ function renderDex(){
     b.setAttribute('aria-label',DINO_INFO[k][0]+(dex[k]?'':' 아직 못 만남'));
     b.onclick=()=>dex[k]?openDexCard(k):goColor(k);el.appendChild(b)});
 }
-function goColor(k){announce(josa(DINO_INFO[k][0],'을','를')+' 색칠해 볼까요?');loadSketch(k);showTab('draw')}
+function goColor(k){announce(josa(DINO_INFO[k][0],'을','를')+' 색칠해 볼까요?',"Let's color the "+nameEn(k)+'!');loadSketch(k);showTab('draw')}
 let dexOpen=null;
 function openDexCard(k){dexOpen=k;$('dexImg').src=dex[k].img;$('dexName').textContent=DINO_INFO[k][0];$('dexFact').textContent=DINO_INFO[k][1];$('dexBox').hidden=false;
-  announce(DINO_INFO[k][0]+'! '+DINO_INFO[k][1])}
+  announce(DINO_INFO[k][0]+'! '+DINO_INFO[k][1],nameEn(k)+'! '+(FACT_EN[k]||''))}
 $('dexClose').onclick=()=>{$('dexBox').hidden=true};
 $('dexStage').onclick=async()=>{const k=dexOpen,d=dex[k];$('dexBox').hidden=true;const cv=await imgCanvas(d.img);
   addChar(cv,defaultMotion(k),sketchName(k),{kind:k,parts:d.parts});showTab('stage');toast.textContent=DINO_INFO[k][0]+' 등장! 크앙!'};
@@ -1824,13 +1669,13 @@ function celebrate(all,st){
   for(let i=0;i<(all?60:28);i++){const c=document.createElement('i');c.className='cf';c.style.left=Math.random()*100+'%';c.style.background=['#FFC83D','#FF6B4A','#4CB3E8','#2FAE6B','#FF7DA0','#9B6BFF'][i%6];c.style.animationDelay=(Math.random()*1.2)+'s';c.style.animationDuration=(2.2+Math.random()*1.6)+'s';o.appendChild(c)}
   const close=()=>{o.remove();partyOpen=null};o.querySelector('button').onclick=close;o.onclick=e=>{if(e.target===o)close()};partyOpen=close;
   document.body.appendChild(o);try{sfx.pop()}catch(e){}
-  announce(all?'우와! 공룡 도감을 다 채웠어요! 공룡 박사 스티커를 받았어요!':st[2]+' 스티커를 받았어요!');
+  announce(all?'우와! 공룡 도감을 다 채웠어요! 공룡 박사 스티커를 받았어요!':st[2]+' 스티커를 받았어요!',all?'Wow! You filled the whole dino book! You got the Dino expert sticker!':'You got the '+(STICKER_EN[st[2]]||'new')+' sticker!');
   if(!all)setTimeout(()=>{if(o.isConnected)close()},4500)}
 let partyOpen=null;
 /* 휴대폰 뒤로 가기: 열린 창 → 크게 그리기 → 연극 멈춤 → 무대 탭 순서로 하나씩 닫고, 무대에서 누르면 앱을 닫는다 */
 window.onBackKey=()=>{
   if(partyOpen){partyOpen();return true}
-  for(const id of ['upd','vidBox','shot','paperPreview','paperBox','cutBox','sketchBox','rigBox','dexBox']){const b=$(id);
+  for(const id of ['upd','vidBox','shot','cutBox','sketchBox','rigBox','dexBox']){const b=$(id);
     if(b&&!b.hidden){const c=b.querySelector('[id$="Close"],[id$="Later"],.close,[aria-label="닫기"]');if(c)c.click();else b.hidden=true;return true}}
   if($('drawbox')&&$('drawbox').classList.contains('big')){setBig(false);return true}
   if(playing){stopPlay();return true}
@@ -1841,7 +1686,7 @@ if(CAP&&CAP.App&&CAP.App.addListener)CAP.App.addListener('backButton',()=>{let h
 function dexAdd(k,c){const before=dexGot();const isNew=!dex[k];dex[k]={img:c.thumb,parts:c.parts||null};saveDex();renderDex();renderStickers();
   if(isNew){const got=dexGot(),st=STICKERS.find(([n])=>before<Math.min(n,DINO_KEYS.length)&&got>=Math.min(n,DINO_KEYS.length));
     if(st)setTimeout(()=>celebrate(got>=DINO_KEYS.length,st),1600)}
-  if(isNew){setTimeout(()=>{toast.textContent='🦖 새 공룡! 도감에 '+DINO_INFO[k][0]+' 칸이 채워졌어요';announce(josa(DINO_INFO[k][0],'을','를')+' 도감에 모았어요!')},900);
+  if(isNew){setTimeout(()=>{toast.textContent='🦖 새 공룡! 도감에 '+DINO_INFO[k][0]+' 칸이 채워졌어요';announce(josa(DINO_INFO[k][0],'을','를')+' 도감에 모았어요!',nameEn(k)+' is now in your dino book!')},900);
     for(let i=0;i<24;i++)particles.push({x:VW/2,y:VH*0.4,vx:(Math.random()-.5)*600,vy:-Math.random()*420-60,life:1.4,c:['#FFC83D','#FF6B4A','#4CB3E8','#2FAE6B','#FF7DA0'][i%5]})}}
 function imgCanvas(src){return new Promise(res=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);res(c)};im.onerror=()=>res(null);im.src=src})}
 
@@ -1850,7 +1695,7 @@ const RIG_KINDS=[['arm','✋ 손'],['leg','🦶 발'],['head','🙂 머리'],['t
 const RIG_ICON={arm:'✋',leg:'🦶',head:'🙂',tail:'〰️',wing:'🪽',neck:'🦕',fin:'🐟'};
 let rigKind='arm',rigDraft=[],rigView=null,rigCenter=null;
 {const el=$('rigKinds');RIG_KINDS.forEach(([k,n])=>{const b=document.createElement('button');b.className='chip sm';b.textContent=n;b.dataset.k=k;
-  b.onclick=()=>{rigKind=k;[...el.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));announce(n.split(' ')[1])};el.appendChild(b)})}
+  b.onclick=()=>{rigKind=k;[...el.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));announce(n.split(' ')[1],RIG_EN[k])};el.appendChild(b)})}
 function spriteCenter(S){const g=S.getContext('2d',{willReadFrequently:true}),d=g.getImageData(0,0,S.width,S.height).data;let sx=0,sy=0,n=0;
   for(let y=0;y<S.height;y+=4)for(let x=0;x<S.width;x+=4){if(d[(y*S.width+x)*4+3]>128){sx+=x;sy+=y;n++}}return n?[sx/n,sy/n]:[S.width/2,S.height/2]}
 function drawRigEditor(){const cv=$('rigCv'),g=cv.getContext('2d'),S=sel.sprite;g.clearRect(0,0,cv.width,cv.height);
@@ -1864,7 +1709,7 @@ function drawRigEditor(){const cv=$('rigCv'),g=cv.getContext('2d'),S=sel.sprite;
   g.textAlign='left';g.textBaseline='alphabetic'}
 function openRig(){if(!sel)return;rigDraft=(sel.parts||[]).map(p=>JSON.parse(JSON.stringify(p)));rigCenter=spriteCenter(sel.sprite);
   [...$('rigKinds').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k===rigKind)));
-  $('rigBox').hidden=false;drawRigEditor();announce('흔들고 싶은 손이랑 발을 톡톡 눌러 주세요')}
+  $('rigBox').hidden=false;drawRigEditor();announce('흔들고 싶은 손이랑 발을 톡톡 눌러 주세요','Tap the hands and feet you want to wiggle')}
 $('rigBtn').onclick=openRig;
 $('rigCv').addEventListener('pointerdown',e=>{if(!rigView||!sel)return;const cv=$('rigCv'),bb=cv.getBoundingClientRect();
   const x=((e.clientX-bb.left)*cv.width/bb.width-rigView.ox)/rigView.f,y=((e.clientY-bb.top)*cv.height/bb.height-rigView.oy)/rigView.f,S=sel.sprite;
@@ -1875,123 +1720,7 @@ $('rigCv').addEventListener('pointerdown',e=>{if(!rigView||!sel)return;const cv=
 $('rigClear').onclick=()=>{rigDraft=[];drawRigEditor()};
 $('rigClose').onclick=()=>{$('rigBox').hidden=true};
 $('rigDone').onclick=()=>{if(!sel)return;sel.parts=rigDraft.length?rigDraft:null;buildRig(sel);$('rigBox').hidden=true;
-  showTab('stage');toast.textContent=sel.parts?'팔다리가 생겼어요! 춤추기를 골라 보세요.':'팔다리를 없앴어요.';if(sel.parts)announce('팔다리가 생겼어요!')};
-
-/* ================= v3: 종이 색칠 놀이 ================= */
-const PG={W:1240,H:1754,mk:70,mks:[[60,60],[1110,60],[60,1624],[1110,1624]],fx:70,fy:330,fs:1.1,codeX:520,codeY:1640,codeStep:44,codeS:28};
-const FLAT=LINEART.LIST.flatMap(g=>g.items.map(i=>i[0]));
-function makePage(k){const c=document.createElement('canvas');c.width=PG.W;c.height=PG.H;const g=c.getContext('2d');
-  g.fillStyle='#fff';g.fillRect(0,0,PG.W,PG.H);g.fillStyle='#000';PG.mks.forEach(([x,y])=>g.fillRect(x,y,PG.mk,PG.mk));
-  g.fillStyle='#1E2944';g.textAlign='center';g.font='700 60px Gaegu, "Gowun Dodum", sans-serif';g.fillText('Doodle 색칠 놀이',PG.W/2,190);
-  g.font='700 46px Gaegu, "Gowun Dodum", sans-serif';g.fillStyle='#FF6B4A';g.fillText(speakName(k),PG.W/2,262);
-  g.strokeStyle='#C9D3DE';g.lineWidth=4;g.strokeRect(PG.fx,PG.fy,1000*PG.fs,900*PG.fs);
-  const t=document.createElement('canvas');t.width=1000;t.height=900;LINEART.draw(t.getContext('2d'),k,1000,900);g.drawImage(t,PG.fx,PG.fy,1000*PG.fs,900*PG.fs);
-  g.font='34px "Gowun Dodum", sans-serif';g.fillStyle='#1E2944';
-  ['① 크레용으로 알록달록 색칠해요','② Doodle → 그리기 → 종이 색칠 → 색칠한 종이 찍기','③ 네 귀퉁이 까만 네모가 다 보이게 찍어요'].forEach((s,i)=>g.fillText(s,PG.W/2,1420+i*56));
-  const idx=FLAT.indexOf(k)+1;g.lineWidth=3;g.strokeStyle='#999';
-  for(let i=0;i<5;i++){const x=PG.codeX+i*PG.codeStep;g.strokeRect(x,PG.codeY,PG.codeS,PG.codeS);if(idx>>i&1){g.fillStyle='#000';g.fillRect(x,PG.codeY,PG.codeS,PG.codeS)}}
-  g.font='24px "Gowun Dodum", sans-serif';g.fillStyle='#8A94A6';g.fillText('까만 네모는 칠하지 말아 주세요',PG.W/2,1720);g.textAlign='left';return c}
-function b64ToBytes(s){const bin=atob(s),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u}
-function bytesToB64(u){let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
-function makePDF(jpg,w,h){const enc=new TextEncoder(),parts=[],off=[];let len=0;const push=x=>{const b=typeof x==='string'?enc.encode(x):x;parts.push(b);len+=b.length};
-  const obj=(n,s)=>{off[n]=len;push(n+' 0 obj\n'+s+'\nendobj\n')};
-  push('%PDF-1.4\n');obj(1,'<</Type/Catalog/Pages 2 0 R>>');obj(2,'<</Type/Pages/Kids[3 0 R]/Count 1>>');
-  obj(3,'<</Type/Page/Parent 2 0 R/MediaBox[0 0 595.28 841.89]/Resources<</XObject<</Im0 4 0 R>>>>/Contents 5 0 R>>');
-  off[4]=len;push('4 0 obj\n<</Type/XObject/Subtype/Image/Width '+w+'/Height '+h+'/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length '+jpg.length+'>>\nstream\n');push(jpg);push('\nendstream\nendobj\n');
-  const cs='q 595.28 0 0 841.89 0 0 cm /Im0 Do Q';obj(5,'<</Length '+cs.length+'>>\nstream\n'+cs+'\nendstream');
-  const xo=len;let x='xref\n0 6\n0000000000 65535 f \n';for(let i=1;i<=5;i++)x+=String(off[i]).padStart(10,'0')+' 00000 n \n';
-  push(x+'trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n'+xo+'\n%%EOF\n');
-  const out=new Uint8Array(len);let o=0;parts.forEach(b=>{out.set(b,o);o+=b.length});return out}
-async function doPrint(k){const page=makePage(k);try{localStorage.setItem('doodle-lastprint',k)}catch(e){}
-  if(CAP&&CAP.Filesystem&&CAP.Share){try{const jpg=b64ToBytes(page.toDataURL('image/jpeg',0.9).split(',')[1]);const pdf=makePDF(jpg,PG.W,PG.H);
-      const w=await CAP.Filesystem.writeFile({path:'doodle-'+k+'.pdf',data:bytesToB64(pdf),directory:'CACHE'});
-      await CAP.Share.share({title:'Doodle 색칠 놀이',files:[w.uri],dialogTitle:'인쇄하거나 저장하기'});$('paperMsg').textContent='인쇄했으면 색칠한 다음 📷를 눌러 찍어 주세요.';return}
-    catch(e){if(e&&/cancel/i.test(String(e.message||e)))return}}
-  if(!CAP){try{const pdf=makePDF(b64ToBytes(page.toDataURL('image/jpeg',0.9).split(',')[1]),PG.W,PG.H);if(await webShare(new Blob([pdf],{type:'application/pdf'}),'doodle-'+k+'.pdf','Doodle 색칠 놀이')){$('paperMsg').textContent='인쇄했으면 색칠한 다음 📷를 눌러 찍어 주세요.';return}}catch(e){}}
-  $('paperPreview').src=page.toDataURL('image/png');$('paperPreview').hidden=false;$('paperMsg').textContent='그림을 길게 눌러 저장한 뒤 인쇄해 주세요.';$('paperBox').hidden=false}
-$('paperBtn').onclick=()=>{$('paperPreview').hidden=true;$('paperMsg').textContent='';$('paperBox').hidden=false;announce('종이 색칠 놀이! 밑그림을 뽑아서 색칠하고 사진을 찍어요')};
-$('paperClose').onclick=()=>{$('paperBox').hidden=true};
-$('paperPrint').onclick=()=>{$('paperBox').hidden=true;openSketch('print')};
-
-// 사진 → 종이 찾기 → 색 읽기
-function solve8(A,b){const n=8;for(let i=0;i<n;i++){let mx=i;for(let r=i+1;r<n;r++)if(Math.abs(A[r][i])>Math.abs(A[mx][i]))mx=r;
-    [A[i],A[mx]]=[A[mx],A[i]];[b[i],b[mx]]=[b[mx],b[i]];const p=A[i][i];if(Math.abs(p)<1e-12)return null;
-    for(let r=0;r<n;r++){if(r===i)continue;const f=A[r][i]/p;for(let c=i;c<n;c++)A[r][c]-=f*A[i][c];b[r]-=f*b[i]}}
-  return b.map((v,i)=>v/A[i][i])}
-function homography(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const [u,v]=src[i],[x,y]=dst[i];
-    A.push([u,v,1,0,0,0,-u*x,-v*x]);b.push(x);A.push([0,0,0,u,v,1,-u*y,-v*y]);b.push(y)}
-  const h=solve8(A,b);if(!h)return null;return (u,v)=>{const d=h[6]*u+h[7]*v+1;return[(h[0]*u+h[1]*v+h[2])/d,(h[3]*u+h[4]*v+h[5])/d]}}
-function findMarkers(d,W,H){
-  const gray=new Uint8Array(W*H),hist=new Uint32Array(256);
-  for(let i=0;i<W*H;i++){const g=(d[i*4]*0.299+d[i*4+1]*0.587+d[i*4+2]*0.114)|0;gray[i]=g;hist[g]++}
-  let sum=0;for(let i=0;i<256;i++)sum+=i*hist[i];let sB=0,wB=0,best=0,T=128;
-  for(let t=0;t<256;t++){wB+=hist[t];if(!wB)continue;const wF=W*H-wB;if(!wF)break;sB+=t*hist[t];const mB=sB/wB,mF=(sum-sB)/wF,v=wB*wF*(mB-mF)*(mB-mF);if(v>best){best=v;T=t}}
-  const thr=Math.min(T*0.62,105),lab=new Int32Array(W*H),comps=[],st=[];let id=0;
-  for(let s=0;s<W*H;s++){if(lab[s]||gray[s]>=thr)continue;id++;let a=0,x0=W,y0=H,x1=0,y1=0,sx=0,sy=0;st.push(s);lab[s]=id;
-    while(st.length){const q=st.pop(),x=q%W,y=(q/W)|0;a++;sx+=x;sy+=y;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;
-      if(x>0&&!lab[q-1]&&gray[q-1]<thr){lab[q-1]=id;st.push(q-1)}if(x<W-1&&!lab[q+1]&&gray[q+1]<thr){lab[q+1]=id;st.push(q+1)}
-      if(y>0&&!lab[q-W]&&gray[q-W]<thr){lab[q-W]=id;st.push(q-W)}if(y<H-1&&!lab[q+W]&&gray[q+W]<thr){lab[q+W]=id;st.push(q+W)}}
-    comps.push({a,x0,y0,x1,y1,cx:sx/a,cy:sy/a})}
-  const md=Math.min(W,H),cand=comps.filter(c=>{const bw=c.x1-c.x0+1,bh=c.y1-c.y0+1;return bw>=md*0.018&&bh>=md*0.018&&bw<=md*0.16&&bh<=md*0.16&&bw/bh>0.55&&bw/bh<1.8&&c.a/(bw*bh)>0.7});
-  const corners=[[0,0],[W,0],[0,H],[W,H]],used=new Set(),out=[];
-  for(const [qx,qy] of corners){let bc=null,bd=1e18;for(const c of cand){if(used.has(c))continue;if((qx?c.cx<W/2:c.cx>W/2)||(qy?c.cy<H/2:c.cy>H/2))continue;
-      const dd=(c.cx-qx)**2+(c.cy-qy)**2;if(dd<bd){bd=dd;bc=c}}if(!bc)return null;used.add(bc);out.push([bc.cx,bc.cy])}
-  const [p0,p1,p2,p3]=out,area=Math.abs((p1[0]-p0[0])*(p2[1]-p0[1])-(p2[0]-p0[0])*(p1[1]-p0[1]))/2+Math.abs((p1[0]-p3[0])*(p2[1]-p3[1])-(p2[0]-p3[0])*(p1[1]-p3[1]))/2;
-  return area>W*H*0.12?out:null}
-let pendingScan=null;
-$('paperPhoto').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
-  $('paperMsg').textContent='종이를 찾는 중이에요…';
-  const url=URL.createObjectURL(f),im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=url});URL.revokeObjectURL(url);
-  if(!im){$('paperMsg').textContent='사진을 열 수 없어요.';return}
-  const sc=Math.min(1,1600/Math.max(im.width,im.height)),W=Math.round(im.width*sc),H=Math.round(im.height*sc);
-  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d',{willReadFrequently:true});g.drawImage(im,0,0,W,H);const full=g.getImageData(0,0,W,H);
-  const s2=Math.min(1,700/Math.max(W,H)),w2=Math.round(W*s2),h2=Math.round(H*s2),c2=document.createElement('canvas');c2.width=w2;c2.height=h2;
-  const g2=c2.getContext('2d',{willReadFrequently:true});g2.drawImage(cv,0,0,w2,h2);
-  let mk=findMarkers(g2.getImageData(0,0,w2,h2).data,w2,h2),found=!!mk;
-  mk=mk?mk.map(([x,y])=>[x/s2,y/s2]):[[W*0.02,H*0.02],[W*0.98,H*0.02],[W*0.02,H*0.98],[W*0.98,H*0.98]];
-  const ctr=PG.mks.map(([x,y])=>[x+PG.mk/2,y+PG.mk/2]),Hm=homography(found?ctr:[[0,0],[PG.W,0],[0,PG.H],[PG.W,PG.H]],mk);
-  if(!Hm){$('paperMsg').textContent='종이를 찾지 못했어요. 다시 찍어 주세요.';return}
-  const px_=(u,v)=>{const [x,y]=Hm(u,v),xi=Math.max(0,Math.min(W-1,Math.round(x))),yi=Math.max(0,Math.min(H-1,Math.round(y))),i=(yi*W+xi)*4;return[full.data[i],full.data[i+1],full.data[i+2]]};
-  let key=null;
-  if(found){const lum=c=>c[0]*0.299+c[1]*0.587+c[2]*0.114,white=lum(px_(PG.W/2,PG.codeY-40));let idx=0;
-    for(let i=0;i<5;i++){const c=px_(PG.codeX+i*PG.codeStep+PG.codeS/2,PG.codeY+PG.codeS/2);if(lum(c)<white*0.55)idx|=1<<i}
-    if(idx>=1&&idx<=FLAT.length)key=FLAT[idx-1]}
-  pendingScan={px_,found};
-  if(!key){let last=null;try{last=localStorage.getItem('doodle-lastprint')}catch(e){}
-    $('paperBox').hidden=true;openSketch('scan');toast2('어떤 밑그림을 색칠했는지 골라 주세요.'+(last?' (마지막으로 뽑은 건 '+speakName(last)+')':''));return}
-  finishScan(key)});
-function finishScan(key){if(!pendingScan)return;const {px_,found}=pendingScan;pendingScan=null;
-  snap();px.clearRect(0,0,PW,PH);setSketch(key);
-  const la=lnx.getImageData(0,0,PW,PH).data,N=PW*PH,blocked=new Uint8Array(N),line=new Uint8Array(N);
-  for(let i=0;i<N;i++)if(la[i*4+3]>80)line[i]=1;
-  const R=2;for(let y=0;y<PH;y++)for(let x=0;x<PW;x++){if(!line[y*PW+x])continue;for(let dy=-R;dy<=R;dy++){const yy=y+dy;if(yy<0||yy>=PH)continue;for(let dx=-R;dx<=R;dx++){const xx=x+dx;if(xx>=0&&xx<PW)blocked[yy*PW+xx]=1}}}
-  const lab=new Int32Array(N),regs=[null],st=[];let id=0;
-  for(let s=0;s<N;s++){if(lab[s]||blocked[s])continue;id++;const pix=[];let edge=false;st.push(s);lab[s]=id;
-    while(st.length){const q=st.pop(),x=q%PW,y=(q/PW)|0;pix.push(q);if(x===0||y===0||x===PW-1||y===PH-1)edge=true;
-      if(x>0&&!lab[q-1]&&!blocked[q-1]){lab[q-1]=id;st.push(q-1)}if(x<PW-1&&!lab[q+1]&&!blocked[q+1]){lab[q+1]=id;st.push(q+1)}
-      if(y>0&&!lab[q-PW]&&!blocked[q-PW]){lab[q-PW]=id;st.push(q-PW)}if(y<PH-1&&!lab[q+PW]&&!blocked[q+PW]){lab[q+PW]=id;st.push(q+PW)}}
-    regs.push({pix,edge})}
-  const samp=(pix,n)=>{const out=[],step=Math.max(1,Math.floor(pix.length/n));for(let i=0;i<pix.length;i+=step){const q=pix[i];out.push(px_(PG.fx+(q%PW)*PG.fs,PG.fy+((q/PW)|0)*PG.fs))}return out};
-  const med=a=>{const s=[...a].sort((x,y)=>x-y);return s[s.length>>1]};
-  const bgReg=regs.slice(1).filter(r=>r.edge).sort((a,b)=>b.pix.length-a.pix.length)[0];
-  let wr=[235,235,235];if(bgReg){const sm=samp(bgReg.pix,600);wr=[0,1,2].map(i=>Math.max(60,med(sm.map(c=>c[i]))))}
-  const col=new Array(regs.length).fill(null);
-  for(let r=1;r<regs.length;r++){const g=regs[r];if(g.edge||g.pix.length<120)continue;
-    const sm=samp(g.pix,300);let c=[0,1,2].map(i=>Math.min(255,med(sm.map(q=>q[i]))*255/wr[i]));
-    const mx=Math.max(...c),mn=Math.min(...c);if(mn>212&&mx-mn<30)continue;
-    const avg=(c[0]+c[1]+c[2])/3;c=c.map(v=>Math.max(0,Math.min(255,Math.round(avg+(v-avg)*1.3-8))));col[r]=c}
-  // 선 둘레 빈틈은 옆 색으로 채우기
-  const lab2=new Int32Array(lab);for(let it=0;it<R+2;it++){const nx=new Int32Array(lab2);
-    for(let q=0;q<N;q++){if(lab2[q]||line[q])continue;const x=q%PW;const n=(x>0&&lab2[q-1])||(x<PW-1&&lab2[q+1])||(q>=PW&&lab2[q-PW])||(q<N-PW&&lab2[q+PW]);if(n)nx[q]=n}lab2.set(nx)}
-  const im=px.getImageData(0,0,PW,PH),o=im.data;let filled=0;
-  for(let q=0;q<N;q++){const c=col[lab2[q]];if(!c)continue;const j=q*4;o[j]=c[0];o[j+1]=c[1];o[j+2]=c[2];o[j+3]=255;filled++}
-  px.putImageData(im,0,0);commit();
-  $('paperBox').hidden=true;showTab('draw');fitPaper();
-  const nm=speakName(key);
-  if(!filled)toast2('색칠한 곳을 찾지 못했어요. 밝은 곳에서 종이가 꽉 차게 다시 찍어 볼까요?');
-  else toast2(nm+' 종이 그림을 가져왔어요! 고칠 곳은 고치고 살아나라를 눌러요.'+(found?'':' (네 귀퉁이 네모가 다 보이게 찍으면 더 정확해요)'));
-  announce(josa(nm,'을','를')+' 가져왔어요! 살아나라를 눌러 봐요')}
-
+  showTab('stage');toast.textContent=sel.parts?'팔다리가 생겼어요! 춤추기를 골라 보세요.':'팔다리를 없앴어요.';if(sel.parts)announce('팔다리가 생겼어요!','Now it has arms and legs!')};
 
 /* ================= 반자동 업데이트 (앱에서만) ================= */
 const APP_VER=(document.querySelector('.ver')||{}).textContent||'v0';
@@ -2029,7 +1758,7 @@ requestAnimationFrame(loop);
 })();
 </script>
 <!--APPINFO--><script>
-window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.6", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.05", "items": ["공룡 밑그림 12종을 도감처럼 고급스럽게 새로 그렸어요 (팔다리·꼬리 움직임도 새 그림에 맞춤)", "사진으로 밑그림: 사진을 찍고 색칠하고 싶은 것만 손가락으로 빙 두르면 배경을 빼고 색칠 밑그림으로 바꿔요 (선 적게·보통·많이)", "만든 사진 밑그림은 밑그림 고르기 → 📸 내 사진에 모여요"]}, {"v": "v3.5", "d": "2026.11.05", "items": ["아이폰·아이패드에서도 써요 (사파리에서 열고 홈 화면에 추가)", "스케치북에 그린 그림 사진에서 책상·그림자·누런 종이·스프링을 빼고 그림만 오려 친구로", "띠링·쿵 같은 효과음을 뺐어요 (말소리·목소리·배경 음악은 그대로)", "내 데이터 백업: 왼쪽 아래 버전 → 친구·그림·대본을 파일로 저장했다가 새 폰(아이폰도)에서 불러오기"]}, {"v": "v3.4", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요.", "backup": {"keys": ["living-drawing-box-v1", "doodle-*"]}};
+window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.7", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.05", "items": ["📷 그림 사진: 사진 찍기와 앨범 고르기를 따로 눌러요 (앱에서 카메라가 안 열리던 문제 고침)", "사진에서 원하는 곳만 손가락으로 둘러 고르면, 사진 모습 그대로 그리기 화면에 들어가요. 그 위에 그리고 색칠한 뒤 살아나라!", "말로 알려주기를 한국어·영어 중에 골라요 (오른쪽 위 🗣️ 버튼: 한 → EN → 끄기)", "종이 색칠 놀이를 뺐어요"]}, {"v": "v3.6", "d": "2026.11.05", "items": ["공룡 밑그림 12종을 도감처럼 고급스럽게 새로 그렸어요 (팔다리·꼬리 움직임도 새 그림에 맞춤)", "사진으로 밑그림: 사진을 찍고 색칠하고 싶은 것만 손가락으로 빙 두르면 배경을 빼고 색칠 밑그림으로 바꿔요 (선 적게·보통·많이)", "만든 사진 밑그림은 밑그림 고르기 → 📸 내 사진에 모여요"]}, {"v": "v3.5", "d": "2026.11.05", "items": ["아이폰·아이패드에서도 써요 (사파리에서 열고 홈 화면에 추가)", "스케치북에 그린 그림 사진에서 책상·그림자·누런 종이·스프링을 빼고 그림만 오려 친구로", "띠링·쿵 같은 효과음을 뺐어요 (말소리·목소리·배경 음악은 그대로)", "내 데이터 백업: 왼쪽 아래 버전 → 친구·그림·대본을 파일로 저장했다가 새 폰(아이폰도)에서 불러오기"]}, {"v": "v3.4", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요.", "backup": {"keys": ["living-drawing-box-v1", "doodle-*"]}};
 window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());window.APP_INFO.web=!window.APP_INFO.online&&/github\.io$/.test(location.hostname);if(window.APP_INFO.online)window.APP_INFO.backup.save=function(n,t){var P=Capacitor.Plugins;if(!P.Filesystem||!P.Share)return false;return P.Filesystem.writeFile({path:n,data:t,directory:'CACHE',encoding:'utf8'}).then(function(w){return P.Share.share({title:n,files:[w.uri],dialogTitle:'백업 파일 저장하기'})}).then(function(){return true},function(e){if(/cancel/i.test(String(e&&e.message||e)))return false;throw e})};
 </script>
 <script>
