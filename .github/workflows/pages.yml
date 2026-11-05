@@ -26,6 +26,7 @@ jobs:
           sed -i "s/__VER__/$VER/g; s/__MB__/$MB/g" site/*.html
           printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk"><title>Doodle 받기</title><a href="https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk">Doodle.apk 받기</a>' > site/dl.html
           touch site/.nojekyll
+          bash webapp/build.sh "$VER-${GITHUB_SHA::7}"
       - uses: actions/upload-pages-artifact@v3
         with: { path: site }
   pages:

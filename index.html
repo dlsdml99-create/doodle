@@ -388,7 +388,7 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="updLater">나중에</button><button class="btn main" id="updGo">업데이트</button></div>
   <p>업데이트를 누르면 새 앱 파일을 받아요. 받은 파일을 열어 설치하면 끝! 만든 친구들은 그대로 남아요.</p>
 </div></div>
-<div class="ver">v3.4</div>
+<div class="ver">v3.5</div>
 
 <script>
 (function(){
@@ -404,18 +404,17 @@ const NAMES=['뭉치','파랑이','콩이','별이','토리','보리','몽실이
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 let chars=[], sel=null, uid=0, scene='theater', together=false, last=clock(), particles=[];
 
-/* ================= 소리 (효과음 + 말소리 + 목소리, 버튼 하나로) ================= */
+/* ================= 소리 (말소리 + 목소리, 버튼 하나로 · 효과음 없음) ================= */
 let ac=null, master=null, recDest=null, curSrc=null, soundOn=true, musicOn=false, musicTimer=null, step=0;
 function audio(){try{if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.connect(ac.destination)}
   if(ac.state==='suspended')ac.resume()}catch(e){ac=null}return ac}
-document.addEventListener('pointerdown',()=>{if(soundOn||musicOn)audio()},{passive:true});
+['pointerdown','touchend','click'].forEach(ev=>document.addEventListener(ev,()=>{if(soundOn||musicOn)audio()},{passive:true})); // 아이폰은 손을 뗄 때 소리가 풀려요
 function tone(f,dur,type,vol,slide,at){const a=audio();if(!a)return;
   const o=a.createOscillator(),g=a.createGain(),n=at||a.currentTime;o.type=type||'triangle';
   o.frequency.setValueAtTime(f,n);if(slide)o.frequency.exponentialRampToValueAtTime(slide,n+dur);
   g.gain.setValueAtTime(0.0001,n);g.gain.exponentialRampToValueAtTime(vol||.15,n+0.01);g.gain.exponentialRampToValueAtTime(0.0001,n+dur);
   o.connect(g);g.connect(master);o.start(n);o.stop(n+dur+0.02)}
-const sfx={jump:()=>soundOn&&tone(300,.28,'sine',.2,900),pop:()=>{if(!soundOn)return;tone(660,.12,'square',.07);setTimeout(()=>tone(990,.15,'square',.06),90)},
-  step:()=>soundOn&&tone(180,.06,'triangle',.05),snap:()=>soundOn&&tone(1500,.08,'square',.08,400)};
+const noop=()=>{},sfx={jump:noop,pop:noop,step:noop,snap:noop,thump:noop,swoosh:noop};
 const MEL=[523,659,784,659,587,698,880,698,523,659,784,1046,988,784,659,587];
 function setMusic(on){musicOn=on;clearInterval(musicTimer);$('music').setAttribute('aria-pressed',on);
   if(on){audio();musicTimer=setInterval(()=>{tone(MEL[step%16],.25,'triangle',.045);if(step%4===0)tone(MEL[step%16]/4,.45,'sine',.06);step++},280)}}
@@ -511,6 +510,62 @@ function makeSprite(src){
   return out;
 }
 
+/* 스케치북·종이 사진 오리기: 그림자·누런 종이·책상·스프링을 빼고 그림만 남겨요 (폰 안에서만 계산) */
+function photoCut(src){
+  const max=520,sc=Math.min(1,max/Math.max(src.width,src.height)),w=Math.max(1,Math.round(src.width*sc)),h=Math.max(1,Math.round(src.height*sc));
+  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(src,0,0,w,h);
+  const im=x.getImageData(0,0,w,h),d=im.data,N=w*h,L=new Float32Array(N),C=new Float32Array(N);
+  for(let q=0,k=0;q<N;q++,k+=4){const r=d[k],g=d[k+1],b=d[k+2];L[q]=0.299*r+0.587*g+0.114*b;C[q]=Math.max(r,g,b)-Math.min(r,g,b)}
+  // 주변 밝기(종이 밝기)와 비교해서 진한 곳만 그림으로 (그림자처럼 천천히 어두워지는 곳은 무시)
+  const integ=(v,m)=>{const I=new Float64Array((w+1)*(h+1));for(let j=0;j<h;j++){let row=0;for(let i=0;i<w;i++){const q=j*w+i;row+=m?(m[q]?v[q]:0):v[q];I[(j+1)*(w+1)+i+1]=I[j*(w+1)+i+1]+row}}return I};
+  const box=(I,i,j,R)=>{const a=Math.max(0,i-R),b=Math.max(0,j-R),e=Math.min(w,i+R+1),f=Math.min(h,j+R+1);return [I[f*(w+1)+e]-I[b*(w+1)+e]-I[f*(w+1)+a]+I[b*(w+1)+a],(e-a)*(f-b)]};
+  const R=Math.max(8,Math.round(Math.min(w,h)/18)),IL=integ(L),IC=integ(C),ink=new Uint8Array(N);
+  for(let j=0;j<h;j++)for(let i=0;i<w;i++){const q=j*w+i,[sl,n]=box(IL,i,j,R),[scc]=box(IC,i,j,R);
+    if(L[q]<sl/n-22||C[q]>scc/n+38)ink[q]=1}
+  // 끊어진 선을 잇고(조금 굵게) 덩어리 나누기
+  const r=Math.max(2,Math.round(Math.min(w,h)*0.012)),dil=new Uint8Array(N),tmp=new Uint8Array(N);
+  for(let j=0;j<h;j++){let last=-1e9;for(let i=0;i<w;i++){if(ink[j*w+i])last=i;if(i-last<=r)tmp[j*w+i]=1}last=1e9;for(let i=w-1;i>=0;i--){if(ink[j*w+i])last=i;if(last-i<=r)tmp[j*w+i]=1}}
+  for(let i=0;i<w;i++){let last=-1e9;for(let j=0;j<h;j++){if(tmp[j*w+i])last=j;if(j-last<=r)dil[j*w+i]=1}last=1e9;for(let j=h-1;j>=0;j--){if(tmp[j*w+i])last=j;if(last-j<=r)dil[j*w+i]=1}}
+  const lab=new Int32Array(N),comps=[];let id=0;
+  for(let s0=0;s0<N;s0++){if(!dil[s0]||lab[s0])continue;id++;const st=[s0];lab[s0]=id;let a=0,x0=w,y0=h,x1=0,y1=0,inkA=0;
+    while(st.length){const q=st.pop(),i=q%w,j=(q/w)|0;a++;if(ink[q])inkA++;if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j;
+      if(i>0&&dil[q-1]&&!lab[q-1]){lab[q-1]=id;st.push(q-1)}if(i<w-1&&dil[q+1]&&!lab[q+1]){lab[q+1]=id;st.push(q+1)}
+      if(j>0&&dil[q-w]&&!lab[q-w]){lab[q-w]=id;st.push(q-w)}if(j<h-1&&dil[q+w]&&!lab[q+w]){lab[q+w]=id;st.push(q+w)}}
+    const edge=x0<=1||y0<=1||x1>=w-2||y1>=h-2;comps.push({id,a,inkA,x0,y0,x1,y1,edge})}
+  // 종이 테두리(책상과 종이 경계·스프링)처럼 가장자리만 있는 큰 액자 모양은 빼기
+  comps.forEach(o=>{const bw=o.x1-o.x0+1,bh=o.y1-o.y0+1;if(bw*bh<N*0.2)return;let nc=0,ni=0;
+    let cc=0,cn=0;
+    for(let j=o.y0;j<=o.y1;j+=2)for(let i=o.x0;i<=o.x1;i+=2){const q=j*w+i,inC=Math.abs(i-(o.x0+o.x1)/2)<bw*0.3&&Math.abs(j-(o.y0+o.y1)/2)<bh*0.3;
+      if(inC&&!ink[q]){cc+=C[q];cn++}if(lab[q]!==o.id||!ink[q])continue;ni++;if(inC)nc++}
+    if(ni&&nc/ni<0.08&&(!cn||cc/cn<55)){o.edge=true;o.frame=true}});
+  const big=comps.filter(o=>o.inkA>N*0.0015);let pool=big.filter(o=>!o.edge);if(!pool.length)pool=big;if(!pool.length)return null;
+  const cxw=w/2,cyw=h/2,score=o=>o.inkA/(1+Math.hypot((o.x0+o.x1)/2-cxw,(o.y0+o.y1)/2-cyw)/Math.min(w,h));
+  const main=pool.reduce((m,o)=>score(o)>score(m)?o:m),mw=main.x1-main.x0,mh=main.y1-main.y0;
+  // 그림이 사진 밖으로 꽉 차게 찍혔으면(가장자리에 닿은 큰 그림) 예전 방식으로
+  if(big.reduce((t,o)=>t+(o.edge&&!o.frame?o.inkA:0),0)>main.inkA*2)return null;
+  const keep=new Set([main.id]);pool.forEach(o=>{if(o.inkA>main.inkA*0.03&&o.x0>=main.x0-mw*0.15&&o.x1<=main.x1+mw*0.15&&o.y0>=main.y0-mh*0.15&&o.y1<=main.y1+mh*0.15)keep.add(o.id)});
+  // 바깥에서 들어갈 수 없는 안쪽(그림 속 흰 부분)은 그림으로 남기기
+  const out=new Uint8Array(N),st=[],obj=q=>keep.has(lab[q]);
+  const push=q=>{if(out[q]||obj(q))return;out[q]=1;st.push(q)};
+  for(let i=0;i<w;i++){push(i);push((h-1)*w+i)}for(let j=0;j<h;j++){push(j*w);push(j*w+w-1)}
+  while(st.length){const q=st.pop(),i=q%w,j=(q/w)|0;if(i>0)push(q-1);if(i<w-1)push(q+1);if(j>0)push(q-w);if(j<h-1)push(q+w)}
+  // 바깥 종이 색을 칸마다 재서(그림 속은 가까운 칸 값으로 채움) 종이색은 하얗게, 그림 색은 그림자만큼 밝게
+  const G=12,gw=Math.ceil(w/G),gh=Math.ceil(h/G),gs=new Float32Array(gw*gh*3),gc=new Float32Array(gw*gh);
+  for(let q=0;q<N;q++)if(out[q]&&!ink[q]){const g=((q/w|0)/G|0)*gw+((q%w)/G|0),k=q*4;gs[g*3]+=d[k];gs[g*3+1]+=d[k+1];gs[g*3+2]+=d[k+2];gc[g]++}
+  const has=new Uint8Array(gw*gh);let left=0;for(let g=0;g<gw*gh;g++){if(gc[g]>G*G*0.2){gs[g*3]/=gc[g];gs[g*3+1]/=gc[g];gs[g*3+2]/=gc[g];has[g]=1}else left++}
+  if(left===gw*gh){gs.fill(235);has.fill(1);left=0}
+  while(left>0){const nx=has.slice();let ch=0;for(let gy=0;gy<gh;gy++)for(let gx=0;gx<gw;gx++){const g=gy*gw+gx;if(has[g])continue;let r0=0,g0=0,b0=0,n=0;
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const X=gx+dx,Y=gy+dy;if(X<0||Y<0||X>=gw||Y>=gh)continue;const o=Y*gw+X;if(!has[o])continue;r0+=gs[o*3];g0+=gs[o*3+1];b0+=gs[o*3+2];n++}
+      if(n){gs[g*3]=r0/n;gs[g*3+1]=g0/n;gs[g*3+2]=b0/n;nx[g]=1;ch++}}has.set(nx);left-=ch;if(!ch)break}
+  let any=0;
+  for(let j=0;j<h;j++)for(let i=0;i<w;i++){const q=j*w+i,k=q*4;if(out[q]){d[k+3]=0;continue}any++;
+    const fx=Math.max(0,Math.min(gw-1.001,i/G-0.5)),fy=Math.max(0,Math.min(gh-1.001,j/G-0.5)),x0=fx|0,y0=fy|0,x1=Math.min(gw-1,x0+1),y1=Math.min(gh-1,y0+1),ax=fx-x0,ay=fy-y0,bl=c=>(gs[(y0*gw+x0)*3+c]*(1-ax)+gs[(y0*gw+x1)*3+c]*ax)*(1-ay)+(gs[(y1*gw+x0)*3+c]*(1-ax)+gs[(y1*gw+x1)*3+c]*ax)*ay,pr=bl(0),pg=bl(1),pb=bl(2),pL=0.299*pr+0.587*pg+0.114*pb;
+    if(!ink[q]&&Math.hypot(d[k]-pr,d[k+1]-pg,d[k+2]-pb)<55){d[k]=d[k+1]=d[k+2]=255;continue}
+    const f=Math.min(1.8,Math.max(1,235/Math.max(60,pL)));d[k]=Math.min(255,d[k]*f);d[k+1]=Math.min(255,d[k+1]*f);d[k+2]=Math.min(255,d[k+2]*f)}
+  if(any<N*0.004)return null;
+  x.putImageData(im,0,0);return c;
+}
+
 /* ================= 예시 친구들 ================= */
 function sampleA(){
   const c=document.createElement('canvas'); c.width=420; c.height=520;
@@ -594,27 +649,8 @@ Object.assign(MOTIONS,{
 });
 function defaultMotion(k){return k==='ptera'?'flap':k==='mosa'?'tail':k==='egg'?'dance':'stomp'}
 
-/* --- 소리: 쿵, 크앙, 휘익 --- */
-let noiseBuf=null;
-function noiseSrc(a){if(!noiseBuf){noiseBuf=a.createBuffer(1,a.sampleRate*1.5,a.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
-  const s=a.createBufferSource();s.buffer=noiseBuf;return s}
-function noiseHit(dur,vol,f0,f1,type,at){const a=audio();if(!a||!soundOn)return;const n=at||a.currentTime;
-  const s=noiseSrc(a),f=a.createBiquadFilter(),g=a.createGain();f.type=type||'lowpass';f.frequency.setValueAtTime(f0,n);f.frequency.exponentialRampToValueAtTime(f1,n+dur);
-  g.gain.setValueAtTime(0.0001,n);g.gain.exponentialRampToValueAtTime(vol,n+0.02);g.gain.exponentialRampToValueAtTime(0.0001,n+dur);
-  s.connect(f);f.connect(g);g.connect(master);s.start(n);s.stop(n+dur+0.05)}
-sfx.thump=()=>{if(!soundOn)return;tone(70,0.28,'sine',0.35,32);noiseHit(0.18,0.25,400,80,'lowpass')};
-sfx.swoosh=()=>{if(!soundOn)return;noiseHit(0.7,0.12,300,2400,'bandpass')};
-let distCurve=null;
-function roarSound(c){const a=audio();if(!a||!soundOn)return;const n=a.currentTime;
-  if(c.kind==='ptera'){tone(1100,0.45,'square',0.05,650);tone(1350,0.4,'sawtooth',0.03,800,n+0.05);return}
-  const big=c.kind==='raptor'||c.kind==='egg'?2.2:c.kind==='brachio'?0.8:1,f=105*big;
-  if(!distCurve){distCurve=new Float32Array(256);for(let i=0;i<256;i++){const x=i/128-1;distCurve[i]=Math.tanh(x*4)}}
-  const sh=a.createWaveShaper();sh.curve=distCurve;const g=a.createGain();g.gain.setValueAtTime(0.0001,n);g.gain.exponentialRampToValueAtTime(0.16,n+0.08);g.gain.exponentialRampToValueAtTime(0.0001,n+1.15);
-  sh.connect(g);g.connect(master);
-  [1,1.013,0.5].forEach((m,i)=>{const o=a.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(f*m*1.25,n);o.frequency.exponentialRampToValueAtTime(f*m*0.6,n+1.1);
-    const lfo=a.createOscillator(),lg=a.createGain();lfo.frequency.value=23+i*4;lg.gain.value=f*0.08;lfo.connect(lg);lg.connect(o.frequency);
-    o.connect(sh);o.start(n);o.stop(n+1.2);lfo.start(n);lfo.stop(n+1.2)});
-  noiseHit(1.0,0.12,900*big,300*big,'bandpass',n+0.03)}
+/* --- 효과음(쿵·크앙·휘익)은 뺐어요 --- */
+/* 효과음은 뺐어요 (말소리·목소리·배경 음악만 남김) */
 function dust(x){for(let i=0;i<7;i++)particles.push({x:x+(Math.random()-.5)*60,y:GROUND+2,vx:(Math.random()-.5)*160,vy:-Math.random()*90-20,life:.55,c:'rgba(150,120,90,.8)'})}
 
 /* --- 읽어주기 --- */
@@ -812,7 +848,7 @@ function drawChar(c,t,dt){
   c.x=Math.max(lo,Math.min(hi,c.x));
   const vis=stageVisible()||!!recorder;
   if(p.stomp){const st=Math.floor(tt*3.5/Math.PI);if(st!==c.lastStep){c.lastStep=st;if(vis){sfx.thump();shakeT=Math.max(shakeT,0.16);dust(c.x)}}}
-  if(p.roar){const cy=Math.floor(tt/2.6);if(cy!==c.lastRoar){c.lastRoar=cy;if(vis&&!playing){roarSound(c);if(!(c.say&&rt()<c.sayUntil)){c.say=c.kind==='ptera'?'끼아악!':'크앙!';c.sayUntil=rt()+1.4}}}}
+  if(p.roar){const cy=Math.floor(tt/2.6);if(cy!==c.lastRoar){c.lastRoar=cy;if(vis&&!playing){if(!(c.say&&rt()<c.sayUntil)){c.say=c.kind==='ptera'?'끼아악!':'크앙!';c.sayUntil=rt()+1.4}}}}
   const bt=t-c.boost;let by=0,spin=0;
   if(bt>=0&&bt<0.7){const u=bt/0.7;by=-4*u*(1-u)*130;spin=u*Math.PI*2*c.dir}
   const lift=p.y+by,sh=Math.max(0.3,1+lift/220);
@@ -933,12 +969,17 @@ $('remove').onclick=()=>{if(!sel)return;chars=chars.filter(c=>c!==sel);sel=chars
 const scenesEl=$('scenes');
 Object.entries(SCENES).forEach(([k,v])=>{const b=document.createElement('button');b.className='chip';b.textContent=v;b.dataset.k=k;b.setAttribute('aria-pressed',String(k===scene));
   b.onclick=()=>{setScene(k);announce(v)};scenesEl.appendChild(b)});
+// 웹(아이폰 사파리 등)에서는 공유 창으로 '사진에 저장'·보내기
+async function webShare(blob,name,title){try{if(!navigator.canShare||!window.File)return false;const f=new File([blob],name,{type:blob.type});
+  if(!navigator.canShare({files:[f]}))return false;await navigator.share({files:[f],title:title||'Doodle'});return true}catch(e){return !!(e&&e.name==='AbortError')}}
+const dataBlob=u=>{const [h,b]=u.split(','),bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:h.slice(5).split(';')[0]})};
 $('snap').onclick=async()=>{sfx.snap();const url=stage.toDataURL('image/png');
   if(CAP&&CAP.Filesystem&&CAP.Share){
     try{const name='doodle-'+Date.now()+'.png';
       const w=await CAP.Filesystem.writeFile({path:name,data:url.split(',')[1],directory:'CACHE'});
       await CAP.Share.share({title:'Doodle',text:'내 그림 친구들!',files:[w.uri],dialogTitle:'사진 저장하거나 보내기'});return}
     catch(e){if(e&&/cancel/i.test(String(e.message||e)))return}}
+  if(!CAP&&await webShare(dataBlob(url),'doodle-'+Date.now()+'.png','내 그림 친구들!'))return;
   $('shotImg').src=url;$('shot').hidden=false};
 let recorder=null,recChunks=[],recStart=0,recTimer=null;
 function pickMime(){for(const m of ['video/mp4;codecs=avc1,mp4a.40.2','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4']){try{if(MediaRecorder.isTypeSupported(m))return m}catch(e){}}return ''}
@@ -951,6 +992,7 @@ async function saveVideo(blob,type){
       const w=await CAP.Filesystem.writeFile({path:'doodle-'+Date.now()+'.'+ext,data:b64,directory:'CACHE'});
       await CAP.Share.share({title:'Doodle',text:'내 그림 친구들의 연극!',files:[w.uri],dialogTitle:'영상 저장하거나 보내기'});return}
     catch(e){if(e&&/cancel/i.test(String(e.message||e)))return}}
+  if(!CAP&&await webShare(blob,'doodle-'+Date.now()+'.'+ext,'내 그림 친구들의 연극!'))return;
   const v=$('vid');try{if(v.src)URL.revokeObjectURL(v.src)}catch(e){}v.src=URL.createObjectURL(blob);$('vidBox').hidden=false;
 }
 $('vidClose').onclick=()=>{$('vid').pause();$('vidBox').hidden=true};
@@ -1075,7 +1117,7 @@ $('photo').addEventListener('change',e=>{
   const f=e.target.files&&e.target.files[0];if(!f)return;
   toast.textContent='그림을 오려내는 중이에요…';
   const img=new Image(),url=URL.createObjectURL(f);
-  img.onload=()=>{const s=makeSprite(img);URL.revokeObjectURL(url);
+  img.onload=()=>{let s=null;try{const cut=photoCut(img);if(cut)s=makeSprite(cut)}catch(err){s=null}if(!s)s=makeSprite(img);URL.revokeObjectURL(url);
     if(s){const c=addChar(s);storeFriend(c);showTab('stage');toast.textContent='살아났어요! 친구들 탭에서 이름과 움직임을 바꿀 수 있어요.'}
     else {toast.textContent='그림을 찾지 못했어요. 흰 종이에 진하게 그린 그림을 밝은 곳에서 찍어 주세요.';toast2(toast.textContent)}e.target.value=''};
   img.onerror=()=>{toast.textContent='사진을 열 수 없어요. 다른 사진으로 해 볼까요?';toast2(toast.textContent)};
@@ -1475,7 +1517,7 @@ async function setBig(on){
   try{
     if(on){if(SO)await SO.lock({orientation:'landscape'});
       else{if(document.documentElement.requestFullscreen&&!document.fullscreenElement)await document.documentElement.requestFullscreen();
-        if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape')}}
+        if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape');else if(innerWidth<innerHeight)toast2('폰을 옆으로 돌리면 더 크게 그릴 수 있어요.')}}
     else{if(SO)await SO.unlock();else{try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}
       if(document.fullscreenElement)await document.exitFullscreen()}}
   }catch(e){if(on)toast2('이 화면에서는 자동으로 가로가 안 돼요. 폰을 옆으로 돌려 주세요.')}
@@ -1496,7 +1538,7 @@ $('wake').onclick=async()=>{
   if($('drawbox').classList.contains('big'))await setBig(false);
   const kind=DINO_INFO[sketchKey]?sketchKey:null;
   const c=addChar(s,kind?defaultMotion(kind):null,kind?sketchName(kind):null,{kind,parts:mapParts(RIG[sketchKey],s)});storeFriend(c);showTab('stage');
-  toast.textContent=kind?DINO_INFO[kind][0]+'가 살아났어요! 톡 누르면 크앙!':'살아났어요! 친구들 탭에서 이름·움직임·팔다리를 바꿀 수 있어요.';
+  toast.textContent=kind?DINO_INFO[kind][0]+'가 살아났어요! 톡 누르면 펄쩍!':'살아났어요! 친구들 탭에서 이름·움직임·팔다리를 바꿀 수 있어요.';
   announce('살아나라!');if(kind)dexAdd(kind,c);
 };
 
@@ -1620,6 +1662,7 @@ async function doPrint(k){const page=makePage(k);try{localStorage.setItem('doodl
       const w=await CAP.Filesystem.writeFile({path:'doodle-'+k+'.pdf',data:bytesToB64(pdf),directory:'CACHE'});
       await CAP.Share.share({title:'Doodle 색칠 놀이',files:[w.uri],dialogTitle:'인쇄하거나 저장하기'});$('paperMsg').textContent='인쇄했으면 색칠한 다음 📷를 눌러 찍어 주세요.';return}
     catch(e){if(e&&/cancel/i.test(String(e.message||e)))return}}
+  if(!CAP){try{const pdf=makePDF(b64ToBytes(page.toDataURL('image/jpeg',0.9).split(',')[1]),PG.W,PG.H);if(await webShare(new Blob([pdf],{type:'application/pdf'}),'doodle-'+k+'.pdf','Doodle 색칠 놀이')){$('paperMsg').textContent='인쇄했으면 색칠한 다음 📷를 눌러 찍어 주세요.';return}}catch(e){}}
   $('paperPreview').src=page.toDataURL('image/png');$('paperPreview').hidden=false;$('paperMsg').textContent='그림을 길게 눌러 저장한 뒤 인쇄해 주세요.';$('paperBox').hidden=false}
 $('paperBtn').onclick=()=>{$('paperPreview').hidden=true;$('paperMsg').textContent='';$('paperBox').hidden=false;announce('종이 색칠 놀이! 밑그림을 뽑아서 색칠하고 사진을 찍어요')};
 $('paperClose').onclick=()=>{$('paperBox').hidden=true};
@@ -1741,14 +1784,14 @@ requestAnimationFrame(loop);
 })();
 </script>
 <!--APPINFO--><script>
-window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.4", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요."};
-window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
+window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.5", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.05", "items": ["아이폰·아이패드에서도 써요 (사파리에서 열고 홈 화면에 추가)", "스케치북에 그린 그림 사진에서 책상·그림자·누런 종이·스프링을 빼고 그림만 오려 친구로", "띠링·쿵 같은 효과음을 뺐어요 (말소리·목소리·배경 음악은 그대로)", "내 데이터 백업: 왼쪽 아래 버전 → 친구·그림·대본을 파일로 저장했다가 새 폰(아이폰도)에서 불러오기"]}, {"v": "v3.4", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요.", "backup": {"keys": ["living-drawing-box-v1", "doodle-*"]}};
+window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());window.APP_INFO.web=!window.APP_INFO.online&&/github\.io$/.test(location.hostname);if(window.APP_INFO.online)window.APP_INFO.backup.save=function(n,t){var P=Capacitor.Plugins;if(!P.Filesystem||!P.Share)return false;return P.Filesystem.writeFile({path:n,data:t,directory:'CACHE',encoding:'utf8'}).then(function(w){return P.Share.share({title:n,files:[w.uri],dialogTitle:'백업 파일 저장하기'})}).then(function(){return true},function(e){if(/cancel/i.test(String(e&&e.message||e)))return false;throw e})};
 </script>
 <script>
 /* ───── 앱 정보 창 (모든 앱 공통) ─────
    왼쪽 아래 버전을 누르면: 앱 이름·버전, 최신인지, 새 버전 확인, 업데이트 내용, 개인정보.
    새 버전이 있으면 버전 글씨가 노란색으로 바뀐다.
-   설정: window.APP_INFO = { name, repo, version, online, mount, notes:[{v,d,items}], privacy }
+   설정: window.APP_INFO = { name, repo, version, online, mount, notes:[{v,d,items}], privacy, backup }
    - version: '1.8' 또는 함수. 'current'인 업데이트 항목은 지금 버전으로 표시
    - online: 앱(APK) 안이면 true. 미리보기에서는 인터넷을 쓰지 않음
    - mount: 이미 있는 버전 글씨의 CSS 선택자 (없으면 왼쪽 아래에 새로 만듦)
@@ -1837,11 +1880,116 @@ window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacito
     'button:focus-visible,a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}';
   var isOpen = false;
   function statusHTML() {
-    if (!C.online) return '미리보기에서는 새 버전을 확인하지 않아요. 앱에서는 자동으로 확인해요.';
+    if (!C.online) return C.web ? '웹앱은 열 때마다 저절로 최신 버전으로 바뀌어요.' : '미리보기에서는 새 버전을 확인하지 않아요. 앱에서는 자동으로 확인해요.';
     if (checking) return '새 버전을 확인하는 중이에요…';
     if (hasUpdate()) return '새 버전 <b>v' + esc(norm(latest.v)) + '</b>이 나왔어요.';
     if (failed && !latest) return '새 버전을 확인하지 못했어요. 인터넷 연결을 확인해 주세요.';
     return latest ? '지금 쓰는 버전이 최신이에요.' : '새 버전 확인을 눌러 주세요.';
+  }
+  /* ── 내 데이터 백업: 이 기기에 저장된 것(설정·기록·사진)을 파일 하나로 저장하고 다시 불러오기.
+     파일은 사용자가 고른 곳(내 파일·드라이브 등)에만 저장되고, 앱이 인터넷으로 보내지 않는다.
+     설정: APP_INFO.backup = { keys:['이름', '접두어*'], idb:[{db, store}], bridge:'Android', save:fn(name,text)->Promise }  ── */
+  var B = C.backup || null, bk = { msg: '', busy: false, pending: null };
+  var bkBridge = function () { var b = B && B.bridge && window[B.bridge]; return b && typeof b.backupSave === 'function' ? b : null; };
+  function lsKeys() {
+    var out = [];
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf('appinfo.') !== 0 && (B.keys || []).some(function (p) { return k === p || (p.slice(-1) === '*' && k.indexOf(p.slice(0, -1)) === 0); })) out.push(k); } } catch (e) { /* 저장 공간 없음 */ }
+    return out;
+  }
+  function toPlain(v) {
+    if (v instanceof Blob) return new Promise(function (res) { var r = new FileReader(); r.onload = function () { res({ __blob: String(r.result) }); }; r.onerror = function () { res(null); }; r.readAsDataURL(v); });
+    if (Array.isArray(v)) return Promise.all(v.map(toPlain));
+    if (v && typeof v === 'object' && !(v instanceof Date)) { var ks = Object.keys(v); return Promise.all(ks.map(function (k) { return toPlain(v[k]); })).then(function (vs) { var o = {}; ks.forEach(function (k, i) { o[k] = vs[i]; }); return o; }); }
+    return Promise.resolve(v);
+  }
+  function fromPlain(v) {
+    if (Array.isArray(v)) return v.map(fromPlain);
+    if (v && typeof v === 'object') {
+      if (typeof v.__blob === 'string' && Object.keys(v).length === 1) { try { var p = v.__blob.split(','), bin = atob(p[1]), a = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type: (p[0].match(/^data:([^;]+)/) || [])[1] || '' }); } catch (e) { return null; } }
+      var o = {}; Object.keys(v).forEach(function (k) { o[k] = fromPlain(v[k]); }); return o;
+    }
+    return v;
+  }
+  function idbOpen(name, store) {
+    return new Promise(function (res) {
+      try { var r = indexedDB.open(name); r.onupgradeneeded = function () { try { r.result.createObjectStore(store); } catch (e) { /* 이미 있음 */ } }; r.onsuccess = function () { res(r.result); }; r.onerror = function () { res(null); }; } catch (e) { res(null); }
+    });
+  }
+  function idbDump(d) {
+    return idbOpen(d.db, d.store).then(function (db) {
+      if (!db || !db.objectStoreNames.contains(d.store)) return [];
+      return new Promise(function (res) {
+        var out = []; try { var q = db.transaction(d.store).objectStore(d.store).openCursor();
+          q.onsuccess = function () { var c = q.result; if (c) { out.push([c.key, c.value]); c.continue(); } else res(out); }; q.onerror = function () { res(out); };
+        } catch (e) { res(out); }
+      }).then(function (rows) { db.close(); return Promise.all(rows.map(function (r) { return toPlain(r[1]).then(function (v) { return [r[0], v]; }); })); });
+    });
+  }
+  function idbLoad(d, rows) {
+    return idbOpen(d.db, d.store).then(function (db) {
+      if (!db || !db.objectStoreNames.contains(d.store)) return;
+      return new Promise(function (res) {
+        try { var tx = db.transaction(d.store, 'readwrite'), s = tx.objectStore(d.store); s.clear(); (rows || []).forEach(function (r) { s.put(fromPlain(r[1]), r[0]); }); tx.oncomplete = function () { db.close(); res(); }; tx.onerror = function () { db.close(); res(); }; } catch (e) { res(); }
+      });
+    });
+  }
+  function bkSet(m, busy) { bk.msg = m; bk.busy = !!busy; if (isOpen) render(); }
+  function bkName() { var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; }; return C.name + '-백업-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '.json'; }
+  function bkSave() {
+    if (bk.busy) return; bkSet('백업 파일을 만드는 중이에요…', true);
+    var ls = {}; lsKeys().forEach(function (k) { ls[k] = localStorage.getItem(k); });
+    Promise.all((B.idb || []).map(idbDump)).then(function (dumps) {
+      var idb = {}; (B.idb || []).forEach(function (d, i) { idb[d.db + '/' + d.store] = dumps[i]; });
+      var text = JSON.stringify({ app: C.name, repo: C.repo, version: cur(), at: new Date().toISOString(), ls: ls, idb: idb }), name = bkName(), br = bkBridge();
+      if (br) { bkSet('저장할 곳을 골라 주세요 (내 파일·드라이브 등)', true); br.backupSave(name, text); return; }
+      if (typeof B.save === 'function') { Promise.resolve(B.save(name, text)).then(function (ok) { bkDone(ok !== false, ok === false ? 'cancel' : ''); }, function () { bkDone(false); }); return; }
+      var blob = new Blob([text], { type: 'application/json' }), f = window.File ? new File([blob], name, { type: 'application/json' }) : null;
+      if (f && navigator.canShare && navigator.canShare({ files: [f] })) { navigator.share({ files: [f], title: name }).then(function () { bkDone(true); }, function (e) { bkDone(false, e && e.name === 'AbortError' ? 'cancel' : ''); }); return; }
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 4000); bkDone(true);
+    }, function () { bkDone(false); });
+  }
+  function bkDone(ok, why) { bkSet(ok ? '백업 파일을 저장했어요. 새 폰에서는 이 화면의 "백업 불러오기"로 넣으면 돼요.' : why === 'cancel' ? '' : '백업 파일을 저장하지 못했어요. 다시 해 주세요.'); }
+  function bkOpen() {
+    if (bk.busy) return; bk.pending = null;
+    var br = bkBridge(); if (br && typeof br.backupOpen === 'function') { bkSet('백업 파일을 골라 주세요', true); br.backupOpen(); return; }
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'application/json,text/plain,application/octet-stream,.json'; inp.style.display = 'none'; document.body.appendChild(inp);
+    inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; inp.remove(); if (!f) return; var r = new FileReader(); r.onload = function () { bkOpened(String(r.result)); }; r.onerror = function () { bkOpened(null); }; r.readAsText(f); });
+    inp.click();
+  }
+  function bkOpened(text) {
+    if (text == null) { bkSet(''); return; }
+    var o = null; try { o = JSON.parse(text); } catch (e) { o = null; }
+    if (!o || typeof o.ls !== 'object' || !o.ls) { bkSet('이 파일은 백업 파일이 아니에요.'); return; }
+    if (o.repo !== C.repo) { bkSet('이 파일은 ' + (o.app ? '“' + o.app + '” 앱의' : '다른 앱의') + ' 백업이에요. ' + C.name + ' 백업 파일을 골라 주세요.'); return; }
+    bk.pending = o; bkSet('');
+  }
+  var bkMatch = function (k) { return (B.keys || []).some(function (p) { return k === p || (p.slice(-1) === '*' && String(k).indexOf(p.slice(0, -1)) === 0); }); };
+  function bkApply() {
+    var o = bk.pending; if (!o) return; bkSet('불러오는 중이에요…', true);
+    var SP = Storage.prototype, set0 = SP.setItem, rm0 = SP.removeItem, old = {};
+    lsKeys().forEach(function (k) { old[k] = localStorage.getItem(k); });
+    try { lsKeys().forEach(function (k) { rm0.call(localStorage, k); });
+      Object.keys(o.ls).forEach(function (k) { if (typeof o.ls[k] === 'string' && bkMatch(k)) set0.call(localStorage, k, o.ls[k]); });
+    } catch (e) {
+      try { lsKeys().forEach(function (k) { rm0.call(localStorage, k); }); Object.keys(old).forEach(function (k) { set0.call(localStorage, k, old[k]); }); } catch (e2) { /* 무시 */ }
+      bk.pending = null; bkSet('저장 공간이 부족해서 불러오지 못했어요. 원래 기록은 그대로예요.'); return;
+    }
+    /* 다시 열리기 전에 앱이 예전 기록을 덮어쓰지 못하게 잠금 */
+    SP.setItem = function (k, v) { if (this === localStorage && bkMatch(k)) return; return set0.apply(this, arguments); };
+    SP.removeItem = function (k) { if (this === localStorage && bkMatch(k)) return; return rm0.apply(this, arguments); };
+    Promise.all((B.idb || []).map(function (d) { var rows = o.idb && o.idb[d.db + '/' + d.store]; return rows ? idbLoad(d, rows) : Promise.resolve(); })).then(function () {
+      bkSet('다 불러왔어요! 잠깐 뒤 다시 열려요.', true); setTimeout(function () { try { location.reload(); } catch (e) { /* 무시 */ } }, 700);
+    });
+  }
+  function bkHTML() {
+    if (!B) return '';
+    var p = bk.pending, when = p && p.at ? new Date(p.at) : null;
+    return '<p class="lbl">내 데이터 백업</p>' +
+      (p ? '<p class="hint">' + esc((when && !isNaN(when) ? (when.getMonth() + 1) + '월 ' + when.getDate() + '일 ' : '') + '백업 (v' + (p.version || '?') + ')') + '을 불러오면 지금 이 폰의 ' + esc(C.name) + ' 기록이 백업 내용으로 바뀌어요.</p>' +
+        '<div class="row"><button class="btn main" type="button" data-bk="apply"' + (bk.busy ? ' disabled' : '') + '>불러오기</button><button class="btn" type="button" data-bk="cancel">취소</button></div>'
+      : '<p class="hint">폰을 바꾸거나 앱을 지우기 전에 파일로 저장해 두세요. 파일은 내가 고른 곳에만 저장되고 인터넷으로 보내지 않아요.</p>' +
+        '<div class="row"><button class="btn" type="button" data-bk="save"' + (bk.busy ? ' disabled' : '') + '>백업 파일로 저장</button><button class="btn" type="button" data-bk="open"' + (bk.busy ? ' disabled' : '') + '>백업 불러오기</button></div>') +
+      (bk.msg ? '<p class="hint" role="status">' + esc(bk.msg) + '</p>' : '');
   }
   function render() {
     var up = hasUpdate();
@@ -1857,11 +2005,13 @@ window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacito
       '<p class="msg">' + statusHTML() + '</p>' +
       '<div class="row">' + (up && latest.url ? '<a class="btn main" href="' + esc(latest.url) + '" target="_blank" rel="noopener">업데이트 받기</a>' : '') +
       (C.online ? '<button class="btn" type="button" data-chk' + (checking ? ' disabled' : '') + '>새 버전 확인</button>' : '') + '</div>' +
+      bkHTML() +
       '<p class="lbl">업데이트 내용</p><ul class="notes">' + notes + '</ul>' +
       '<p class="lbl">개인정보</p><p class="hint">' + esc(C.privacy || '') + '</p></div></div>';
     root.querySelectorAll('[data-x]').forEach(function (b) { b.addEventListener('click', close); });
     var c = root.querySelector('[data-chk]');
     if (c) c.addEventListener('click', function () { check(true); });
+    root.querySelectorAll('[data-bk]').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-bk'); if (k === 'save') bkSave(); else if (k === 'open') bkOpen(); else if (k === 'apply') bkApply(); else { bk.pending = null; bkSet(''); } }); });
   }
   function open() { isOpen = true; host.style.display = 'block'; render(); var sh = root.querySelector('.sheet'); if (sh) sh.focus(); if (C.online && !checking && (!latest || Date.now() - (latest.at || 0) > 600000)) check(false); }
   function close() { isOpen = false; host.style.display = 'none'; root.innerHTML = ''; try { label.focus(); } catch (e) { /* 무시 */ } }
@@ -1888,7 +2038,8 @@ window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacito
   /* 폰(앱)이 확인한 최신 버전을 알려줄 때 */
   function native(v) { if (v) { latest = { v: norm(v), url: (latest && latest.url) || ('https://github.com/' + C.repo + '/releases/latest'), at: Date.now() }; try { localStorage.setItem(KEY, JSON.stringify(latest)); } catch (e) { /* 무시 */ } paint(); } }
 
-  window.AppInfo = { open: open, check: check, native: native, refresh: paint };
+  window.AppInfo = { open: open, check: check, native: native, refresh: paint,
+    backupDone: function (ok, why) { bkDone(!!ok, why); }, backupOpened: function (t) { bkOpened(t); } };
   paint();
   if (C.online && (!latest || Date.now() - (latest.at || 0) > 6 * 3600000)) setTimeout(function () { check(false); }, 1500);
   document.addEventListener('visibilitychange', function () { if (!document.hidden && C.online && latest && Date.now() - (latest.at || 0) > 6 * 3600000) check(false); });
