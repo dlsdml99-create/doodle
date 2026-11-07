@@ -40,6 +40,7 @@ p{margin:0} a{color:inherit}
 .app{background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow);display:grid;gap:20px}
 .top{display:flex;gap:18px;align-items:center}
 .wrap>*{min-width:0}
+.feat div.feat-emoji{display:grid;place-items:center;aspect-ratio:4/3;font-size:52px;letter-spacing:6px;background:var(--sky-soft);padding:0}
 .top>div{min-width:0}
 .top img{width:92px;height:92px;border-radius:24px;flex:none}
 .top h1{font-size:clamp(44px,9vw,60px);letter-spacing:-.5px}
@@ -135,6 +136,9 @@ footer{color:var(--sub);font-size:14px;border-top:1px solid var(--line);padding-
       <article class="feat"><img src="guide/06_alive.jpg" alt="색칠한 티라노가 무대에서 살아난 화면" loading="lazy"><div><h3>🦖 공룡이 공룡처럼</h3><p>쿵쿵 걷고, 크앙 울고, 꼬리를 흔들어요. 공룡 밑그림으로 만들면 저절로 공룡 움직임이 나와요.</p></div></article>
       <article class="feat"><img src="guide/08_friends.jpg" alt="공룡 도감 화면" loading="lazy"><div><h3>📖 공룡 도감</h3><p>공룡 12종을 색칠해서 살릴 때마다 도감이 채워져요. 누르면 이름과 재미있는 사실을 소리 내어 읽어줘요.</p></div></article>
       <article class="feat"><img src="guide/09_rig.jpg" alt="팔다리 만들기 화면" loading="lazy"><div><h3>🦵 팔다리가 따로</h3><p>손과 발을 톡톡 찍으면 그 부분이 따로 흔들려요. 공룡 밑그림은 머리·다리·꼬리가 처음부터 움직여요.</p></div></article>
+      <article class="feat"><div class="feat-emoji" aria-hidden="true">🦴🥚🔊✏️</div><div><h3>🦕 공룡 놀이 4가지</h3><p>모래를 문질러 <b>화석 발굴</b>, 알을 색칠해 <b>알 부화</b>, 설명을 듣고 맞히는 <b>누구일까?</b>, 점선을 따라 그리는 <b>따라 그리기</b>. 그리기가 어려운 날에도 도감을 채워요.</p></div></article>
+      <article class="feat"><div class="feat-emoji" aria-hidden="true">📖🎤📅</div><div><h3>📖 그림책 · 목소리 이름 · 앨범</h3><p>연극을 그림책(PDF)으로 만들어 가족에게 보내요. 친구 이름을 내 목소리로 담고, 만든 그림은 날짜별 앨범에 모여요.</p></div></article>
+      <article class="feat"><div class="feat-emoji" aria-hidden="true">🌙</div><div><h3>🔒 놀이 시간 (부모님)</h3><p>하루 놀이 시간을 정하면 1분 전에 알려주고, 시간이 되면 친구들이 "내일 또 놀자!" 하고 커튼을 닫아요.</p></div></article>
       <article class="feat"><img src="guide/12_curtain.jpg" alt="장면이 바뀌며 커튼이 열리는 무대" loading="lazy"><div><h3>🎭 장면이 있는 연극</h3><p>장면마다 배경을 바꾸면 커튼이 닫혔다 열려요. 대사는 목소리로 읽고, 끝나면 한 편의 영상으로 저장돼요.</p></div></article>
       <article class="feat"><img src="guide/13_photo.jpg" alt="사진에서 원하는 곳을 둘러 고르는 화면" loading="lazy"><div><h3>📸 사진으로 그리기</h3><p>사진을 찍거나 앨범에서 고른 뒤, 원하는 곳만 손가락으로 빙 둘러요. 사진 모습 그대로 그리기 화면에 들어가서 그 위에 그리고 색칠할 수 있어요.</p></div></article>
       <article class="feat"><img src="guide/04_draw.jpg" alt="공룡 밑그림을 색칠하는 화면" loading="lazy"><div><h3>🖍️ 그리기와 색칠</h3><p>밑그림 28가지와 펜 10가지. 글을 몰라도 누르는 것마다 이름을 읽어줘서 혼자 할 수 있어요.</p></div></article>
@@ -146,7 +150,8 @@ footer{color:var(--sub);font-size:14px;border-top:1px solid var(--line);padding-
     <h2 id="logH">새로 바뀐 것</h2>
     <p class="lead">앱을 켤 때 새 버전이 있으면 알려줘요. 업데이트해도 만든 친구들은 그대로 남아요.</p>
     <div class="log" style="margin-top:20px">
-      <div class="ver new"><div><b>v3.8</b><br><span class="new-pill">최신</span></div><ul><li>🔒 보안 강화: 앱 화면이 허락된 곳 말고는 스크립트를 불러오지 못하게 막고, 업데이트 파일은 Doodle 저장소 주소에서만 받아요</li></ul></div>
+      <div class="ver new"><div><b>v4.0</b><br><span class="new-pill">최신</span></div><ul><li>🦴 화석 발굴: 모래를 문질러 공룡 화석을 찾고 살려내요</li><li>🥚 알 부화: 알을 색칠하면 아기 공룡이 깨어나요</li><li>🔊 누구일까?: 설명을 듣고 공룡 맞히기 (한국어·영어)</li><li>✏️ 따라 그리기: 점선을 따라 그리면 공룡 완성</li><li>🎤 목소리 이름, 📅 그림 앨범, 📖 연극 그림책(PDF), 🔒 놀이 시간(부모님)</li><li>🔒 보안: 쓰지 않는 바깥 주소를 막고, 인터넷은 업데이트 확인만</li></ul></div>
+      <div class="ver"><div><b>v3.8</b></div><ul><li>🔒 보안 강화: 앱 화면이 허락된 곳 말고는 스크립트를 불러오지 못하게 막고, 업데이트 파일은 Doodle 저장소 주소에서만 받아요</li></ul></div>
       <div class="ver"><div><b>v3.7</b></div><ul><li>📷 그림 사진: 사진 찍기와 앨범을 따로 눌러요 (앱에서 카메라가 안 열리던 문제 고침)</li><li>사진에서 원하는 곳만 둘러 고르면 사진 모습 그대로 그리기 화면에</li><li>말로 알려주기 한국어·영어 고르기 (🗣️ 버튼: 한 → EN → 끄기)</li><li>종이 색칠 놀이를 뺐어요</li></ul></div>
       <div class="ver"><div><b>v3.6</b></div><ul><li>공룡 밑그림 12종을 도감처럼 고급스럽게 새로 그렸어요 (팔다리·꼬리 움직임도 새 그림에 맞춤)</li><li>📸 사진으로 밑그림: 사진에서 색칠하고 싶은 것만 손가락으로 빙 두르면 배경을 빼고 색칠 밑그림으로</li><li>선 적게·보통·많이 고르기, 만든 사진 밑그림은 「📸 내 사진」에 모여요</li></ul></div>
       <div class="ver"><div><b>v3.5</b></div><ul><li>아이폰·아이패드에서도 써요 (사파리 → 홈 화면에 추가)</li><li>스케치북·종이에 그린 그림 사진에서 책상·그림자·누런 종이·스프링을 빼고 그림만 깔끔하게 오려 친구로</li><li>띠링·쿵 같은 효과음을 뺐어요 (말소리·목소리·배경 음악은 그대로)</li><li>내 데이터 백업: 왼쪽 아래 버전 → 친구·그림·대본을 파일로 저장·불러오기 (안드로이드 ↔ 아이폰도)</li></ul></div>

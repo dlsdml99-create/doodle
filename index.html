@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' file: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: file: https:; media-src 'self' data: blob:; connect-src 'self' https: data: blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' file: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: file:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com data: blob:; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#4FC3F7">
 <link rel="icon" href="icon-180.png">
@@ -208,6 +208,57 @@ body{padding-block:14px 120px}
 .mysk{position:relative}.mysk img{width:100%;height:auto;display:block}
 .mysk .x{position:absolute;top:2px;right:2px;width:26px;height:26px;border-radius:50%;background:#1E2944;color:#fff;display:grid;place-items:center;font-size:16px;line-height:1}
 @media (prefers-reduced-motion: reduce){.btn:active{transform:none}}
+/* v4.0 공룡 놀이 · 앨범 · 그림책 · 놀이 시간 */
+.games{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.game{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px 8px;border:2px solid var(--ink);border-radius:16px;background:var(--card);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.1;cursor:pointer;box-shadow:2px 2px 0 var(--ink);word-break:keep-all;text-align:center}
+.game b{font-size:30px;line-height:1}
+.game:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+@media (max-width:370px){.games{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dig{position:relative;border-radius:16px;overflow:hidden;border:3px solid var(--ink);aspect-ratio:10/9;width:100%;max-height:52vh;background:#C9A777}
+.dig canvas{position:absolute;inset:0;width:100%;height:100%}
+#sandCv{touch-action:none;transition:opacity 1s}
+.meter{height:12px;border-radius:99px;background:var(--chip);border:2px solid var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#FFC83D,#FF6B4A);transition:width .3s}
+.btn:disabled{opacity:.45;cursor:default}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.qscore{font-family:var(--display);font-size:20px;color:var(--ink);white-space:nowrap}
+.qtext{font-size:18px;line-height:1.45;color:var(--ink)!important;text-align:center!important;min-height:2.9em;margin:0}
+.qgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.qcard{background:#fff;border:3px solid var(--line);border-radius:16px;padding:6px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;color:#1E2944;font:inherit;font-size:13px;word-break:keep-all;text-align:center}
+.qcard canvas,.qcard img{width:100%;height:auto;aspect-ratio:10/9;object-fit:contain}
+.qcard span{visibility:hidden;min-height:2.4em}
+.qgrid.show .qcard span{visibility:visible}
+.qcard.ok{border-color:#2FAE6B;box-shadow:0 0 0 3px #2FAE6B;background:#E9F9EF}
+.qcard.no{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.qend{grid-column:1/-1;text-align:center;display:flex;flex-direction:column;gap:10px;color:var(--ink)}
+.qend .stars{font-size:40px;letter-spacing:4px}
+.tracebar{display:flex;align-items:center;gap:8px;background:var(--sun);color:#1E2944;border:2px solid var(--ink);border-radius:14px;padding:6px 8px}
+.tracebar b{flex:1;font-family:var(--display);font-size:20px;line-height:1.15;min-width:0}
+.tracebar .chip{background:#fff;color:#1E2944}
+.albrow{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px}
+.albrow img{flex:0 0 auto;width:64px;height:64px;object-fit:contain;background:#fff;border:2px solid var(--line);border-radius:12px;padding:3px}
+.albcard{max-width:560px!important}
+.albday{font-family:var(--display);font-size:20px;color:var(--ink);margin:10px 0 6px}
+.albgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.albgrid button{background:#fff;border:2px solid var(--line);border-radius:12px;padding:4px;cursor:pointer;aspect-ratio:1;display:grid;place-items:center}
+.albgrid img{max-width:100%;max-height:100%;object-fit:contain}
+#albImg{width:100%;max-height:46vh;object-fit:contain;background:#fff;border-radius:14px;border:2px solid var(--line)}
+.albmeta{color:var(--ink)!important;text-align:center!important;font-size:16px}
+.bookcard{max-width:520px!important}
+#bookImg{width:100%;border-radius:12px;border:2px solid var(--line);background:#FFF8E7}
+.bnav{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;gap:8px;text-align:center;font-family:var(--display);font-size:20px;color:var(--ink)}
+.gateq{font-family:var(--display);font-size:40px;text-align:center!important;color:var(--ink)!important;margin:0}
+#gateIn{font:inherit;font-size:28px;text-align:center;padding:10px;border-radius:14px;border:2px solid var(--ink);background:var(--card);color:var(--ink);width:100%}
+#gateBox{z-index:3100}
+.shot.rest{z-index:3000;background:radial-gradient(circle at 50% 30%,#3C3570,#141A3C 70%)}
+.restin{text-align:center;color:#fff;align-items:center!important}
+.restin .moon{font-size:96px;line-height:1;animation:wob 3s ease-in-out infinite}
+.restin h2{font-family:var(--display);font-size:44px;margin:0}
+.shot .restin p{font-size:18px;line-height:1.6;color:#E6E9FF}
+.restin .chip{background:transparent;color:#C9CEF5;border-color:#6B6FA8;font-size:15px}
+.restin .row{width:100%;max-width:280px}
+@media (prefers-reduced-motion: reduce){.qcard.no,.restin .moon{animation:none}}
 </style>
 
 <div class="wrap" id="app">
@@ -238,7 +289,7 @@ body{padding-block:14px 120px}
   <section id="tab-draw" class="wrap tab" hidden>
     <div class="drawbox" id="drawbox">
       <div class="dtop">
-        <div class="dzoom"><button class="chip sm" id="sketchBtn">밑그림 고르기</button><button class="chip sm" id="drawPhoto">📷 그림 사진</button></div>
+        <div class="dzoom"><button class="chip sm" id="sketchBtn">밑그림 고르기</button><button class="chip sm" id="drawPhoto">📷 그림 사진</button><button class="chip sm" id="traceBtn">✏️ 따라 그리기</button><button class="chip sm" id="eggBtn">🥚 알</button></div>
         <div class="dzoom">
           <button class="chip sm" id="zoomOut" aria-label="축소">−</button>
           <button class="chip sm" id="zoomReset">맞춤</button>
@@ -253,6 +304,7 @@ body{padding-block:14px 120px}
           <canvas id="lineart" width="1000" height="900"></canvas>
         </div>
       </div>
+      <div class="tracebar" id="traceBar" hidden><b id="traceStep"></b><button class="chip sm" id="traceSkip">다음 ▶</button><button class="chip sm" id="traceQuit">그만</button></div>
       <p class="toast" id="toast2">밑그림을 골라 색칠하거나 자유롭게 그려 보세요. 「밑그림 고르기」에서 사진으로 내 밑그림도 만들 수 있어요.</p>
       <div class="dtools">
         <div class="tools" id="pens" role="toolbar" aria-label="펜 도구"></div>
@@ -284,6 +336,8 @@ body{padding-block:14px 120px}
       </div>
       <button class="btn main" id="play2">▶ 무대에서 연극 시작</button>
       <button class="btn" id="playVideo">🎥 연극을 영상으로 만들기</button>
+      <button class="btn" id="bookBtn">📖 연극을 그림책으로 만들기</button>
+      <p class="note" id="bookMsg" aria-live="polite"></p>
       <p class="note">장면을 넣으면 커튼이 닫혔다 열리면서 배경이 바뀌어요. 영상으로 만들면 연극이 끝날 때 자동으로 저장돼요.</p>
     </div>
     <div class="group">
@@ -303,6 +357,15 @@ body{padding-block:14px 120px}
       </div>
       <p class="note">사진을 찍거나 앨범에서 고른 뒤, 원하는 곳만 손가락으로 둘러 그리기 화면으로 가져와요.</p>
     </div>
+    <div class="group">
+      <div class="label">🦕 공룡 놀이</div>
+      <div class="games">
+        <button class="game" id="gFossil"><b>🦴</b>화석 발굴</button>
+        <button class="game" id="gEgg"><b>🥚</b>알 부화</button>
+        <button class="game" id="gQuiz"><b>🔊</b>누구일까?</button>
+        <button class="game" id="gTrace"><b>✏️</b>따라 그리기</button>
+      </div>
+    </div>
     <div class="group" id="stickerBox">
       <div class="label">🏅 내 스티커 <span class="note" id="stickerCount"></span></div>
       <div class="stickers" id="stickers"></div>
@@ -317,7 +380,8 @@ body{padding-block:14px 120px}
       <div class="friends" id="friends"></div>
       <p class="note" id="noFriend" role="status" hidden>아직 무대에 친구가 없어요. 그리기 탭에서 그림을 그리고 <b>살아나라!</b>를 눌러 친구를 만들어 보세요.</p>
       <div class="panel">
-        <div class="ctl"><span>이름</span><input type="text" id="name" maxlength="8" placeholder="뭉치"></div>
+        <div class="ctl"><span>이름</span><input type="text" id="name" maxlength="8" placeholder="뭉치"><button class="mic" id="nameMic" aria-label="목소리로 이름 담기" aria-pressed="false">🎤</button></div>
+        <p class="note" id="nameMsg" aria-live="polite">🎤를 누르고 이름을 말하면, 무대에서 친구를 누를 때마다 그 목소리로 불러줘요.</p>
         <div class="ctl"><span>크기</span><input type="range" id="size" min="40" max="140" value="100" aria-label="크기"><span id="sizeV">100%</span></div>
         <div class="chips" id="motions"></div>
         <div class="ctl"><span>소품</span><div class="chips" id="props"></div></div>
@@ -332,6 +396,17 @@ body{padding-block:14px 120px}
       <div class="label">내 친구 상자</div>
       <p class="note">만든 친구는 자동으로 보관돼요. 누르면 무대로 나와요.</p>
       <div class="box" id="box"></div>
+    </div>
+    <div class="group">
+      <div class="label">📅 그림 앨범 <span class="note" id="albCount"></span></div>
+      <p class="note">그동안 만든 친구들이 날짜별로 모여요. 그림 실력이 느는 걸 볼 수 있어요.</p>
+      <div class="albrow" id="albRow"></div>
+      <button class="btn" id="albOpen">앨범 크게 보기</button>
+    </div>
+    <div class="group">
+      <div class="label">👨‍👩‍👧 부모님</div>
+      <button class="btn" id="limBtn">🔒 놀이 시간 정하기</button>
+      <p class="note" id="limNote"></p>
     </div>
   </section>
 </div>
@@ -373,6 +448,65 @@ body{padding-block:14px 120px}
   <div class="row" id="cutBtns" hidden><button class="btn" id="cutAll" type="button">사진 전체</button><button class="btn" id="cutAgain" type="button" hidden>다시 고르기</button><button class="btn main" id="cutUse" type="button" hidden>이걸로 그리기</button></div>
   <button class="chip sm" id="cutClose">닫기</button>
 </div></div>
+<div class="shot" id="fosBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="fosTitle">
+  <h2 id="fosTitle">🦴 화석 발굴</h2>
+  <p class="note" id="fosMsg" aria-live="polite">손가락으로 모래를 쓱쓱 문질러 보세요!</p>
+  <div class="dig"><canvas id="fosCv" width="500" height="450" aria-hidden="true"></canvas><canvas id="sandCv" width="500" height="450" aria-label="모래를 문질러 화석 찾기"></canvas></div>
+  <div class="meter" aria-hidden="true"><i id="fosBar"></i></div>
+  <div class="row"><button class="btn" id="fosNew">다른 화석</button><button class="btn main" id="fosWake" disabled>살려내기!</button></div>
+  <button class="chip sm" id="fosClose">닫기</button>
+</div></div>
+<div class="shot" id="quizBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="quizTitle">
+  <div class="qhead"><h2 id="quizTitle">🔊 누구일까?</h2><span class="qscore" id="quizScore"></span></div>
+  <button class="btn main" id="quizSay">🔊 다시 듣기</button>
+  <p class="qtext" id="quizText" aria-live="polite"></p>
+  <div class="qgrid" id="quizGrid"></div>
+  <button class="chip sm" id="quizClose">닫기</button>
+</div></div>
+<div class="shot" id="traceBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="trTitle">
+  <h2 id="trTitle">✏️ 따라 그리기</h2>
+  <p class="note">점선을 따라 그리면 다음 순서가 나와요. 다 그리면 색칠하고 살려요!</p>
+  <div class="skgrid" id="trGrid"></div>
+  <button class="chip sm" id="trClose">닫기</button>
+</div></div>
+<div class="shot" id="albBox" hidden><div class="sketchcard albcard" role="dialog" aria-labelledby="albTitle">
+  <h2 id="albTitle">📅 그림 앨범</h2>
+  <div id="albList"></div>
+  <div id="albView" hidden><img id="albImg" alt=""><p class="albmeta" id="albMeta"></p>
+    <div class="row"><button class="btn" id="albDel">지우기</button><button class="btn main" id="albStage">무대로 데려가기</button></div>
+    <button class="chip sm" id="albBack">◀ 앨범으로</button></div>
+  <button class="chip sm" id="albClose">닫기</button>
+</div></div>
+<div class="shot" id="bookBox" hidden><div class="sketchcard bookcard" role="dialog" aria-labelledby="bookTitle">
+  <h2 id="bookTitle">📖 우리들의 그림책</h2>
+  <img id="bookImg" alt="그림책 쪽">
+  <div class="bnav"><button class="btn" id="bookPrev" aria-label="앞 쪽">◀</button><span id="bookNo"></span><button class="btn" id="bookNext" aria-label="다음 쪽">▶</button></div>
+  <button class="btn main" id="bookSave">📤 그림책 저장·보내기</button>
+  <p class="note" id="bookNote" aria-live="polite"></p>
+  <button class="chip sm" id="bookClose">닫기</button>
+</div></div>
+<div class="shot" id="limBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="limTitle">
+  <h2 id="limTitle">🔒 놀이 시간</h2>
+  <p class="note">하루에 놀 시간을 정해요. 시간이 되면 친구들이 "이제 쉬자, 내일 또 놀자!" 하고 무대 커튼을 닫아요. 1분 전에 미리 알려주고, 다음 날 다시 열려요.</p>
+  <div class="chips" id="limChips"></div>
+  <p class="note" id="limUsed"></p>
+  <div class="row"><button class="btn" id="limReset">오늘 시간 처음부터</button><button class="btn main" id="limClose">닫기</button></div>
+</div></div>
+<div class="shot" id="gateBox" hidden><div class="sketchcard" role="dialog" aria-labelledby="gateTitle">
+  <h2 id="gateTitle">부모님 확인</h2>
+  <p class="note">아래 문제의 답을 적어 주세요.</p>
+  <p class="gateq" id="gateQ"></p>
+  <input type="text" inputmode="numeric" pattern="[0-9]*" id="gateIn" maxlength="3" aria-label="답" autocomplete="off">
+  <p class="note" id="gateMsg" aria-live="polite"></p>
+  <div class="row"><button class="btn" id="gateClose">취소</button><button class="btn main" id="gateOk">확인</button></div>
+</div></div>
+<div class="shot rest" id="restBox" hidden><div class="restin" role="dialog" aria-labelledby="restTitle">
+  <div class="moon">🌙</div>
+  <h2 id="restTitle">오늘 놀이 끝!</h2>
+  <p>친구들도 코~ 자러 갔어요.<br>내일 또 만나요!</p>
+  <div id="restMore" hidden><div class="row"><button class="btn" data-m="10">+10분</button><button class="btn" data-m="30">+30분</button></div></div>
+  <button class="chip sm" id="restParent">부모님: 시간 더 주기</button>
+</div></div>
 <div class="shot" id="shot" hidden><div>
   <img id="shotImg" alt="무대 사진">
   <p>사진을 길게 눌러 저장하세요.</p>
@@ -390,7 +524,7 @@ body{padding-block:14px 120px}
   <div class="row"><button class="btn" id="updLater">나중에</button><button class="btn main" id="updGo">업데이트</button></div>
   <p>업데이트를 누르면 새 앱 파일을 받아요. 받은 파일을 열어 설치하면 끝! 만든 친구들은 그대로 남아요.</p>
 </div></div>
-<div class="ver">v3.8</div>
+<div class="ver">v4.0</div>
 
 <script>
 (function(){
@@ -795,8 +929,8 @@ function addChar(sprite,motion,name,o){o=o||{};
   for(const cand of [400,200,600,110,690,300,500]){if(used.every(u=>Math.abs(u-cand)>120)){x=cand;break}}
   const c={id:++uid,sprite,x,dir:Math.random()<.5?1:-1,target:null,motion:motion||'dance',scale:chars.length?0.78:1,
     say:'',sayUntil:0,prop:o.prop||'none',temp:null,nextAuto:null,name:name||NAMES[(uid-1)%NAMES.length],phase:Math.random()*10,boost:-9,box:null,thumb:sprite.toDataURL('image/png'),
-    kind:o.kind||null,parts:o.parts||null};
-  if(o.scale)c.scale=o.scale;buildRig(c);
+    kind:o.kind||null,parts:o.parts||null,voice:o.voice||null,vbuf:null,boxId:o.boxId||null};
+  if(o.scale)c.scale=o.scale;buildRig(c);decodeVoice(c);
   chars.push(c);select(c);if(o.silent)return c;sfx.pop();
   for(let i=0;i<10;i++)particles.push({x:c.x,y:GROUND-80,vx:(Math.random()-.5)*300,vy:-Math.random()*300-60,life:1,c:['#FFC83D','#FF6B4A','#4CB3E8'][i%3]});
   return c;
@@ -892,7 +1026,8 @@ function loop(){
     ctx.save();if(shakeT>0){shakeT-=dt;const a=shakeT*30;ctx.translate((Math.random()-.5)*a,(Math.random()-.5)*a)}
     drawScene(now);
     for(const c of [...chars].sort((a,b)=>(a===sel)-(b===sel)))drawChar(c,now,dt);
-    drawParticles(dt);drawCurtainOverlay(q);ctx.restore();
+    for(const f of overlays)f(now,dt);
+    drawParticles(dt);drawCurtainOverlay(Math.max(q,restQ));ctx.restore();
     stepT+=dt;if(stepT>0.28){stepT=0;if(chars.some(c=>c.target!=null&&!c.kind))sfx.step()}
   }
   requestAnimationFrame(loop);
@@ -901,6 +1036,7 @@ function loop(){
 stage.addEventListener('pointerdown',e=>{
   const r=stage.getBoundingClientRect(),x=(e.clientX-r.left)*VW/r.width,y=(e.clientY-r.top)*VH/r.height;
   const hit=[...chars].reverse().find(c=>c.box&&x>=c.box.x0&&x<=c.box.x1&&y>=c.box.y0-10&&y<=c.box.y1+10);
+  if(hit)playName(hit);
   if(hit&&hit.kind){if(hit!==sel)select(hit);hit.temp='roar';hit.tempUntil=rt()+2.5;hit.phase=-clock();hit.lastRoar=null;hit.target=null;return}
   if(hit){if(hit!==sel)select(hit);hit.boost=clock();sfx.jump();
     for(let i=0;i<14;i++)particles.push({x:hit.x,y:hit.box.y0+40,vx:(Math.random()-.5)*420,vy:-Math.random()*360-80,life:1,c:['#FFC83D','#FF6B4A','#4CB3E8','#2FAE6B','#FF7DA0'][i%5]})}
@@ -911,7 +1047,7 @@ stage.addEventListener('pointerdown',e=>{
 function renderFriends(){
   const el=$('friends');el.innerHTML='';
   chars.forEach(c=>{const b=document.createElement('button');b.className='fr';b.setAttribute('aria-pressed',String(c===sel));b.setAttribute('aria-label',c.name+' 고르기');
-    const im=document.createElement('img');im.src=c.thumb;im.alt='';b.appendChild(im);b.onclick=()=>select(c);el.appendChild(b)});
+    const im=document.createElement('img');im.src=c.thumb;im.alt='';b.appendChild(im);b.onclick=()=>{select(c);playName(c)};el.appendChild(b)});
   renderLines();
 }
 /* 친구가 없을 때 꾸미기 버튼을 누르면 조용히 무시하지 말고 친구부터 만들라고 알려 준다 */
@@ -927,7 +1063,7 @@ function syncControls(){
   [...motionsEl.children].forEach(b=>b.setAttribute('aria-pressed',String(!!sel&&sel.motion===b.dataset.k)));
   [...propsEl.children].forEach(b=>b.setAttribute('aria-pressed',String(!!sel&&sel.prop===b.dataset.k)));
   $('size').value=sel?Math.round(sel.scale*100):100;$('sizeV').textContent=$('size').value+'%';
-  $('name').value=sel?sel.name:'';
+  $('name').value=sel?sel.name:'';{const m=$('nameMic');if(m)m.setAttribute('aria-pressed',String(!!(sel&&sel.voice)))}
 }
 $('name').addEventListener('input',e=>{if(!sel)return;sel.name=e.target.value.trim()||'친구';renderLines()});
 $('together').onclick=e=>{together=!together;e.currentTarget.setAttribute('aria-pressed',together);
@@ -1066,8 +1202,8 @@ function stopPlay(ended){playToken++;playing=false;playIdx=-1;markLine();stopTTS
 const KEY='living-drawing-box-v1';
 function loadBox(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}
 function saveBox(list){try{localStorage.setItem(KEY,JSON.stringify(list));return true}catch(e){return false}}
-function storeFriend(c){const list=loadBox();list.unshift({id:Date.now(),img:c.thumb,kind:c.kind||null,parts:c.parts||null,name:c.name});
-  while(list.length>12)list.pop();if(!saveBox(list)){list.pop();saveBox(list)}renderBox()}
+function storeFriend(c){const list=loadBox(),it={id:Date.now(),img:c.thumb,kind:c.kind||null,parts:c.parts||null,name:c.name,voice:c.voice||null};c.boxId=it.id;list.unshift(it);
+  while(list.length>12)list.pop();if(!saveBox(list)){list.pop();saveBox(list)}renderBox();albumAdd(it)}
 function renderBox(){
   const el=$('box'),list=loadBox();el.innerHTML='';
   if(!list.length){const p=document.createElement('div');p.className='empty';p.textContent='아직 보관한 친구가 없어요. 그림을 그리면 여기에 모여요.';el.appendChild(p);return}
@@ -1075,7 +1211,7 @@ function renderBox(){
     const im=document.createElement('img');im.src=item.img;im.alt='';d.appendChild(im);
     const x=document.createElement('button');x.className='x';x.textContent='×';x.setAttribute('aria-label','상자에서 지우기');
     x.onclick=ev=>{ev.stopPropagation();saveBox(loadBox().filter(i=>i.id!==item.id));renderBox()};d.appendChild(x);
-    const go=()=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');cv.width=img.width;cv.height=img.height;cv.getContext('2d').drawImage(img,0,0);addChar(cv,item.kind?defaultMotion(item.kind):null,item.name||null,{kind:item.kind,parts:item.parts});showTab('stage');toast.textContent='친구가 무대에 나왔어요!'};img.src=item.img};
+    const go=()=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');cv.width=img.width;cv.height=img.height;cv.getContext('2d').drawImage(img,0,0);addChar(cv,item.kind?defaultMotion(item.kind):null,item.name||null,{kind:item.kind,parts:item.parts,voice:item.voice,boxId:item.id});showTab('stage');toast.textContent='친구가 무대에 나왔어요!'};img.src=item.img};
     d.onclick=go;d.onkeydown=e=>{if(e.key==='Enter')go()};el.appendChild(d)});
 }
 
@@ -1342,12 +1478,12 @@ $('penSize').oninput=e=>{size=+e.target.value;updDot()};updDot();
 /* ================= v3: 자동 저장 ================= */
 const SKEY='doodle-stage-v1',DKEY='doodle-draw-v1';
 let lastSig='',drawDirty=false,drawDirtyAt=0,restoring=false;
-function stageSig(){return JSON.stringify([scene,chars.map(c=>[c.id,c.name,c.motion,c.prop,c.scale,c.kind,(c.parts||[]).length]),chars.indexOf(sel),
+function stageSig(){return JSON.stringify([scene,chars.map(c=>[c.id,c.name,c.motion,c.prop,c.scale,c.kind,(c.parts||[]).length,!!c.voice]),chars.indexOf(sel),
   script.map(l=>l.type==='scene'?['s',l.scene]:[l.who,l.text,!!l.voice])])}
 function saveStage(force){if(restoring)return;const sig=stageSig();if(!force&&sig===lastSig)return;lastSig=sig;
-  const st={v:1,scene,sel:chars.indexOf(sel),chars:chars.map(c=>({img:c.thumb,name:c.name,motion:c.motion,prop:c.prop,scale:c.scale,kind:c.kind||null,parts:c.parts||null})),
+  const st={v:1,scene,sel:chars.indexOf(sel),chars:chars.map(c=>({img:c.thumb,name:c.name,motion:c.motion,prop:c.prop,scale:c.scale,kind:c.kind||null,parts:c.parts||null,voice:c.voice||null,boxId:c.boxId||null})),
     script:script.map(l=>l.type==='scene'?{type:'scene',scene:l.scene}:{who:chars.findIndex(c=>c.id===l.who),text:l.text,voice:l.voice||null})};
-  try{localStorage.setItem(SKEY,JSON.stringify(st))}catch(e){try{st.script.forEach(l=>{if(l.voice)l.voice=null});localStorage.setItem(SKEY,JSON.stringify(st))}catch(e2){}}}
+  try{localStorage.setItem(SKEY,JSON.stringify(st))}catch(e){try{st.script.forEach(l=>{if(l.voice)l.voice=null});localStorage.setItem(SKEY,JSON.stringify(st))}catch(e2){try{st.chars.forEach(c=>{c.voice=null});localStorage.setItem(SKEY,JSON.stringify(st))}catch(e3){}}}}
 function saveDraw(){if(!drawDirty)return;drawDirty=false;
   let blank=true;const d=px.getImageData(0,0,PW,PH).data;for(let i=3;i<d.length;i+=64)if(d[i]){blank=false;break}
   try{localStorage.setItem(DKEY,JSON.stringify({sketch:sketchKey,img:blank?null:pad.toDataURL('image/png')}))}catch(e){}}
@@ -1356,7 +1492,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){saveStage(
 async function restoreStage(){let st=null;try{st=JSON.parse(localStorage.getItem(SKEY)||'null')}catch(e){}
   if(!st||!st.chars||!st.chars.length)return false;restoring=true;const ids=[];
   for(const ch of st.chars){const cv=await imgCanvas(ch.img);if(!cv)continue;
-    const c=addChar(cv,ch.motion||'dance',ch.name,{kind:ch.kind,parts:ch.parts,prop:ch.prop,scale:ch.scale,silent:true});ids.push(c.id)}
+    const c=addChar(cv,ch.motion||'dance',ch.name,{kind:ch.kind,parts:ch.parts,prop:ch.prop,scale:ch.scale,voice:ch.voice,boxId:ch.boxId,silent:true});ids.push(c.id)}
   if(!ids.length){restoring=false;return false}
   setScene(st.scene||'theater');
   script=(st.script||[]).map(l=>{if(l.type==='scene')return{type:'scene',scene:l.scene};const ln={who:ids[l.who]!=null?ids[l.who]:ids[0],text:l.text||''};
@@ -1526,10 +1662,10 @@ function lineAlpha(){const im=lnx.getImageData(0,0,PW,PH),d=im.data;
   for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;const lum=(d[i]+d[i+1]+d[i+2])/3;d[i+3]=Math.round(d[i+3]*(1-lum/255));d[i]=d[i+1]=d[i+2]=34}
   lnx.putImageData(im,0,0)}
 const SKETCH_KEYS=new Set(LINEART.LIST.flatMap(g=>g.items.map(i=>i[0])));
-function setSketch(key){sketchKey=key;lnx.clearRect(0,0,PW,PH);if(!key||!SKETCH_KEYS.has(key)){sketchKey=null;return}
+function setSketch(key){sketchKey=key;lnx.clearRect(0,0,PW,PH);if(key==='hatch'){drawEggArt(lnx);lineAlpha();return}if(!key||!SKETCH_KEYS.has(key)){sketchKey=null;return}
   LINEART.draw(lnx,key,PW,PH);lineAlpha()}
 let skCat=0;
-function loadSketch(k){snap();px.clearRect(0,0,PW,PH);commit();setSketch(k);drawDirty=true;drawDirtyAt=Date.now();fitPaper();pen='fill';
+function loadSketch(k){if(TR.on)traceStop();traceKind=null;snap();px.clearRect(0,0,PW,PH);commit();setSketch(k);drawDirty=true;drawDirtyAt=Date.now();fitPaper();pen='fill';
   [...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='fill')));updDot();
   toast2(speakName(k)+' 밑그림이에요! 색칠통으로 톡톡 칠하거나 크레용으로 칠해 보세요.')}
 function openSketch(){
@@ -1587,7 +1723,7 @@ function cutDone(pts){const o=cutMake(pts);if(!o){CUT.pts=[];cutPaint();$('cutMs
 $('cutAll').onclick=()=>{if(!CUT.img)return;const w=CUT.img.width,h=CUT.img.height;CUT.pts=[[0,0],[w,0],[w,h],[0,h]];cutDone(CUT.pts)};
 $('cutAgain').onclick=()=>{CUT.out=null;CUT.pts=[];cutStep(false);cutPaint()};
 $('cutClose').onclick=()=>{$('cutBox').hidden=true;CUT.img=null;CUT.out=null};
-$('cutUse').onclick=()=>{const o=CUT.out;if(!o)return;
+$('cutUse').onclick=()=>{const o=CUT.out;if(!o)return;if(TR.on)traceStop();traceKind=null;
   snap();px.clearRect(0,0,PW,PH);setSketch(null);
   const s=Math.min(880/o.width,790/o.height);px.drawImage(o,(PW-o.width*s)/2,(PH-o.height*s)/2,o.width*s,o.height*s);commit();
   drawDirty=true;drawDirtyAt=Date.now();$('cutBox').hidden=true;CUT.img=null;CUT.out=null;showTab('draw');fitPaper();
@@ -1597,7 +1733,7 @@ $('cutUse').onclick=()=>{const o=CUT.out;if(!o)return;
 $('drawPhoto').onclick=cutOpen;$('photoBtn').onclick=cutOpen;
 $('sketchBtn').onclick=()=>openSketch();
 $('skClose').onclick=()=>{$('sketchBox').hidden=true};
-$('skNone').onclick=()=>{$('sketchBox').hidden=true;setSketch(null);drawDirty=true;toast2('밑그림 없이 자유롭게 그려요.')};
+$('skNone').onclick=()=>{$('sketchBox').hidden=true;if(TR.on)traceStop();traceKind=null;setSketch(null);drawDirty=true;toast2('밑그림 없이 자유롭게 그려요.')};
 
 /* --- 크게 그리기 (가로 화면) --- */
 const SO=CAP&&CAP.ScreenOrientation;
@@ -1623,10 +1759,12 @@ function composite(){const c=document.createElement('canvas');c.width=PW;c.heigh
 function isBlank(){const d=px.getImageData(0,0,PW,PH).data;for(let i=3;i<d.length;i+=16)if(d[i]>0)return false;return !sketchKey}
 $('goDraw').onclick=()=>{if(playing)stopPlay();showTab('draw')};
 $('wake').onclick=async()=>{
+  if(TR.on){traceStop();traceKind=null}
+  if(sketchKey==='hatch'){hatchFromPad();return}
   if(isBlank()){toast2('먼저 그림을 그려 주세요!');return}
   const s=makeSprite(composite());if(!s){toast2('그림이 너무 작거나 연해요. 진한 색으로 크게 그려 볼까요?');return}
   if($('drawbox').classList.contains('big'))await setBig(false);
-  const kind=DINO_INFO[sketchKey]?sketchKey:null;
+  const kind=DINO_INFO[sketchKey]?sketchKey:(traceKind&&DINO_INFO[traceKind]?traceKind:null);traceKind=null;
   const c=addChar(s,kind?defaultMotion(kind):null,kind?sketchName(kind):null,{kind,parts:mapParts(RIG[sketchKey],s)});storeFriend(c);showTab('stage');
   toast.textContent=kind?DINO_INFO[kind][0]+'가 살아났어요! 톡 누르면 펄쩍!':'살아났어요! 친구들 탭에서 이름·움직임·팔다리를 바꿀 수 있어요.';
   announce('살아나라!','Come alive!');if(kind)dexAdd(kind,c);
@@ -1674,8 +1812,9 @@ function celebrate(all,st){
 let partyOpen=null;
 /* 휴대폰 뒤로 가기: 열린 창 → 크게 그리기 → 연극 멈춤 → 무대 탭 순서로 하나씩 닫고, 무대에서 누르면 앱을 닫는다 */
 window.onBackKey=()=>{
+  if(restOn)return true;
   if(partyOpen){partyOpen();return true}
-  for(const id of ['upd','vidBox','shot','cutBox','sketchBox','rigBox','dexBox']){const b=$(id);
+  for(const id of ['gateBox','limBox','bookBox','albBox','traceBox','quizBox','fosBox','upd','vidBox','shot','cutBox','sketchBox','rigBox','dexBox']){const b=$(id);
     if(b&&!b.hidden){const c=b.querySelector('[id$="Close"],[id$="Later"],.close,[aria-label="닫기"]');if(c)c.click();else b.hidden=true;return true}}
   if($('drawbox')&&$('drawbox').classList.contains('big')){setBig(false);return true}
   if(playing){stopPlay();return true}
@@ -1722,6 +1861,361 @@ $('rigClose').onclick=()=>{$('rigBox').hidden=true};
 $('rigDone').onclick=()=>{if(!sel)return;sel.parts=rigDraft.length?rigDraft:null;buildRig(sel);$('rigBox').hidden=true;
   showTab('stage');toast.textContent=sel.parts?'팔다리가 생겼어요! 춤추기를 골라 보세요.':'팔다리를 없앴어요.';if(sel.parts)announce('팔다리가 생겼어요!','Now it has arms and legs!')};
 
+/* ================= v4.0 공용: 말하기 · 색칠한 공룡 · 무대 덧그림 ================= */
+const useEn=()=>readOn&&voiceLang==='en';
+// 놀이 문제는 '말로 알려주기'를 꺼도 읽어줘요 (소리를 끄면 글자로만). 끄기 상태에서는 한국어로.
+function sayNow(ko,en){if(!soundOn)return;const isEn=useEn()&&!!en,text=isEn?en:ko,lang=isEn?'en-US':'ko-KR';if(!text)return;
+  try{if(NTTS){NTTS.stop().catch(()=>{}).then(()=>NTTS.speak({text,lang,rate:isEn?0.9:1.0,pitch:1.15,volume:1.0,category:'playback'})).catch(()=>{});return}
+    if(hasTTS&&!ttsBroken){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;const v=isEn?enVoice:koVoice;if(v)u.voice=v;u.rate=isEn?0.9:1;u.pitch=1.15;speechSynthesis.speak(u)}}catch(e){}}
+const PASTEL=['#FF8A7A','#FFB45C','#FFD84D','#8EDB7A','#5CCFE6','#7FA8FF','#B08CFF','#FF8FC8'];
+// 공룡 밑그림을 색칠해서 친구 그림으로 (큰 면만 칠하고 눈·이빨 같은 작은 흰 부분은 그대로)
+function colorDino(k,col){const W=PW,H=PH,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d',{willReadFrequently:true});
+  LINEART.draw(g,k,W,H);const im=g.getImageData(0,0,W,H),d=im.data,n=W*H,seen=new Uint8Array(n),[R,G,B]=hex(col),min=n*0.006;
+  const isW=q=>{const i=q*4;return d[i+3]>100&&d[i]+d[i+1]+d[i+2]>330};
+  for(let q0=0;q0<n;q0++){if(seen[q0]||!isW(q0))continue;const st=[q0],mem=[];seen[q0]=1;
+    while(st.length){const q=st.pop();mem.push(q);const x=q%W;
+      for(const p of [x>0?q-1:-1,x<W-1?q+1:-1,q-W,q+W])if(p>=0&&p<n&&!seen[p]&&isW(p)){seen[p]=1;st.push(p)}}
+    if(mem.length<min)continue;
+    for(const q of mem){const i=q*4,f=(d[i]+d[i+1]+d[i+2])/765;d[i]=R*f;d[i+1]=G*f;d[i+2]=B*f}}
+  g.putImageData(im,0,0);const o=document.createElement('canvas');o.width=W;o.height=H;const ox=o.getContext('2d');ox.fillStyle='#fff';ox.fillRect(0,0,W,H);ox.drawImage(c,0,0);return o}
+function spawnDino(k,col,o){o=o||{};const s=makeSprite(colorDino(k,col));if(!s)return null;
+  const c=addChar(s,defaultMotion(k),o.name||sketchName(k),{kind:k,parts:mapParts(RIG[k],s),scale:o.scale});storeFriend(c);dexAdd(k,c);return c}
+function burst(x,y,n){for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*520,vy:-Math.random()*380-60,life:1.2,c:['#FFC83D','#FF6B4A','#4CB3E8','#2FAE6B','#FF7DA0'][i%5]})}
+const overlays=[];   // 무대 위에 덧그리는 것 (알 부화 등)
+function closeAllBoxes(){['fosBox','quizBox','traceBox','albBox','bookBox','limBox','gateBox','sketchBox','dexBox','rigBox','cutBox'].forEach(id=>{const b=$(id);if(b)b.hidden=true})}
+
+/* ================= 1. 화석 발굴 ================= */
+const FOS={k:null,mask:null,done:false,last:null,checkAt:0};
+const fosCv=$('fosCv'),fx=fosCv.getContext('2d'),sandCv=$('sandCv'),sx2=sandCv.getContext('2d',{willReadFrequently:true});
+function fosPick(){const fresh=DINO_KEYS.filter(k=>!dex[k]&&k!==FOS.k&&k!=='egg');const all=DINO_KEYS.filter(k=>k!==FOS.k&&k!=='egg');return pick(fresh.length?fresh:all)}
+function fosDraw(){const W=500,H=450,k=FOS.k;
+  // 바위 바닥
+  const gr=fx.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#B98E5E');gr.addColorStop(1,'#8C6440');fx.fillStyle=gr;fx.fillRect(0,0,W,H);
+  let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<70;i++){fx.fillStyle='rgba(60,40,20,'+(0.08+rnd()*0.12)+')';fx.beginPath();fx.ellipse(rnd()*W,rnd()*H,4+rnd()*14,3+rnd()*8,rnd()*3,0,7);fx.fill()}
+  // 뼈 색 공룡
+  const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d',{willReadFrequently:true});LINEART.draw(g,k,W,H);
+  const im=g.getImageData(0,0,W,H),d=im.data,mask=[];
+  for(let i=0,q=0;i<d.length;i+=4,q++){if(d[i+3]<40)continue;const lum=(d[i]+d[i+1]+d[i+2])/765;
+    d[i]=110+lum*135;d[i+1]=85+lum*140;d[i+2]=60+lum*130;if(q%5===0)mask.push(q)}
+  g.putImageData(im,0,0);fx.save();fx.shadowColor='rgba(40,25,10,.55)';fx.shadowBlur=10;fx.drawImage(c,0,0);fx.restore();FOS.mask=mask;
+  // 모래 덮기
+  sx2.globalCompositeOperation='source-over';const sg=sx2.createLinearGradient(0,0,0,H);sg.addColorStop(0,'#F2D49B');sg.addColorStop(1,'#E2B872');sx2.fillStyle=sg;sx2.fillRect(0,0,W,H);
+  for(let i=0;i<900;i++){sx2.fillStyle=rnd()<.5?'rgba(150,105,50,.35)':'rgba(255,245,220,.5)';sx2.fillRect(rnd()*W,rnd()*H,2,2)}
+  for(let i=0;i<10;i++){sx2.fillStyle='rgba(170,120,60,.25)';sx2.beginPath();sx2.ellipse(rnd()*W,rnd()*H,30+rnd()*50,10+rnd()*16,0,0,7);sx2.fill()}
+  sandCv.style.opacity=1;$('fosBar').style.width='0%';$('fosWake').disabled=true;FOS.done=false;
+  $('fosMsg').textContent='손가락으로 모래를 쓱쓱 문질러 보세요! 어떤 공룡이 숨어 있을까요?'}
+function fosOpen(){closeAllBoxes();if(playing)stopPlay();FOS.k=fosPick();$('fosBox').hidden=false;fosDraw();announce('모래를 쓱쓱 문질러서 화석을 찾아 보세요!','Rub the sand to find a fossil!')}
+function fosCheck(){const d=sx2.getImageData(0,0,500,450).data;let open=0;for(const q of FOS.mask)if(d[q*4+3]<110)open++;
+  const r=FOS.mask.length?open/FOS.mask.length:0;$('fosBar').style.width=Math.min(100,Math.round(r/0.6*100))+'%';
+  if(r>=0.6&&!FOS.done){FOS.done=true;sandCv.style.opacity=0;const nm=DINO_INFO[FOS.k][0];
+    $('fosMsg').textContent='🎉 '+josa(nm,'을','를')+' 찾았어요! 「살려내기!」를 눌러 보세요.';$('fosWake').disabled=false;
+    sayNow(josa(nm,'을','를')+' 찾았어요! 살려내기를 눌러 보세요!',"You found the "+nameEn(FOS.k)+"! Tap Bring it to life!")}}
+function fosRub(e){if(FOS.done)return;const r=sandCv.getBoundingClientRect(),x=(e.clientX-r.left)*500/r.width,y=(e.clientY-r.top)*450/r.height;
+  sx2.globalCompositeOperation='destination-out';sx2.lineCap='round';sx2.lineWidth=46;sx2.beginPath();
+  if(FOS.last){sx2.moveTo(FOS.last[0],FOS.last[1]);sx2.lineTo(x,y);sx2.stroke()}else{sx2.arc(x,y,23,0,7);sx2.fill()}
+  FOS.last=[x,y];const now=performance.now();if(now-FOS.checkAt>180){FOS.checkAt=now;fosCheck()}}
+sandCv.addEventListener('pointerdown',e=>{sandCv.setPointerCapture(e.pointerId);FOS.last=null;fosRub(e)});
+sandCv.addEventListener('pointermove',e=>{if(e.buttons||e.pointerType==='touch')if(FOS.last||e.buttons)fosRub(e)});
+['pointerup','pointercancel'].forEach(ev=>sandCv.addEventListener(ev,()=>{FOS.last=null;if(!FOS.done)fosCheck()}));
+$('fosNew').onclick=()=>{FOS.k=fosPick();fosDraw();announce('새 화석을 묻었어요!','A new fossil is hidden!')};
+$('fosClose').onclick=()=>{$('fosBox').hidden=true};
+$('fosWake').onclick=()=>{const k=FOS.k;$('fosBox').hidden=true;const c=spawnDino(k,pick(PASTEL));showTab('stage');
+  if(c){c.boost=clock();burst(c.x,GROUND-120,18);toast.textContent=DINO_INFO[k][0]+'가 화석에서 살아났어요! 크앙!';announce(josa(DINO_INFO[k][0],'이','가')+' 살아났어요!',nameEn(k)+' came back to life!')}};
+
+/* ================= 2. 알 부화 ================= */
+function drawEggArt(g){g.save();g.clearRect(0,0,PW,PH);g.lineWidth=9;g.lineJoin=g.lineCap='round';g.strokeStyle='#222';g.fillStyle='#fff';
+  const egg=new Path2D('M500 70 C710 70 815 390 805 570 C795 765 665 860 500 860 C335 860 205 765 195 570 C185 390 290 70 500 70 Z');g.fill(egg);g.stroke(egg);
+  g.save();g.clip(egg);g.lineWidth=7;
+  g.stroke(new Path2D('M180 470 L260 410 L340 470 L420 410 L500 470 L580 410 L660 470 L740 410 L820 470'));
+  g.stroke(new Path2D('M180 560 L260 620 L340 560 L420 620 L500 560 L580 620 L660 560 L740 620 L820 560'));
+  [[380,250,42],[560,200,30],[640,330,36],[330,730,34],[520,740,46],[690,700,28]].forEach(([x,y,r])=>{g.beginPath();g.arc(x,y,r,0,7);g.stroke()});
+  g.restore();g.restore()}
+function loadEgg(){if(TR.on){TR.on=false;$('traceBar').hidden=true}traceKind=null;snap();px.clearRect(0,0,PW,PH);commit();setSketch('hatch');drawDirty=true;drawDirtyAt=Date.now();showTab('draw');fitPaper();
+  pen='fill';[...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='fill')));updDot();
+  toast2('🥚 알을 예쁘게 색칠하고 「살아나라!」를 누르면 아기 공룡이 깨어나요!');announce('알을 색칠하고 살아나라를 누르면 아기 공룡이 깨어나요!','Color the egg, then tap Come alive to hatch a baby dino!')}
+function padColor(){const d=px.getImageData(0,0,PW,PH).data;let r=0,g=0,b=0,n=0;
+  for(let i=0;i<d.length;i+=4*37){if(d[i+3]<128)continue;const s=d[i]+d[i+1]+d[i+2];if(s<120||s>720)continue;r+=d[i];g+=d[i+1];b+=d[i+2];n++}
+  if(n<20)return pick(PASTEL);const m=v=>Math.round(v/n*0.7+255*0.3);return '#'+[m(r),m(g),m(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}
+const HATCH_POOL=['trex','triceratops','brachio','stego','ankylo','pachy','spino','parasaur','raptor'];
+let hatch=null;
+async function hatchFromPad(){const s=makeSprite(composite());if(!s){toast2('알이 너무 작거나 연해요.');return}
+  if($('drawbox').classList.contains('big'))await setBig(false);
+  const fresh=HATCH_POOL.filter(k=>!dex[k]);const k=pick(fresh.length?fresh:HATCH_POOL);
+  hatch={s,t0:rt(),k,col:padColor(),x:VW/2,done:false};showTab('stage');
+  toast.textContent='알이 흔들흔들… 누가 나올까?';announce('알이 흔들흔들! 누가 나올까?','The egg is wiggling! Who will come out?')}
+overlays.push(()=>{if(!hatch)return;const e=rt()-hatch.t0,S=hatch.s,sc=Math.min((VH*0.42)/S.height,(VW*0.34)/S.width),w=S.width*sc,h=S.height*sc,x=hatch.x,y=GROUND,cut=0.45;
+  if(e<2.2){const amp=Math.min(1,e/1.8)*0.16,rot=Math.sin(e*(9+e*7))*amp;
+    ctx.fillStyle='rgba(20,30,50,.18)';ctx.beginPath();ctx.ellipse(x,y+4,w*0.38,10,0,0,7);ctx.fill();
+    ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.drawImage(S,-w/2,-h,w,h);
+    const n=Math.min(9,Math.floor(e/0.22));if(n>1){ctx.strokeStyle='#1E2944';ctx.lineWidth=4;ctx.lineJoin='round';ctx.beginPath();
+      for(let i=0;i<n;i++){const px2=-w*0.42+i*w*0.105,py=-h*(1-cut)+(i%2?-12:12);i?ctx.lineTo(px2,py):ctx.moveTo(px2,py)}ctx.stroke()}
+    ctx.restore();return}
+  if(!hatch.done){hatch.done=true;const k=hatch.k,c=spawnDino(k,hatch.col,{name:'아기 '+sketchName(k),scale:0.6});burst(x,y-h*0.5,26);
+    if(c){c.x=x;c.boost=clock();toast.textContent='🎉 아기 '+DINO_INFO[k][0]+'가 태어났어요!';announce('아기 '+josa(DINO_INFO[k][0],'이','가')+' 태어났어요!','A baby '+nameEn(k)+' hatched!')}}
+  const u=Math.min(1,(e-2.2)/1.1),fade=Math.max(0,1-(e-2.6)/1.2);
+  ctx.save();ctx.globalAlpha=1-u;ctx.translate(x-u*120,y-h*(1-cut)-u*200);ctx.rotate(-u*1.8);ctx.drawImage(S,0,0,S.width,S.height*cut,-w/2,-h*cut,w,h*cut);ctx.restore();
+  ctx.save();ctx.globalAlpha=fade;ctx.drawImage(S,0,S.height*cut,S.width,S.height*(1-cut),x-w/2,y-h*(1-cut),w,h*(1-cut));ctx.restore();
+  if(e>3.9)hatch=null});
+
+/* ================= 3. 누구일까? (소리 듣고 공룡 맞히기) ================= */
+const QZ={n:0,score:0,ans:null,first:true,used:[],lock:false,total:5};
+function quizOpen(){closeAllBoxes();if(playing)stopPlay();Object.assign(QZ,{n:0,score:0,used:[],lock:false});$('quizBox').hidden=false;$('quizSay').hidden=false;quizNext()}
+function quizQ(){const k=QZ.ans,fact=QZ.n%2===0;
+  return fact?[DINO_INFO[k][1]+' 나는 누구일까?',(FACT_EN[k]||'')+' Who am I?']:[josa(DINO_INFO[k][0],'은','는')+' 어디 있을까?','Where is the '+nameEn(k)+'?']}
+function quizAsk(){const [ko,en]=quizQ();$('quizText').textContent=useEn()?en:ko;sayNow(ko,en)}
+function dinoCard(k){const b=document.createElement('button');b.className='qcard';
+  if(dex[k]){const im=document.createElement('img');im.src=dex[k].img;im.alt='';b.appendChild(im)}
+  else{const c=document.createElement('canvas');c.width=200;c.height=180;LINEART.draw(c.getContext('2d'),k,200,180);b.appendChild(c)}
+  const s=document.createElement('span');s.textContent=DINO_INFO[k][0];b.appendChild(s);return b}
+function quizNext(){if(QZ.n>=QZ.total){quizEnd();return}
+  const pool=DINO_KEYS.filter(k=>!QZ.used.includes(k));const k=pick(pool);QZ.used.push(k);QZ.ans=k;QZ.first=true;QZ.lock=false;QZ.n++;
+  const others=DINO_KEYS.filter(x=>x!==k).sort(()=>Math.random()-.5).slice(0,2),opts=[k,...others].sort(()=>Math.random()-.5);
+  const grid=$('quizGrid');grid.className='qgrid';grid.innerHTML='';
+  opts.forEach((o,i)=>{const b=dinoCard(o);b.setAttribute('aria-label',(i+1)+'번 공룡');b.onclick=()=>quizPick(b,o);grid.appendChild(b)});
+  $('quizScore').textContent='⭐ '+QZ.score+' · '+QZ.n+'/'+QZ.total;quizAsk()}
+function quizPick(b,k){if(QZ.lock)return;
+  if(k===QZ.ans){QZ.lock=true;if(QZ.first)QZ.score++;b.classList.add('ok');$('quizGrid').classList.add('show');$('quizScore').textContent='⭐ '+QZ.score+' · '+QZ.n+'/'+QZ.total;
+    $('quizText').textContent=(useEn()?'Ding dong! '+nameEn(k)+'!':'딩동댕! '+DINO_INFO[k][0]+'!');
+    sayNow('딩동댕! '+DINO_INFO[k][0]+'!','Ding dong! '+nameEn(k)+'!');setTimeout(quizNext,2200)}
+  else{QZ.first=false;b.classList.remove('no');void b.offsetWidth;b.classList.add('no');sayNow('다시 골라 볼까?','Try again!')}}
+function quizEnd(){$('quizSay').hidden=true;const sc=QZ.score,T=QZ.total,grid=$('quizGrid');grid.className='qgrid';grid.innerHTML='';
+  const d=document.createElement('div');d.className='qend';
+  const st=document.createElement('div');st.className='stars';st.textContent='⭐'.repeat(sc)+'☆'.repeat(T-sc);
+  const p=document.createElement('p');p.className='qtext';p.textContent=sc===T?'모두 맞혔어요! 공룡 박사님!':sc>=3?T+'개 중에 '+sc+'개 맞혔어요! 잘했어요!':'괜찮아요! 한 번 더 해 볼까요?';
+  const again=document.createElement('button');again.className='btn main';again.textContent='한 번 더';again.onclick=quizOpen;
+  d.append(st,p,again);grid.appendChild(d);$('quizText').textContent='';$('quizScore').textContent='⭐ '+sc+' / '+T;
+  sayNow(p.textContent,sc===T?'You got them all! Dino expert!':'You got '+sc+' out of '+T+'!');
+}
+$('quizSay').onclick=quizAsk;$('quizClose').onclick=()=>{$('quizBox').hidden=true;QZ.lock=true};
+
+/* ================= 4. 따라 그리기 ================= */
+const GUIDES=[
+  {k:'egg',n:'아기 공룡 알',steps:[
+    ['동그란 알을 그려요','Draw a round egg','M500 150 C660 150 740 390 735 540 C730 700 625 790 500 790 C375 790 270 700 265 540 C260 390 340 150 500 150'],
+    ['지그재그 금을 그어요','Draw a zigzag crack','M285 450 L355 400 L425 460 L500 400 L575 460 L645 400 L715 450'],
+    ['눈 두 개를 그려요','Draw two eyes','M392 560 A30 30 0 1 0 452 560 A30 30 0 1 0 392 560 M548 560 A30 30 0 1 0 608 560 A30 30 0 1 0 548 560'],
+    ['웃는 입을 그려요','Draw a smile','M430 650 Q500 710 570 650']]},
+  {k:'trex',n:'티라노사우루스',steps:[
+    ['커다란 몸통을 그려요','Draw a big body','M360 560 C360 450 470 400 600 400 C730 400 820 470 820 560 C820 650 730 710 600 710 C470 710 360 660 360 560'],
+    ['네모난 머리를 그려요','Draw a boxy head','M420 450 C440 380 450 300 420 260 C390 230 260 230 200 250 C150 270 150 360 190 400 C230 430 330 440 370 470'],
+    ['꼬리를 그려요','Draw the tail','M800 500 C870 470 930 420 975 360 C950 470 890 560 805 610'],
+    ['튼튼한 다리 두 개','Draw two strong legs','M520 700 L510 810 L440 815 M690 690 L700 810 L630 815'],
+    ['작은 팔을 그려요','Draw tiny arms','M420 570 Q385 600 370 585 M445 610 Q410 645 395 630'],
+    ['눈과 이빨을 그려요','Draw the eye and teeth','M300 300 A20 20 0 1 0 340 300 A20 20 0 1 0 300 300 M200 395 L222 420 L244 398 L266 423 L288 401 L310 426 L332 404']]},
+  {k:'brachio',n:'브라키오사우루스',steps:[
+    ['통통한 몸통을 그려요','Draw a round body','M330 580 C330 470 440 420 580 420 C720 420 820 480 820 580 C820 670 720 710 580 710 C440 710 330 670 330 580'],
+    ['아주 긴 목을 그려요','Draw a very long neck','M370 500 C330 400 300 300 300 190 M450 450 C410 380 385 290 385 195'],
+    ['작은 머리를 그려요','Draw a small head','M300 190 C290 120 320 95 370 95 C430 95 470 120 470 160 C470 195 430 205 385 195'],
+    ['다리 네 개를 그려요','Draw four legs','M400 680 L400 820 M480 700 L480 820 M650 700 L650 820 M740 680 L740 820'],
+    ['꼬리와 눈을 그려요','Draw the tail and eye','M815 560 C890 580 940 630 975 700 M410 140 A12 12 0 1 0 434 140 A12 12 0 1 0 410 140']]},
+  {k:'stego',n:'스테고사우루스',steps:[
+    ['둥근 등을 그려요','Draw a round back','M250 640 C270 420 420 330 560 330 C720 330 830 450 850 640 Z'],
+    ['등에 골판을 그려요','Draw plates on the back','M320 470 L345 360 L400 425 M420 385 L465 255 L520 350 M545 335 L595 215 L640 335 M665 360 L725 260 L750 405 M760 450 L810 380 L820 510'],
+    ['머리를 그려요','Draw the head','M265 600 C215 570 165 580 150 615 C140 655 200 675 280 645'],
+    ['다리 네 개를 그려요','Draw four legs','M340 640 L340 790 M440 640 L440 800 M650 640 L650 800 M760 640 L760 790'],
+    ['꼬리 가시를 그려요','Draw the tail spikes','M845 610 C900 620 940 600 975 560 M905 612 L930 540 M945 585 L985 525']]},
+];
+const TR={on:false,g:null,i:0,pts:null};let traceKind=null;
+function guideThumb(g){const c=document.createElement('canvas');c.width=200;c.height=180;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,200,180);
+  x.scale(.2,.2);x.lineWidth=14;x.lineCap=x.lineJoin='round';x.strokeStyle='#222';g.steps.forEach(s=>x.stroke(new Path2D(s[2])));return c}
+function traceOpen(){closeAllBoxes();const grid=$('trGrid');grid.innerHTML='';
+  GUIDES.forEach(g=>{const b=document.createElement('button');b.append(guideThumb(g),g.n);b.setAttribute('aria-label',g.n+' 따라 그리기');
+    b.onclick=()=>traceStart(g);grid.appendChild(b)});$('traceBox').hidden=false;announce('무엇을 따라 그릴까요?','What shall we draw?')}
+function pathSamples(d){const c=document.createElement('canvas');c.width=250;c.height=225;const g=c.getContext('2d');g.scale(.25,.25);g.lineWidth=8;g.stroke(new Path2D(d));
+  const im=g.getImageData(0,0,250,225).data,out=[];for(let y=0;y<225;y+=2)for(let x=0;x<250;x+=2)if(im[(y*250+x)*4+3]>100)out.push([x*4,y*4]);return out}
+function traceDraw(praise){const g=TR.g,cur=g.steps[TR.i];lnx.clearRect(0,0,PW,PH);lnx.save();lnx.lineCap=lnx.lineJoin='round';
+  g.steps.forEach((s,i)=>{if(i>TR.i)return;const p=new Path2D(s[2]);
+    if(i<TR.i){lnx.setLineDash([]);lnx.strokeStyle='rgba(120,135,160,.35)';lnx.lineWidth=6}else{lnx.setLineDash([20,16]);lnx.strokeStyle='rgba(255,107,74,.95)';lnx.lineWidth=11}
+    lnx.stroke(p)});
+  lnx.setLineDash([]);const m=/M\s*([\d.]+)[ ,]+([\d.]+)/.exec(cur[2]);
+  if(m){lnx.fillStyle='#2FAE6B';lnx.strokeStyle='#fff';lnx.lineWidth=5;lnx.beginPath();lnx.arc(+m[1],+m[2],17,0,7);lnx.fill();lnx.stroke()}
+  lnx.restore();TR.pts=pathSamples(cur[2]);
+  const no=(TR.i+1)+'/'+g.steps.length;$('traceStep').textContent=no+' '+cur[0];
+  toast2('초록 점에서 시작해서 주황 점선을 따라 그려요.');
+  announce((praise?'잘했어요! ':'')+cur[0],(praise?'Great! ':'')+cur[1])}
+function traceStart(g){$('traceBox').hidden=true;if(playing)stopPlay();showTab('draw');snap();px.clearRect(0,0,PW,PH);commit();setSketch(null);
+  TR.on=true;TR.g=g;TR.i=0;traceKind=null;pen='crayon';size=14;$('penSize').value=14;
+  [...pensEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.k==='crayon')));
+  if(color==='#FFFFFF'){color='#222222';[...colorsEl.children].forEach(x=>x.setAttribute('aria-pressed',String(x.style&&x.style.background==='rgb(34, 34, 34)')))}
+  updDot();$('traceBar').hidden=false;drawDirty=true;drawDirtyAt=Date.now();fitPaper();traceDraw(false)}
+function traceStop(){TR.on=false;TR.pts=null;lnx.clearRect(0,0,PW,PH);sketchKey=null;$('traceBar').hidden=true}
+function traceCheck(){if(!TR.on||!TR.pts||!TR.pts.length||pen==='eraser')return;const d=px.getImageData(0,0,PW,PH).data;let hit=0;
+  for(const [x,y] of TR.pts){let ok=false;for(let dy=-24;dy<=24&&!ok;dy+=12)for(let dx=-24;dx<=24;dx+=12){const xx=x+dx,yy=y+dy;
+      if(xx<0||yy<0||xx>=PW||yy>=PH)continue;if(d[(yy*PW+xx)*4+3]>40){ok=true;break}}if(ok)hit++}
+  if(hit/TR.pts.length>=0.7)traceNext()}
+function traceNext(){if(!TR.on)return;TR.i++;if(TR.i>=TR.g.steps.length){traceKind=TR.g.k;traceStop();
+    toast2('완성! 🎉 색칠하고 「살아나라!」를 누르면 살아나요.');announce('완성! 색칠하고 살아나라를 눌러요!','Done! Color it and tap Come alive!');return}
+  traceDraw(true)}
+area.addEventListener('pointerup',()=>{if(TR.on)setTimeout(traceCheck,40)});
+$('traceSkip').onclick=traceNext;$('traceQuit').onclick=()=>{traceStop();traceKind=null;toast2('따라 그리기를 그만했어요. 자유롭게 그려 보세요.')};
+$('trClose').onclick=()=>{$('traceBox').hidden=true};
+$('clearAll').addEventListener('click',()=>{traceKind=null});
+
+/* ================= 5. 목소리로 이름 ================= */
+function decodeVoice(c){if(!c.voice)return;fetch(c.voice).then(r=>r.arrayBuffer()).then(ab=>audio().decodeAudioData(ab)).then(b=>{c.vbuf=b}).catch(()=>{})}
+let nameSrc=null;
+function playName(c){if(!c||!c.vbuf||!soundOn||playing)return;const a=audio();if(!a)return;
+  try{if(nameSrc)try{nameSrc.stop()}catch(e){}const s=a.createBufferSource();s.buffer=c.vbuf;s.connect(master);s.start();nameSrc=s}catch(e){}}
+function boxPatch(c){if(!c||!c.boxId)return;const list=loadBox(),it=list.find(i=>i.id===c.boxId);
+  if(it){it.name=c.name;it.voice=c.voice||null;if(!saveBox(list)){it.voice=null;saveBox(list)}}albPatch(c.boxId,{name:c.name,voice:c.voice||null})}
+let nameRec=null;
+function setNameMic(on){const b=$('nameMic');b.classList.toggle('on',on);b.textContent=on?'■':'🎤';b.setAttribute('aria-label',on?'녹음 멈추기':'목소리로 이름 담기')}
+$('nameMic').onclick=async()=>{if(nameRec){nameRec.stop();return}if(needFriend()||!sel||micRec)return;const c=sel;
+  try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});const mr=new MediaRecorder(stream),ch=[];nameRec=mr;setNameMic(true);
+    mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
+    mr.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());nameRec=null;setNameMic(false);
+      try{const bl=new Blob(ch,{type:mr.mimeType});if(!bl.size||bl.size>250000)throw 0;
+        c.vbuf=await audio().decodeAudioData(await bl.arrayBuffer());
+        c.voice=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result));fr.onerror=rej;fr.readAsDataURL(bl)});
+        $('nameMic').setAttribute('aria-pressed','true');boxPatch(c);saveStage(true);playName(c);
+        $('nameMsg').textContent='✅ '+c.name+' 이름을 내 목소리로 담았어요! 무대에서 누르면 불러줘요.'}
+      catch(e){$('nameMsg').textContent='녹음을 담지 못했어요. 다시 해 볼까요?'}};
+    mr.start();$('nameMsg').textContent='🔴 지금 이름을 말해요! (3초)';setTimeout(()=>{if(nameRec===mr)mr.stop()},3000)}
+  catch(e){$('nameMsg').textContent='마이크를 쓸 수 없어요. 미리보기 화면에서는 막혀 있고, 앱에서는 돼요.'}};
+$('name').addEventListener('change',()=>{if(sel)boxPatch(sel)});
+
+/* ================= 6. 그림 앨범 (날짜별, 이 기기에만) ================= */
+const ALB={db:'doodle-album',store:'items'};
+function albDB(){return new Promise(res=>{try{const r=indexedDB.open(ALB.db);r.onupgradeneeded=()=>{try{r.result.createObjectStore(ALB.store)}catch(e){}};
+  r.onsuccess=()=>{const db=r.result;if(!db.objectStoreNames.contains(ALB.store)){db.close();res(null);return}res(db)};r.onerror=()=>res(null)}catch(e){res(null)}})}
+function albTx(mode,fn){return albDB().then(db=>{if(!db)return null;return new Promise(res=>{let out=null;try{const tx=db.transaction(ALB.store,mode),st=tx.objectStore(ALB.store);out=fn(st);
+  tx.oncomplete=()=>{db.close();res(out&&'result' in out?out.result:out)};tx.onerror=tx.onabort=()=>{db.close();res(null)}}catch(e){db.close();res(null)}})})}
+function albAll(){return albDB().then(db=>{if(!db)return[];return new Promise(res=>{const out=[];try{const q=db.transaction(ALB.store).objectStore(ALB.store).openCursor(null,'prev');
+  q.onsuccess=()=>{const c=q.result;if(c){out.push([c.key,c.value]);c.continue()}else{db.close();res(out)}};q.onerror=()=>{db.close();res(out)}}catch(e){db.close();res(out)}})})}
+function smallThumb(src){return new Promise(res=>{const im=new Image();im.onload=()=>{const s=Math.min(1,200/Math.max(im.width,im.height)),c=document.createElement('canvas');
+  c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);
+  res(c.toDataURL('image/jpeg',0.8))};im.onerror=()=>res(src);im.src=src})}
+async function albumAdd(it){const sm=await smallThumb(it.img);await albTx('readwrite',st=>st.put({t:it.id,img:it.img,sm,name:it.name||'',kind:it.kind||null,parts:it.parts||null,voice:it.voice||null},it.id));renderAlbRow()}
+async function albPatch(id,p){const db=await albDB();if(!db)return;try{const st=db.transaction(ALB.store,'readwrite').objectStore(ALB.store),g=st.get(id);
+  g.onsuccess=()=>{if(g.result)st.put(Object.assign(g.result,p),id)};g.transaction.oncomplete=()=>db.close()}catch(e){db.close()}}
+const DAYS=['일','월','화','수','목','금','토'];
+const dayName=t=>{const d=new Date(t);return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일 ('+DAYS[d.getDay()]+')'};
+async function renderAlbRow(){const rows=await albAll(),el=$('albRow');el.innerHTML='';$('albCount').textContent=rows.length?rows.length+'개':'';
+  if(!rows.length){const p=document.createElement('div');p.className='empty';p.textContent='아직 앨범이 비어 있어요. 친구를 만들면 날짜별로 모여요.';el.appendChild(p);$('albOpen').hidden=true;return}
+  $('albOpen').hidden=false;rows.slice(0,10).forEach(([,v])=>{const im=document.createElement('img');im.src=v.sm||v.img;im.alt='';el.appendChild(im)})}
+let albCur=null;
+async function albOpen(){closeAllBoxes();const rows=await albAll(),L=$('albList');L.innerHTML='';$('albView').hidden=true;L.hidden=false;let day='';let grid=null;
+  if(!rows.length){const p=document.createElement('p');p.className='note';p.textContent='아직 앨범이 비어 있어요.';L.appendChild(p)}
+  rows.forEach(([k,v])=>{const dn=dayName(v.t||k);if(dn!==day){day=dn;const h=document.createElement('div');h.className='albday';h.textContent=dn;grid=document.createElement('div');grid.className='albgrid';L.append(h,grid)}
+    const b=document.createElement('button');const im=document.createElement('img');im.src=v.sm||v.img;im.alt='';b.appendChild(im);b.setAttribute('aria-label',(v.name||'친구')+' 크게 보기');
+    b.onclick=()=>albShow(k,v);grid.appendChild(b)});
+  $('albBox').hidden=false;announce('그림 앨범','Drawing album')}
+function albShow(k,v){albCur=[k,v];$('albList').hidden=true;$('albView').hidden=false;$('albImg').src=v.img;const d=new Date(v.t||k);
+  $('albMeta').textContent=(v.name||'친구')+' · '+dayName(v.t||k)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  $('albDel').textContent='지우기';$('albDel').dataset.ok=''}
+$('albBack').onclick=()=>{$('albView').hidden=true;$('albList').hidden=false};
+$('albDel').onclick=async()=>{const b=$('albDel');if(!b.dataset.ok){b.dataset.ok='1';b.textContent='정말 지울까요?';return}
+  await albTx('readwrite',st=>st.delete(albCur[0]));renderAlbRow();albOpen()};
+$('albStage').onclick=async()=>{const v=albCur[1];const cv=await imgCanvas(v.img);if(!cv)return;$('albBox').hidden=true;
+  const c=addChar(cv,v.kind?defaultMotion(v.kind):null,v.name||null,{kind:v.kind,parts:v.parts,voice:v.voice});showTab('stage');toast.textContent=c.name+'가 무대에 나왔어요!'};
+$('albOpen').onclick=albOpen;$('albClose').onclick=()=>{$('albBox').hidden=true};
+// 처음 한 번: 친구 상자에 있던 친구들을 만든 날짜 그대로 앨범에 넣기
+(async()=>{let done=false;try{done=localStorage.getItem('doodle-album-mig')==='1'}catch(e){}
+  if(!done){const rows=await albAll();if(!rows.length)for(const it of loadBox().slice().reverse())await albumAdd(it);try{localStorage.setItem('doodle-album-mig','1')}catch(e){}}
+  renderAlbRow()})();
+
+/* ================= 7. 연극 그림책 ================= */
+let bookPages=[],bookI=0;
+function frameShot(sk,who,text){const saved=chars.map(c=>[c.say,c.sayUntil,c.temp,c.target]),ps=scene,psel=sel,pp=playing;
+  scene=sk;sel=null;playing=true;chars.forEach(c=>{c.say='';c.target=null;c.temp=null});if(who){who.say=text;who.sayUntil=Infinity;who.temp='hello'}
+  const t=4.2;ctx.save();drawScene(t);for(const c of chars)drawChar(c,t,0);ctx.restore();
+  const out=document.createElement('canvas');out.width=1200;out.height=930;out.getContext('2d').drawImage(stage,0,0,1200,930);
+  chars.forEach((c,i)=>{[c.say,c.sayUntil,c.temp,c.target]=saved[i]});scene=ps;sel=psel;playing=pp;return out}
+function wrapText(g,text,maxW){const out=[];let line='';for(const ch of text){if(g.measureText(line+ch).width>maxW&&line){out.push(line);line=ch.trim()?ch:''}else line+=ch}if(line)out.push(line);return out}
+function bookPage(img,cap,no,cover){const W=1200,H=1200,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  g.fillStyle='#FFF8E7';g.fillRect(0,0,W,H);g.fillStyle='#1E2944';g.textAlign='center';
+  if(cover){g.font='700 96px Gaegu, "Gowun Dodum", sans-serif';g.fillText('우리들의 연극',W/2,130);
+    g.drawImage(img,90,180,1020,791);g.strokeStyle='#1E2944';g.lineWidth=8;g.strokeRect(90,180,1020,791);
+    g.font='44px "Gowun Dodum", sans-serif';g.fillStyle='#5D6B85';wrapText(g,cap,1040).slice(0,2).forEach((l,i)=>g.fillText(l,W/2,1050+i*58));return c}
+  g.drawImage(img,50,50,1100,853);g.strokeStyle='#1E2944';g.lineWidth=8;g.strokeRect(50,50,1100,853);
+  g.font='700 66px Gaegu, "Gowun Dodum", sans-serif';wrapText(g,cap,1060).slice(0,3).forEach((l,i)=>g.fillText(l,W/2,995+i*72));
+  if(no){g.font='34px "Gowun Dodum", sans-serif';g.fillStyle='#9AA7C0';g.textAlign='right';g.fillText(String(no),W-40,H-30)}return c}
+async function makeBook(){const msg=$('bookMsg');
+  if(!chars.length){msg.textContent='무대에 친구가 있어야 그림책을 만들 수 있어요.';return}
+  if(!lineCount()){msg.textContent='먼저 대사를 하나 이상 적어 주세요. 대사 한 줄이 그림책 한 쪽이 돼요.';announce('먼저 대사를 적어 주세요','Write a line first');return}
+  msg.textContent='그림책을 만드는 중…';await new Promise(r=>setTimeout(r,30));
+  try{await document.fonts.load('700 66px Gaegu')}catch(e){}
+  const pages=[];let sk=script[0]&&script[0].type==='scene'?script[0].scene:scene;const now=new Date();
+  pages.push(bookPage(frameShot(sk,null,''),chars.map(c=>c.name).join(' · ')+' · '+now.getFullYear()+'.'+(now.getMonth()+1)+'.'+now.getDate(),0,true));
+  let no=1;for(const ln of script){if(ln.type==='scene'){sk=ln.scene;continue}const c=chars.find(x=>x.id===ln.who),t=(ln.text||'').trim();if(!c||!t)continue;
+    pages.push(bookPage(frameShot(sk,c,t),c.name+': '+t,no++));await new Promise(r=>setTimeout(r,0))}
+  pages.push(bookPage(frameShot(sk,null,''),'끝 · 짝짝짝!',0));
+  bookPages=pages.map(p=>p.toDataURL('image/jpeg',0.86));bookI=0;msg.textContent='';closeAllBoxes();$('bookNote').textContent='';$('bookBox').hidden=false;bookShow();
+  announce('그림책이 완성됐어요!','Your picture book is ready!')}
+function bookShow(){$('bookImg').src=bookPages[bookI];$('bookNo').textContent=(bookI+1)+' / '+bookPages.length;$('bookPrev').disabled=bookI===0;$('bookNext').disabled=bookI===bookPages.length-1}
+$('bookPrev').onclick=()=>{if(bookI>0){bookI--;bookShow()}};$('bookNext').onclick=()=>{if(bookI<bookPages.length-1){bookI++;bookShow()}};
+{let sx=null;$('bookImg').addEventListener('pointerdown',e=>{sx=e.clientX});$('bookImg').addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;
+  if(Math.abs(d)>40)(d<0?$('bookNext'):$('bookPrev')).click();else{const r=e.currentTarget.getBoundingClientRect();(e.clientX-r.left>r.width/2?$('bookNext'):$('bookPrev')).click()}})}
+const u8=u=>{const b=atob(u.split(',')[1]),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a};
+// 아주 작은 PDF 만들기 (쪽마다 JPEG 그림 한 장)
+function makePDF(pages){const enc=new TextEncoder(),parts=[],offs=[];let len=0;const push=x=>{const u=typeof x==='string'?enc.encode(x):x;parts.push(u);len+=u.length};
+  const N=pages.length,S=576;push('%PDF-1.4\n%âãÏÓ\n');const obj=(n,body)=>{offs[n]=len;push(n+' 0 obj\n'+body+'\nendobj\n')};
+  obj(1,'<< /Type /Catalog /Pages 2 0 R >>');obj(2,'<< /Type /Pages /Kids ['+pages.map((_,i)=>(3+i*3)+' 0 R').join(' ')+'] /Count '+N+' >>');
+  pages.forEach((u,i)=>{const P=3+i*3,C=P+1,I=P+2,cs='q '+S+' 0 0 '+S+' 0 0 cm /Im'+i+' Do Q';
+    obj(P,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+S+' '+S+'] /Resources << /XObject << /Im'+i+' '+I+' 0 R >> >> /Contents '+C+' 0 R >>');
+    obj(C,'<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream');
+    const jb=u8(u);offs[I]=len;push(I+' 0 obj\n<< /Type /XObject /Subtype /Image /Width 1200 /Height 1200 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jb.length+' >>\nstream\n');push(jb);push('\nendstream\nendobj\n')});
+  const total=3+N*3,xref=len;let x='xref\n0 '+total+'\n0000000000 65535 f \n';for(let n=1;n<total;n++)x+=String(offs[n]).padStart(10,'0')+' 00000 n \n';
+  push(x);push('trailer\n<< /Size '+total+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n');return new Blob(parts,{type:'application/pdf'})}
+async function shareFile(blob,name,text){
+  if(CAP&&CAP.Filesystem&&CAP.Share){try{const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(blob)});
+      const w=await CAP.Filesystem.writeFile({path:name,data:b64,directory:'CACHE'});await CAP.Share.share({title:'Doodle',text,files:[w.uri],dialogTitle:'저장하거나 보내기'});return true}
+    catch(e){if(e&&/cancel/i.test(String(e.message||e)))return true}}
+  if(!CAP&&await webShare(blob,name,text))return true;
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},5000);return true}
+$('bookBtn').onclick=makeBook;$('bookClose').onclick=()=>{$('bookBox').hidden=true};
+$('bookSave').onclick=async()=>{const n=new Date(),name='doodle-그림책-'+n.getFullYear()+(n.getMonth()+1+'').padStart(2,'0')+(n.getDate()+'').padStart(2,'0')+'.pdf';
+  $('bookNote').textContent='그림책 파일(PDF)을 만드는 중…';await shareFile(makePDF(bookPages),name,'우리 아이가 만든 연극 그림책!');$('bookNote').textContent='카톡으로 보내거나 파일로 저장할 수 있어요.'};
+
+/* ================= 8. 놀이 시간 알림 (부모님 설정) ================= */
+const LIM_KEY='doodle-limit',USE_KEY='doodle-usage';
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+let limitMin=(()=>{try{return Math.max(0,parseInt(localStorage.getItem(LIM_KEY)||'0',10)||0)}catch(e){return 0}})();
+let usage=(()=>{try{const u=JSON.parse(localStorage.getItem(USE_KEY)||'null');if(u&&u.d===today()&&typeof u.s==='number')return{d:u.d,s:u.s,b:+u.b||0}}catch(e){}return{d:today(),s:0,b:0}})();
+function saveUsage(){try{localStorage.setItem(USE_KEY,JSON.stringify(usage))}catch(e){}}
+let restOn=false,warned=false,lastTick=Date.now(),restQ=0,restMot=null;
+const minsLeft=()=>Math.ceil(((limitMin+usage.b)*60-usage.s)/60);
+function limText(){const used=Math.floor(usage.s/60);$('limNote').textContent=limitMin?'하루 '+limitMin+'분'+(usage.b?' (+'+usage.b+'분)':'')+' · 오늘 '+used+'분 놀았어요':'지금은 시간 제한이 없어요.';
+  $('limUsed').textContent='오늘 논 시간: '+used+'분';[...$('limChips').children].forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.m===limitMin)))}
+[0,15,20,30,45,60].forEach(m=>{const b=document.createElement('button');b.className='chip';b.dataset.m=m;b.textContent=m?m+'분':'끄기';
+  b.onclick=()=>{limitMin=m;try{localStorage.setItem(LIM_KEY,String(m))}catch(e){}warned=false;limText()};$('limChips').appendChild(b)});
+function restStart(){if(restOn)return;restOn=true;saveUsage();if(playing)stopPlay();if(autoOn)$('auto').click();if(musicOn)setMusic(false);if(recorder)stopRec();
+  closeAllBoxes();if($('drawbox').classList.contains('big'))setBig(false);showTab('stage');restMot=chars.map(c=>c.motion);
+  chars.forEach((c,i)=>{c.target=null;c.motion='sleep';if(i===0){c.say='이제 쉬자, 내일 또 놀자!';c.sayUntil=rt()+3}});
+  sayNow('이제 쉬자, 내일 또 놀자!',"Let's rest now. Let's play again tomorrow!");
+  const t0=rt();const tick=()=>{restQ=Math.min(1,(rt()-t0-1.2)/1.2);if(restQ<1)requestAnimationFrame(tick)};tick();
+  setTimeout(()=>{$('restMore').hidden=true;$('restParent').hidden=false;$('restBox').hidden=false},2600)}
+function restEnd(add){usage.b+=add;saveUsage();restOn=false;warned=false;$('restBox').hidden=true;
+  if(restMot)chars.forEach((c,i)=>{if(restMot[i])c.motion=restMot[i]});restMot=null;
+  const t0=rt();const tick=()=>{restQ=Math.max(0,1-(rt()-t0)/1);if(restQ>0)requestAnimationFrame(tick)};tick();
+  toast.textContent=add+'분 더 놀 수 있어요!';limText()}
+setInterval(()=>{const now=Date.now(),dt=Math.min(10,(now-lastTick)/1000);lastTick=now;if(document.hidden||restOn)return;
+  if(usage.d!==today()){usage={d:today(),s:0,b:0};warned=false}usage.s+=dt;saveUsage();
+  if(!$('tab-friends').hidden)limText();if(!limitMin)return;const left=(limitMin+usage.b)*60-usage.s;
+  if(left<=60&&left>0&&!warned){warned=true;const c=chars[0];if(c){c.say='1분 남았어요!';c.sayUntil=rt()+3}toast.textContent='⏰ 1분 뒤에 오늘 놀이가 끝나요.';sayNow('1분 남았어요!','One more minute!')}
+  if(left<=0)restStart()},2000);
+// 부모님 확인 (간단한 셈)
+let gateCb=null,gateAns=0;
+function gate(cb){gateCb=cb;const a=6+Math.floor(Math.random()*8),b=6+Math.floor(Math.random()*8);gateAns=a+b;$('gateQ').textContent=a+' + '+b+' = ?';
+  $('gateIn').value='';$('gateMsg').textContent='';$('gateBox').hidden=false;setTimeout(()=>$('gateIn').focus(),50)}
+$('gateOk').onclick=()=>{if(parseInt($('gateIn').value,10)===gateAns){$('gateBox').hidden=true;const cb=gateCb;gateCb=null;if(cb)cb()}else{$('gateMsg').textContent='답이 달라요. 부모님이 해 주세요.';$('gateIn').value=''}};
+$('gateIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('gateOk').click()});
+$('gateClose').onclick=()=>{$('gateBox').hidden=true;gateCb=null};
+$('limBtn').onclick=()=>gate(()=>{limText();$('limBox').hidden=false});
+$('limClose').onclick=()=>{$('limBox').hidden=true};
+$('limReset').onclick=()=>{usage={d:today(),s:0,b:0};warned=false;saveUsage();limText()};
+$('restParent').onclick=()=>gate(()=>{$('restParent').hidden=true;$('restMore').hidden=false});
+[...$('restMore').querySelectorAll('[data-m]')].forEach(b=>b.onclick=()=>restEnd(+b.dataset.m));
+limText();
+if(limitMin&&usage.s>=(limitMin+usage.b)*60)setTimeout(restStart,800);
+
+/* ================= 놀이 버튼 연결 ================= */
+$('gFossil').onclick=()=>fosOpen();
+$('gEgg').onclick=()=>{loadEgg()};$('eggBtn').onclick=()=>{loadEgg()};
+$('gQuiz').onclick=()=>{quizOpen()};
+$('gTrace').onclick=()=>{traceOpen()};$('traceBtn').onclick=()=>{traceOpen()};
+
 /* ================= 반자동 업데이트 (앱에서만) ================= */
 const APP_VER=(document.querySelector('.ver')||{}).textContent||'v0';
 const REPO='dlsdml99-create/doodle';
@@ -1760,7 +2254,7 @@ requestAnimationFrame(loop);
 })();
 </script>
 <!--APPINFO--><script>
-window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "3.8", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.05", "items": ["보안 강화: 앱 화면이 허락된 곳 말고는 스크립트를 불러오지 못하게 막고, 폰의 다른 파일을 읽지 못하게 하고, 업데이트 파일은 이 앱 저장소 주소에서만 받아요"]}, {"v": "v3.7", "d": "2026.11.05", "items": ["📷 그림 사진: 사진 찍기와 앨범 고르기를 따로 눌러요 (앱에서 카메라가 안 열리던 문제 고침)", "사진에서 원하는 곳만 손가락으로 둘러 고르면, 사진 모습 그대로 그리기 화면에 들어가요. 그 위에 그리고 색칠한 뒤 살아나라!", "말로 알려주기를 한국어·영어 중에 골라요 (오른쪽 위 🗣️ 버튼: 한 → EN → 끄기)", "종이 색칠 놀이를 뺐어요"]}, {"v": "v3.6", "d": "2026.11.05", "items": ["공룡 밑그림 12종을 도감처럼 고급스럽게 새로 그렸어요 (팔다리·꼬리 움직임도 새 그림에 맞춤)", "사진으로 밑그림: 사진을 찍고 색칠하고 싶은 것만 손가락으로 빙 두르면 배경을 빼고 색칠 밑그림으로 바꿔요 (선 적게·보통·많이)", "만든 사진 밑그림은 밑그림 고르기 → 📸 내 사진에 모여요"]}, {"v": "v3.5", "d": "2026.11.05", "items": ["아이폰·아이패드에서도 써요 (사파리에서 열고 홈 화면에 추가)", "스케치북에 그린 그림 사진에서 책상·그림자·누런 종이·스프링을 빼고 그림만 오려 친구로", "띠링·쿵 같은 효과음을 뺐어요 (말소리·목소리·배경 음악은 그대로)", "내 데이터 백업: 왼쪽 아래 버전 → 친구·그림·대본을 파일로 저장했다가 새 폰(아이폰도)에서 불러오기"]}, {"v": "v3.4", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리는 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요.", "backup": {"keys": ["living-drawing-box-v1", "doodle-*"]}};
+window.APP_INFO={"name": "Doodle", "repo": "dlsdml99-create/doodle", "version": "4.0", "mount": ".ver", "notes": [{"v": "current", "d": "2026.11.08", "items": ["🦴 화석 발굴: 모래를 문질러 공룡 화석을 찾고 살려내요 (도감에도 들어가요)", "🥚 알 부화: 알을 색칠하고 살아나라! 하면 흔들흔들 깨지며 아기 공룡이 태어나요", "🔊 누구일까?: 설명을 듣고 공룡 세 마리 중에 맞혀요 (한국어·영어)", "✏️ 따라 그리기: 점선을 순서대로 따라 그리면 공룡 완성 (알·티라노·브라키오·스테고)", "🎤 목소리 이름: 이름을 말로 담으면 무대에서 누를 때마다 그 목소리로 불러줘요", "📅 그림 앨범: 만든 친구들이 날짜별로 모여요", "📖 연극 그림책: 대사 한 줄이 한 쪽! 그림책(PDF)으로 저장·카톡 보내기", "🔒 놀이 시간(부모님): 정한 시간이 되면 친구들이 인사하고 커튼을 닫아요", "보안: 앱이 쓰지 않는 바깥 글꼴·그림 주소를 막고, 인터넷은 업데이트 확인 주소만 쓰게 했어요"]}, {"v": "v3.8", "d": "2026.11.05", "items": ["보안 강화: 앱 화면이 허락된 곳 말고는 스크립트를 불러오지 못하게 막고, 폰의 다른 파일을 읽지 못하게 하고, 업데이트 파일은 이 앱 저장소 주소에서만 받아요"]}, {"v": "v3.7", "d": "2026.11.05", "items": ["📷 그림 사진: 사진 찍기와 앨범 고르기를 따로 눌러요 (앱에서 카메라가 안 열리던 문제 고침)", "사진에서 원하는 곳만 손가락으로 둘러 고르면, 사진 모습 그대로 그리기 화면에 들어가요. 그 위에 그리고 색칠한 뒤 살아나라!", "말로 알려주기를 한국어·영어 중에 골라요 (오른쪽 위 🗣️ 버튼: 한 → EN → 끄기)", "종이 색칠 놀이를 뺐어요"]}, {"v": "v3.6", "d": "2026.11.05", "items": ["공룡 밑그림 12종을 도감처럼 고급스럽게 새로 그렸어요 (팔다리·꼬리 움직임도 새 그림에 맞춤)", "사진으로 밑그림: 사진을 찍고 색칠하고 싶은 것만 손가락으로 빙 두르면 배경을 빼고 색칠 밑그림으로 바꿔요 (선 적게·보통·많이)", "만든 사진 밑그림은 밑그림 고르기 → 📸 내 사진에 모여요"]}, {"v": "v3.5", "d": "2026.11.05", "items": ["아이폰·아이패드에서도 써요 (사파리에서 열고 홈 화면에 추가)", "스케치북에 그린 그림 사진에서 책상·그림자·누런 종이·스프링을 빼고 그림만 오려 친구로", "띠링·쿵 같은 효과음을 뺐어요 (말소리·목소리·배경 음악은 그대로)", "내 데이터 백업: 왼쪽 아래 버전 → 친구·그림·대본을 파일로 저장했다가 새 폰(아이폰도)에서 불러오기"]}, {"v": "v3.4", "d": "2026.11.01", "items": ["그리기 탭에서도 '📷 그림 사진'으로 종이에 그린 그림을 찍어 친구 만들기", "작은 폰에서 그리기 탭 위쪽 버튼 글자가 두 줄로 깨지지 않게"]}, {"v": "v3.3", "d": "2026.11.01", "items": ["공룡 3·6·9·12마리를 모으면 스티커를 받고, 도감을 다 채우면 축하 화면이 떠요", "친구들 탭 맨 위에 '새 친구 만들기' 버튼", "휴대폰 뒤로 가기 버튼으로 열린 창부터 닫아요 (예전에는 바로 앱이 꺼졌어요)"]}, {"v": "v3.2", "d": "2026.11.01", "items": ["작은 폰에서 친구들 탭이 옆으로 밀리던 문제를 고쳤어요", "작은 폰에서 무대 버튼이 화면 밖으로 나가지 않게 했어요", "친구가 없을 때 꾸미기 버튼을 누르면 친구부터 만들라고 알려줘요"]}, {"v": "v3.1", "d": "2026.11.01", "items": ["처음 열면 빈 무대에서 시작해요 (예시 친구를 미리 넣지 않아요)", "보안: 앱 서명 키를 새로 바꿨어요. 이번 한 번만 지우고 새로 설치해 주세요", "왼쪽 아래 버전을 누르면 앱 정보·업데이트 내용을 볼 수 있고, 새 버전이 있으면 노란색으로 알려줘요"]}, {"v": "v3.0", "d": "2026.10.30", "items": ["공룡이 공룡처럼 걷고 울고 꼬리를 흔들어요, 공룡 도감 12칸", "누르는 것마다 이름을 읽어줘요", "팔다리 만들기, 종이 색칠, 장면이 있는 연극과 영상 저장", "앱을 껐다 켜도 무대·대본·그림이 그대로"]}, {"v": "v2.2", "d": "2026.10.29", "items": ["앱 받기·사용 설명 페이지", "화면을 길게 눌러도 글자가 선택되지 않아요", "펜 굵기 미리보기 모양 수정"]}, {"v": "v2.1", "d": "2026.10.29", "items": ["무대 버튼을 아이콘으로 작게 정리", "친구 꾸미기는 친구들 탭, 배경·음악은 연극 탭으로"]}, {"v": "v1.8", "d": "2026.10.28", "items": ["새 버전이 나오면 앱을 켤 때 알려줘요", "업데이트해도 만든 친구들은 그대로"]}], "privacy": "그린 그림, 친구, 대본, 녹음한 목소리, 그림 앨범은 이 기기에만 저장돼요. 인터넷은 새 버전을 확인할 때만 써요.", "backup": {"keys": ["living-drawing-box-v1", "doodle-*"], "idb": [{"db": "doodle-album", "store": "items"}]}};
 window.APP_INFO.online=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());window.APP_INFO.web=!window.APP_INFO.online&&/github\.io$/.test(location.hostname);if(window.APP_INFO.online)window.APP_INFO.backup.save=function(n,t){var P=Capacitor.Plugins;if(!P.Filesystem||!P.Share)return false;return P.Filesystem.writeFile({path:n,data:t,directory:'CACHE',encoding:'utf8'}).then(function(w){return P.Share.share({title:n,files:[w.uri],dialogTitle:'백업 파일 저장하기'})}).then(function(){return true},function(e){if(/cancel/i.test(String(e&&e.message||e)))return false;throw e})};
 </script>
 <script>
