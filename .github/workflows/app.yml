@@ -46,7 +46,7 @@ jobs:
           # 보안: 부품 버전을 package.json에 고정하고, 설치할 때 남의 스크립트가 실행되지 않게 막음(--ignore-scripts)
           # package-lock.json 으로 매번 같은 부품 버전을 씀 (npm ci). .npmrc: legacy-peer-deps, ignore-scripts
           if [ -f package-lock.json ]; then npm ci --no-audit --no-fund --ignore-scripts
-          else npm install --no-audit --no-fund --ignore-scripts; mkdir -p /tmp/lock && cp package-lock.json /tmp/lock/; fi
+          else npm install --no-audit --no-fund --ignore-scripts; mkdir -p /tmp/lock && cp package-lock.json /tmp/lock/; echo NEW_LOCK=1 >> $GITHUB_ENV; fi
           npm ls --depth=0 || true
           npx cap add android
           bash scripts/harden-android.sh
@@ -96,7 +96,7 @@ jobs:
           path: site
       # 처음 한 번: 저장소에 package-lock.json 이 없으면 만든 파일을 내려받을 수 있게 올려 둠 (비밀값 없음)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: hashFiles('package-lock.json') == ''
+        if: env.NEW_LOCK == '1'
         with:
           name: package-lock
           path: /tmp/lock/package-lock.json
