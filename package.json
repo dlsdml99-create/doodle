@@ -4,8 +4,8 @@
   "private": true,
   "description": "Doodle - 내 그림이 살아나는 앱",
   "dependencies": {
-    "@capacitor/android": "~6.2.0",
-    "@capacitor/core": "~6.2.0",
+    "@capacitor/android": "6.2.3",
+    "@capacitor/core": "6.2.3",
     "@capacitor/filesystem": "6.0.4",
     "@capacitor/share": "6.0.4",
     "@capacitor-community/text-to-speech": "4.1.1",
@@ -13,6 +13,6 @@
     "@capacitor/app": "6.0.3"
   },
   "devDependencies": {
-    "@capacitor/cli": "~6.2.0"
+    "@capacitor/cli": "6.2.3"
   }
 }
