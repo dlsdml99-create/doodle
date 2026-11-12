@@ -33,9 +33,11 @@ jobs:
           cp -r fonts www/
           cp ic_launcher*.png splash.png icons/
           cp apply-icons.sh scripts/
+          # 보안: 부품 버전을 package.json에 고정하고, 설치할 때 남의 스크립트가 실행되지 않게 막음(--ignore-scripts)
           npm pkg delete dependencies.@capacitor-community/text-to-speech
-          npm install --no-audit --no-fund
-          for v in 4 5 3; do npm i --no-audit --no-fund --legacy-peer-deps @capacitor-community/text-to-speech@$v && break; done
+          npm install --no-audit --no-fund --ignore-scripts
+          npm i --no-audit --no-fund --legacy-peer-deps --ignore-scripts @capacitor-community/text-to-speech@4.1.1
+          npm ls --depth=0 || true
           npx cap add android
           bash scripts/apply-icons.sh
           npx cap sync android
