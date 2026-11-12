@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8">
+<html lang="ko"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Doodle 받기</title>
 <meta name="description" content="내 그림이 살아나요! 그리거나 찍어 올린 그림이 무대에서 춤추고 말하는 안드로이드 앱">
@@ -8,8 +8,8 @@
 <meta property="og:image" content="icon.png">
 <link rel="icon" href="icon.png">
 <!-- 글꼴은 이 사이트에 같이 올린 파일을 써요. 바깥 글꼴 서버가 느리거나 막히면(카톡 안 브라우저 등) 페이지가 하얗게 멈추던 문제를 막아요 -->
-<link rel="preload" href="app/fonts/gowun-400.woff" as="font" type="font/woff" crossorigin>
-<style>@font-face{font-family:"Gaegu";font-weight:700;font-display:swap;src:url(app/fonts/gaegu-700.woff) format("woff")}@font-face{font-family:"Gowun Dodum";font-weight:400;font-display:swap;src:url(app/fonts/gowun-400.woff) format("woff")}</style>
+<link rel="preload" href="app/fonts/gowun-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Gaegu";font-weight:700;font-display:swap;src:url(app/fonts/gaegu-700.woff2) format("woff2"),url(app/fonts/gaegu-700.woff) format("woff")}@font-face{font-family:"Gowun Dodum";font-weight:400;font-display:swap;src:url(app/fonts/gowun-400.woff2) format("woff2"),url(app/fonts/gowun-400.woff) format("woff")}</style>
 <style>
 /* 레이아웃: 앱 카드(받기 버튼 + QR) → 소개 → 업데이트 내용 → 설치 방법 → 안전 정보 → 자주 묻는 질문 */
 :root{
@@ -150,7 +150,8 @@ footer{color:var(--sub);font-size:14px;border-top:1px solid var(--line);padding-
     <h2 id="logH">새로 바뀐 것</h2>
     <p class="lead">앱을 켤 때 새 버전이 있으면 알려줘요. 업데이트해도 만든 친구들은 그대로 남아요.</p>
     <div class="log" style="margin-top:20px">
-      <div class="ver new"><div><b>v4.1</b><br><span class="new-pill">최신</span></div><ul><li>화석 발굴 버튼 이름을 「살아나라!」로 맞췄어요</li><li>앱을 만들 때 쓰는 부품 버전을 고정해 더 안전하게</li></ul></div>
+      <div class="ver new"><div><b>v4.2</b><br><span class="new-pill">최신</span></div><ul><li>🦖 처음 열면 「공룡 색칠부터 해 보기」 버튼으로 바로 시작해요</li><li>🎭 친구가 없을 때 연극·꾸미기를 누르면 「먼저 친구를 만들어 주세요」와 「친구 만들러 가기」 버튼이 나와요</li><li>▶ 무대 버튼 아래에 연극·녹화·자동 놀이·소리·사진 이름이 생겼어요</li><li>💾 그림을 더 넉넉한 곳에 저장해요. 저장이 안 되면 알려 줘요 (예전 그림은 저절로 옮겨져요)</li><li>🔒 백업 파일 비밀번호(6글자 이상), 친구 상자는 ×를 두 번 눌러야 빠져요</li><li>🌙 어두운 화면 카드 색, 글자 크기 고르기, 낱말이 중간에서 끊기지 않게</li><li>🔒 보안: 폰 자동 백업에 그림이 실리지 않게, 암호화 안 된 주소 막기, 글꼴 용량 줄이기</li></ul></div>
+      <div class="ver"><div><b>v4.1</b></div><ul><li>화석 발굴 버튼 이름을 「살아나라!」로 맞췄어요</li><li>앱을 만들 때 쓰는 부품 버전을 고정해 더 안전하게</li></ul></div>
       <div class="ver"><div><b>v4.0</b></div><ul><li>🦴 화석 발굴: 모래를 문질러 공룡 화석을 찾고 살려내요</li><li>🥚 알 부화: 알을 색칠하면 아기 공룡이 깨어나요</li><li>🔊 누구일까?: 설명을 듣고 공룡 맞히기 (한국어·영어)</li><li>✏️ 따라 그리기: 점선을 따라 그리면 공룡 완성</li><li>🎤 목소리 이름, 📅 그림 앨범, 📖 연극 그림책(PDF), 🔒 놀이 시간(부모님)</li><li>🔒 보안: 쓰지 않는 바깥 주소를 막고, 인터넷은 업데이트 확인만</li></ul></div>
       <div class="ver"><div><b>v3.8</b></div><ul><li>🔒 보안 강화: 앱 화면이 허락된 곳 말고는 스크립트를 불러오지 못하게 막고, 업데이트 파일은 Doodle 저장소 주소에서만 받아요</li></ul></div>
       <div class="ver"><div><b>v3.7</b></div><ul><li>📷 그림 사진: 사진 찍기와 앨범을 따로 눌러요 (앱에서 카메라가 안 열리던 문제 고침)</li><li>사진에서 원하는 곳만 둘러 고르면 사진 모습 그대로 그리기 화면에</li><li>말로 알려주기 한국어·영어 고르기 (🗣️ 버튼: 한 → EN → 끄기)</li><li>종이 색칠 놀이를 뺐어요</li></ul></div>

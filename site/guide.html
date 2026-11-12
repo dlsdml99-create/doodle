@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8">
+<html lang="ko"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Doodle 사용 설명서</title>
 <meta name="description" content="Doodle 앱 탭별·기능별 사용 방법">
@@ -8,8 +8,8 @@
 <meta property="og:image" content="icon.png">
 <link rel="icon" href="icon.png">
 <!-- 글꼴은 이 사이트에 같이 올린 파일을 써요. 바깥 글꼴 서버가 느리거나 막히면(카톡 안 브라우저 등) 페이지가 하얗게 멈추던 문제를 막아요 -->
-<link rel="preload" href="app/fonts/gowun-400.woff" as="font" type="font/woff" crossorigin>
-<style>@font-face{font-family:"Gaegu";font-weight:700;font-display:swap;src:url(app/fonts/gaegu-700.woff) format("woff")}@font-face{font-family:"Gowun Dodum";font-weight:400;font-display:swap;src:url(app/fonts/gowun-400.woff) format("woff")}</style>
+<link rel="preload" href="app/fonts/gowun-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Gaegu";font-weight:700;font-display:swap;src:url(app/fonts/gaegu-700.woff2) format("woff2"),url(app/fonts/gaegu-700.woff) format("woff")}@font-face{font-family:"Gowun Dodum";font-weight:400;font-display:swap;src:url(app/fonts/gowun-400.woff2) format("woff2"),url(app/fonts/gowun-400.woff) format("woff")}</style>
 <style>
 /* 레이아웃: 앱 소개 카드(받기 버튼) → 목차 → 탭별 설명(왼쪽 화면 사진, 오른쪽 따라하기) → 받기 */
 :root{

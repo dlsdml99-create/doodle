@@ -15,7 +15,7 @@ jobs:
   site:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: 최신 버전 번호로 페이지 채우기
         env: { GH_TOKEN: '${{ github.token }}' }
         run: |
@@ -26,8 +26,13 @@ jobs:
           sed -i "s/__VER__/$VER/g; s/__MB__/$MB/g" site/*.html
           printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk"><title>Doodle 받기</title><a href="https://github.com/dlsdml99-create/doodle/releases/latest/download/Doodle.apk">Doodle.apk 받기</a>' > site/dl.html
           touch site/.nojekyll
+          pip install -q fonttools==4.55.3 brotli==1.1.0 && python3 -c "
+          from fontTools.ttLib import TTFont
+          for n in ['gaegu-700','gowun-400']:
+              f=TTFont('fonts/'+n+'.woff'); f.flavor='woff2'; f.save('fonts/'+n+'.woff2')
+          " || echo "woff2 변환 실패: woff 사용"
           bash webapp/build.sh "$VER-${GITHUB_SHA::7}"
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with: { path: site }
   pages:
     needs: site
@@ -35,4 +40,4 @@ jobs:
     environment: { name: github-pages, url: '${{ steps.deploy.outputs.page_url }}' }
     steps:
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
