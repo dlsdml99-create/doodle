@@ -14,7 +14,7 @@
 /* 레이아웃: 앱 카드(받기 버튼 + QR) → 소개 → 업데이트 내용 → 설치 방법 → 안전 정보 → 자주 묻는 질문 */
 :root{
   --bg:#EAF4FB; --surface:#FFFFFF; --ink:#1E2944; --sub:#5D6B85; --line:#D3DEEA;
-  --sky:#2FA7E0; --sky-soft:#DDF1FC; --pop:#FF6B4A; --pop-soft:#FFE7E0; --sun:#FFC83D; --leaf:#2FAE6B;
+  --sky:#2FA7E0; --sky-soft:#DDF1FC; --pop:#C2410C; --pop-soft:#FFE7E0; --sun:#FFC83D; --leaf:#2FAE6B;
   --display:"Gaegu","Gowun Dodum",system-ui,sans-serif;
   --body:"Gowun Dodum",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
   --shadow:0 1px 2px rgba(30,41,68,.06),0 8px 24px rgba(30,41,68,.08);
@@ -52,7 +52,7 @@ p{margin:0} a{color:inherit}
 .stack{display:grid;gap:8px;flex:1;min-width:0}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 18px;border-radius:16px;font-weight:700;text-decoration:none;font-size:18px}
 .btn svg{width:22px;height:22px;flex:none}
-.btn.dl{background:var(--pop);color:#fff;box-shadow:0 4px 0 #C94A2E}
+.btn.dl{background:var(--pop);color:#fff;box-shadow:0 4px 0 #8A2E08}
 .btn.ghost{background:var(--sky-soft);color:var(--ink);font-size:16px;padding:12px 16px}
 .btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .small{font-size:14px;color:var(--sub)}
@@ -150,7 +150,8 @@ footer{color:var(--sub);font-size:14px;border-top:1px solid var(--line);padding-
     <h2 id="logH">새로 바뀐 것</h2>
     <p class="lead">앱을 켤 때 새 버전이 있으면 알려줘요. 업데이트해도 만든 친구들은 그대로 남아요.</p>
     <div class="log" style="margin-top:20px">
-      <div class="ver new"><div><b>v4.2</b><br><span class="new-pill">최신</span></div><ul><li>🦖 처음 열면 「공룡 색칠부터 해 보기」 버튼으로 바로 시작해요</li><li>🎭 친구가 없을 때 연극·꾸미기를 누르면 「먼저 친구를 만들어 주세요」와 「친구 만들러 가기」 버튼이 나와요</li><li>▶ 무대 버튼 아래에 연극·녹화·자동 놀이·소리·사진 이름이 생겼어요</li><li>💾 그림을 더 넉넉한 곳에 저장해요. 저장이 안 되면 알려 줘요 (예전 그림은 저절로 옮겨져요)</li><li>🔒 백업 파일 비밀번호(6글자 이상), 친구 상자는 ×를 두 번 눌러야 빠져요</li><li>🌙 어두운 화면 카드 색, 글자 크기 고르기, 낱말이 중간에서 끊기지 않게</li><li>🔒 보안: 폰 자동 백업에 그림이 실리지 않게, 암호화 안 된 주소 막기, 글꼴 용량 줄이기</li></ul></div>
+      <div class="ver new"><div><b>v4.3</b><br><span class="new-pill">최신</span></div><ul><li>🎪 친구가 없을 때 무대 버튼(연극·녹화·자동 놀이·사진)은 흐리게 보여요. 누르면 「먼저 친구를 만들어 주세요」라고 알려 주고 친구 만드는 곳으로 안내해요</li><li>🌗 부모님 칸에 「화면 색」이 생겼어요. 폰 설정 따라·밝게·어둡게 중에 골라요</li><li>🎨 주황 버튼 색을 진하게 해서 흰 글씨가 더 잘 보여요. 새 버전 알림 글씨도 밝은 화면에서 잘 보이게 했어요</li><li>🔒 백업 비밀번호를 더 튼튼하게 만들어요. 이제 8글자 이상이고, 숫자만 쓰면 한 번 더 확인해요 (예전에 만든 백업도 그대로 열려요)</li><li>💾 저장이 안 될 때 알림 문구를 알기 쉽게 바꾸고, 또 실패하면 다시 알려 줘요</li><li>🔒 아이폰 웹앱이 같은 주소의 다른 앱 저장 파일을 지우지 않게 고쳤어요</li><li>왼쪽 아래 버전 글씨를 누르기 쉽게 조금 넓혔어요</li></ul></div>
+      <div class="ver"><div><b>v4.2</b></div><ul><li>🦖 처음 열면 「공룡 색칠부터 해 보기」 버튼으로 바로 시작해요</li><li>🎭 친구가 없을 때 연극·꾸미기를 누르면 「먼저 친구를 만들어 주세요」와 「친구 만들러 가기」 버튼이 나와요</li><li>▶ 무대 버튼 아래에 연극·녹화·자동 놀이·소리·사진 이름이 생겼어요</li><li>💾 그림을 더 넉넉한 곳에 저장해요. 저장이 안 되면 알려 줘요 (예전 그림은 저절로 옮겨져요)</li><li>🔒 백업 파일 비밀번호(6글자 이상), 친구 상자는 ×를 두 번 눌러야 빠져요</li><li>🌙 어두운 화면 카드 색, 글자 크기 고르기, 낱말이 중간에서 끊기지 않게</li><li>🔒 보안: 폰 자동 백업에 그림이 실리지 않게, 암호화 안 된 주소 막기, 글꼴 용량 줄이기</li></ul></div>
       <div class="ver"><div><b>v4.1</b></div><ul><li>화석 발굴 버튼 이름을 「살아나라!」로 맞췄어요</li><li>앱을 만들 때 쓰는 부품 버전을 고정해 더 안전하게</li></ul></div>
       <div class="ver"><div><b>v4.0</b></div><ul><li>🦴 화석 발굴: 모래를 문질러 공룡 화석을 찾고 살려내요</li><li>🥚 알 부화: 알을 색칠하면 아기 공룡이 깨어나요</li><li>🔊 누구일까?: 설명을 듣고 공룡 맞히기 (한국어·영어)</li><li>✏️ 따라 그리기: 점선을 따라 그리면 공룡 완성</li><li>🎤 목소리 이름, 📅 그림 앨범, 📖 연극 그림책(PDF), 🔒 놀이 시간(부모님)</li><li>🔒 보안: 쓰지 않는 바깥 주소를 막고, 인터넷은 업데이트 확인만</li></ul></div>
       <div class="ver"><div><b>v3.8</b></div><ul><li>🔒 보안 강화: 앱 화면이 허락된 곳 말고는 스크립트를 불러오지 못하게 막고, 업데이트 파일은 Doodle 저장소 주소에서만 받아요</li></ul></div>
